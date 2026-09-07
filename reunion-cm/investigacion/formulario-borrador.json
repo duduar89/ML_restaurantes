@@ -1,0 +1,320 @@
+{
+ "titulo": "Antes de vernos: dónde se te va el tiempo",
+ "subtitulo": "20 preguntas y casi todas son de darle a un botón. Unos 7 minutos desde el móvil.",
+ "introduccion": "Te mando esto para no quemarnos media reunión mañana con que tú me cuentes cómo es tu semana y yo tomando notas. Son unos 7 minutos y casi todo es marcar opciones: solo hay dos o tres huecos para escribir, y si no te apetece los saltas. Contesta a ojo, en serio: prefiero un número aproximado tuyo que uno exacto que te cueste media hora sacar, así que no mires ningún Excel ni cuentes publicaciones. Lo que ganas: mañana llego con un par de cosas ya montadas sobre tu caso concreto en vez de con una presentación genérica, y no te voy a hacer repetir nada de lo que me pongas aquí. No te voy a vender nada por rellenarlo y esto no lo lee nadie más que yo.",
+ "tiempo_estimado": "Unos 7 minutos. 17 de las 20 preguntas son de un toque.",
+ "bloques": [
+  {
+   "nombre": "Lo básico, para hacerme una idea",
+   "contexto": "Tres preguntas rápidas para saber de qué tamaño estamos hablando. A ojo, sin mirar nada.",
+   "preguntas": [
+    {
+     "id": "cuentas_total",
+     "enunciado": "¿Cuántas cuentas llevas ahora mismo?",
+     "tipo": "opcion_unica",
+     "obligatoria": true,
+     "opciones": [
+      "1-3",
+      "4-6",
+      "7-10",
+      "11-15",
+      "Más de 15"
+     ],
+     "por_que": "Es el denominador de todo lo demás: sin este número no puedo convertir ningún ahorro por cuenta en un ahorro real. Y me dice si estoy hablando con alguien que necesita respirar o con alguien que ya no puede crecer más sin sistema."
+    },
+    {
+     "id": "cuentas_hosteleria",
+     "enunciado": "De esas, ¿cuántas son de hostelería (bares, restaurantes, cafeterías)?",
+     "tipo": "opcion_unica",
+     "obligatoria": true,
+     "opciones": [
+      "Ninguna",
+      "1-2",
+      "3-5",
+      "6-10",
+      "Más de 10"
+     ],
+     "por_que": "Decide el ángulo entero de la reunión. Si son 6 de 10, mañana voy a fondo con menús del día, cartas y fotos de plato. Si son 2 de 12, la hostelería es solo un ejemplo y hay que hablar en genérico."
+    },
+    {
+     "id": "piezas_mes",
+     "enunciado": "En una cuenta normal, ¿cuántas piezas diseñas al mes? (posts, portadas y stories que hay que montar; no las stories espontáneas del día a día)",
+     "tipo": "opcion_unica",
+     "obligatoria": true,
+     "opciones": [
+      "Menos de 8",
+      "8-12",
+      "13-20",
+      "21-30",
+      "Más de 30",
+      "Va por rachas, no hay dos meses iguales"
+     ],
+     "por_que": "Segundo denominador. Cruzado con el número de cuentas y con los formatos por pieza me da el volumen real de diseños al mes, que es la cifra que pongo encima de la mesa mañana. El paréntesis evita que unas cuenten stories y otras no."
+    }
+   ]
+  },
+  {
+   "nombre": "Dónde se te va la semana",
+   "contexto": "Aquí no busco horas exactas, busco saber qué te come de verdad.",
+   "preguntas": [
+    {
+     "id": "top3_tiempo",
+     "enunciado": "Marca las TRES cosas que más tiempo te comen",
+     "tipo": "opcion_multiple",
+     "obligatoria": true,
+     "ayuda": "Solo tres. Si marcas todo no me dices nada.",
+     "opciones": [
+      "Diseñar en Canva desde cero",
+      "Sacar la misma pieza en varios formatos",
+      "Elegir, recortar y arreglar las fotos que me mandan",
+      "Escribir los textos",
+      "Montar y subtitular reels o vídeo",
+      "Perseguir al cliente para que mande material",
+      "Esperar a que el cliente apruebe y rehacer cambios",
+      "Programar y publicar",
+      "Contestar comentarios, mensajes y reseñas",
+      "Los informes de fin de mes",
+      "Reuniones, llamadas y correos",
+      "Mis facturas y mi papeleo"
+     ],
+     "por_que": "El mapa del tiempo, y el corazón del formulario. Obligar a elegir tres es lo que lo hace útil. Si salen 'varios formatos' o 'las fotos', la demo de mañana está decidida. Si sale 'perseguir al cliente' o 'esperar aprobación', el problema no es producir más rápido y tengo que cambiar el discurso entero: acelerar la fábrica no sirve si el atasco está en la entrada y en la salida."
+    },
+    {
+     "id": "video_vs_imagen",
+     "enunciado": "De lo que entregas, ¿cuánto es vídeo o reels y cuánto imagen fija?",
+     "tipo": "opcion_unica",
+     "obligatoria": true,
+     "opciones": [
+      "Casi todo imagen fija",
+      "Más imagen que vídeo",
+      "Mitad y mitad",
+      "Más vídeo que imagen",
+      "Casi todo vídeo"
+     ],
+     "por_que": "El agujero que casi me cuesta la reunión. Si la mitad de sus horas son montar y subtitular reels, todas mis demos apuntan al sitio equivocado porque están pensadas para imágenes. Necesito saberlo esta noche, no mañana en la mesa."
+    }
+   ]
+  },
+  {
+   "nombre": "Lo de Canva, en concreto",
+   "contexto": "Me dijiste que se te va la vida en Canva. Quiero saber en qué parte exactamente, porque cada una se arregla de una forma distinta.",
+   "preguntas": [
+    {
+     "id": "canva_que_parte",
+     "enunciado": "Cuando pierdes tiempo en Canva, ¿en qué es exactamente? Marca todo lo que te suene",
+     "tipo": "opcion_multiple",
+     "obligatoria": true,
+     "opciones": [
+      "Buscar o adaptar la plantilla",
+      "Cambiar textos, precios y fechas uno a uno",
+      "Sacar la misma pieza en feed, story, portada, cartel...",
+      "Colocar y recortar las fotos dentro del diseño",
+      "Mantener los colores y la línea de cada marca",
+      "Hacer los cambios que me pide el cliente",
+      "Exportar, renombrar y ordenar los archivos",
+      "Encontrar un diseño antiguo entre todos los que tengo",
+      "Empezar casi de cero cada vez"
+     ],
+     "por_que": "La pregunta más importante del formulario. 'Canva' no es un problema: cada casilla tiene una solución distinta y una demo distinta. Si marca 'cambiar textos, precios y fechas' y 'sacar la misma pieza en varios formatos', voy con la demo del menú del día generado desde una hoja. Si marca 'empezar de cero', eso es creativo y no lo toco. Sin esta respuesta voy adivinando."
+    },
+    {
+     "id": "formatos_por_pieza",
+     "enunciado": "Cuando haces una pieza, ¿en cuántos formatos o tamaños acaba?",
+     "tipo": "opcion_unica",
+     "obligatoria": false,
+     "opciones": [
+      "1",
+      "2",
+      "3",
+      "4 o más",
+      "Depende, pero casi siempre varios"
+     ],
+     "por_que": "El multiplicador oculto. No diseña 20 piezas al mes: diseña 20 y las rehace 60 veces. Piezas x formatos x cuentas es el número que le hace abrir los ojos, y encima es exactamente lo que resuelve una plantilla maestra."
+    },
+    {
+     "id": "porcentaje_repetitivo",
+     "enunciado": "¿Cuánto de lo que diseñas es \"lo mismo de siempre pero cambiando los datos\"? (el menú del día, el plato de la semana, el horario de fiestas, la promo del finde...)",
+     "tipo": "opcion_unica",
+     "obligatoria": true,
+     "opciones": [
+      "Casi nada, cada cosa es distinta",
+      "Como un cuarto",
+      "Como la mitad",
+      "La mayoría",
+      "Prácticamente todo"
+     ],
+     "por_que": "La pregunta más rentable de todo el formulario. Dimensiona de un solo toque qué parte de su trabajo es automatizable hoy, sin que ella tenga que saber nada de automatización. Si contesta 'la mayoría', la demo se monta sola y el argumento económico también."
+    },
+    {
+     "id": "plan_canva",
+     "enunciado": "¿Qué plan de Canva tienes?",
+     "tipo": "opcion_unica",
+     "obligatoria": false,
+     "opciones": [
+      "El gratuito",
+      "Uno de pago (Pro)",
+      "Uno de equipo o empresa",
+      "Me han invitado al de un cliente",
+      "No estoy segura"
+     ],
+     "por_que": "Decide si la demo la puede repetir ella sola esa misma tarde o si tengo que hacerla desde mi cuenta y decírselo claramente. Generar muchos diseños de golpe desde una hoja no está en el plan gratuito, y prometerle algo que su cuenta no puede hacer es la forma más rápida de quedar mal."
+    },
+    {
+     "id": "diseno_que_se_fue",
+     "enunciado": "Cuéntame el último diseño que se te fue de las manos: uno que te llevó mucho más tiempo del que debería. ¿Qué era y en qué se te fue el tiempo?",
+     "tipo": "texto_largo",
+     "obligatoria": false,
+     "ayuda": "Del tipo: \"la carta de Navidad del bar X. Me mandaron los platos en tres audios, dos precios estaban mal, y luego había que sacarlo en cuatro tamaños. Se me fue la tarde entera.\" Tres líneas me sobran.",
+     "por_que": "La única pregunta larga del formulario, y va aquí a propósito: en el minuto cuatro, cuando ya lleva ocho respuestas fáciles y tiene inercia. Es reciente y concreta, así que no depende de que recuerde bien 'en general', y me entrega un caso real que puedo reconstruir delante de ella mañana. El ejemplo en el texto de ayuda es lo que hace que escriba tres líneas en vez de cuatro palabras."
+    }
+   ]
+  },
+  {
+   "nombre": "Las fotos y el material del cliente",
+   "contexto": "Me dijiste que \"auditas fotos\" y quiero entender bien qué significa eso en tu día a día.",
+   "preguntas": [
+    {
+     "id": "como_llega_material",
+     "enunciado": "¿Cómo te llega el material de un cliente de hostelería? Marca todo lo que te pase",
+     "tipo": "opcion_multiple",
+     "obligatoria": true,
+     "opciones": [
+      "Fotos por WhatsApp, a montones",
+      "Audios de WhatsApp",
+      "Un PDF o una foto de la carta",
+      "Una carpeta compartida (Drive, Dropbox)",
+      "Por correo",
+      "Voy yo al local y lo hago",
+      "No me llega nada, tiro de fotos antiguas o de banco",
+      "Tengo que perseguirles cada vez"
+     ],
+     "por_que": "Aquí está el atasco que ella no va a nombrar como problema porque lo tiene asumido como parte del oficio. Si todo entra por WhatsApp, las fotos llegan ya comprimidas y media 'foto mala' no era mala. Y si marca 'tengo que perseguirles', lo primero que hay que montar no es diseño, es la recogida de material."
+    },
+    {
+     "id": "fotos_volumen",
+     "enunciado": "Cuando un restaurante te suelta fotos, ¿cuántas te manda y cuántas acabas usando?",
+     "tipo": "opcion_unica",
+     "obligatoria": false,
+     "opciones": [
+      "Pocas, y uso casi todas",
+      "Me manda unas 20-30 y uso 5 o 6",
+      "Me manda 50-100 y uso un puñado",
+      "Me manda un montón y salvo 3 o 4",
+      "Varía muchísimo según el cliente"
+     ],
+     "por_que": "Es la munición exacta para la demo de las fotos: poder decir sus números en voz alta ('de 80 salvas 4') en vez de números inventados míos. Y me dice si el descarte automático merece la pena o si con 20 fotos no compensa montarlo."
+    },
+    {
+     "id": "fotos_descarte",
+     "enunciado": "¿Qué es lo que más te hace descartar una foto? Marca todo lo que aplique",
+     "tipo": "opcion_multiple",
+     "obligatoria": false,
+     "opciones": [
+      "Está movida o desenfocada",
+      "Luz de bombilla, muy oscura o muy amarilla",
+      "La mesa está sin recoger o hay cosas por medio",
+      "Sale gente reconocible",
+      "Se ve algo que no toca (otra marca, un cable, el TPV)",
+      "Es horizontal y no me entra en vertical",
+      "Se ve pixelada o pesa poquísimo",
+      "Está repetida, casi igual que otra",
+      "No pega con el estilo de ese cliente"
+     ],
+     "por_que": "Separa lo que se puede medir con matemáticas (movida, pixelada, repetida, formato) de lo que necesita criterio (que pegue con el estilo, que el plato apetezca). Esa frontera es literalmente el diseño de la herramienta, y también la frontera que no puedo cruzar mañana: la máquina tira la basura, la foto la elige ella."
+    }
+   ]
+  },
+  {
+   "nombre": "Lo que no se ve en ningún sitio",
+   "contexto": "Tres preguntas más personales. Contesta lo que te salga, aunque sea de una línea.",
+   "preguntas": [
+    {
+     "id": "que_has_probado",
+     "enunciado": "¿Has intentado ya arreglar algo de esto con alguna herramienta o con IA? ¿Qué probaste y por qué lo dejaste?",
+     "tipo": "texto_corto",
+     "obligatoria": false,
+     "ayuda": "Vale con \"probé ChatGPT para los textos y me salían todos iguales\" o \"monté un Notion y no lo abrí nunca más\".",
+     "por_que": "La pregunta que me evita el ridículo de proponerle mañana algo que ella abandonó hace ocho meses. Y me da su umbral de tolerancia: si dejó Notion porque era mucho lío, montarle un tablero en Notion es tirar el trabajo. También calibra el nivel: si ya usa IA a diario, enseñarle que escribe textos es quedar de vendedor de humo."
+    },
+    {
+     "id": "no_soltaria",
+     "enunciado": "De todo lo que haces, ¿qué NO soltarías nunca, ni aunque una máquina lo hiciera bien?",
+     "tipo": "texto_corto",
+     "obligatoria": false,
+     "por_que": "La frontera que no puedo cruzar mañana. Si en la reunión la respeto en voz alta y sin que ella me lo pida, me gano la confianza entera; si la cruzo, la pierdo en un minuto. Es además la pregunta que cambia el tono del formulario: después de veinte preguntas sobre en qué es lenta, esta le devuelve el orgullo."
+    },
+    {
+     "id": "cinco_horas",
+     "enunciado": "Si te aparecieran 5 horas libres cada semana, cobrando lo mismo, ¿qué harías con ellas?",
+     "tipo": "opcion_unica",
+     "obligatoria": false,
+     "opciones": [
+      "Coger más clientes",
+      "Hacerlo mejor con los que ya tengo",
+      "Meterme en vídeo en serio",
+      "Soltar los clientes que no compensan y buscar mejores",
+      "Cobrar más y trabajar menos",
+      "Cerrar el portátil antes y ya está",
+      "Otra cosa"
+     ],
+     "por_que": "Me dice qué le estoy vendiendo en realidad. Si contesta 'coger más clientes', el argumento es capacidad y crecimiento. Si contesta 'cerrar el portátil antes', el argumento es calidad de vida y no menciono la palabra crecer ni una vez. Venderle crecimiento a alguien que lo que quiere es descansar es la forma más rápida de perder la reunión."
+    }
+   ]
+  },
+  {
+   "nombre": "Para mañana",
+   "contexto": "Cuatro cosas rápidas y ya está.",
+   "preguntas": [
+    {
+     "id": "herramientas",
+     "enunciado": "¿Con qué te apañas hoy? Marca lo que uses de verdad",
+     "tipo": "opcion_multiple",
+     "obligatoria": true,
+     "ayuda": "No te pido claves ni accesos a nada, ni ahora ni mañana. Es para no proponerte cosas que ya estás pagando.",
+     "opciones": [
+      "Canva",
+      "Metricool",
+      "El programador de Instagram y Facebook (Meta Business Suite)",
+      "Otro programador (Later, Buffer, Hootsuite, Planoly...)",
+      "CapCut o similar para vídeo",
+      "Lightroom o algo para retocar fotos",
+      "ChatGPT, Claude o Gemini",
+      "Hojas de cálculo",
+      "WhatsApp, que al final es mi gestor de proyectos"
+     ],
+     "por_que": "Inventario, no interrogatorio. Sirve sobre todo para NO proponerle mañana algo que ya tiene pagado: ofrecerle un programador de publicaciones a alguien que ya usa Metricool es la forma más rápida de parecer que no conozco el oficio. Y si ya paga Canva de pago, la mitad de lo que le voy a enseñar lo tiene comprado sin usar, que es lo que más confianza compra."
+    },
+    {
+     "id": "cuenta_ejemplo",
+     "enunciado": "Si te parece bien, dime el @ de una de tus cuentas de hostelería y preparo el ejemplo de mañana con esa. Si prefieres que no, déjalo en blanco.",
+     "tipo": "texto_corto",
+     "obligatoria": false,
+     "ayuda": "Solo el @ de Instagram, lo que se ve en público. Nada de claves ni de darme acceso a nada.",
+     "por_que": "Es lo que convierte una demo genérica en una demo sobre su cliente, que es cuando la gente se queda callada mirando la pantalla. Pedir un @ público es riesgo cero para ella y suena a que me lo voy a currar, no a que la voy a auditar. Y si dice que no, también es información: es protectora con su cartera, y eso hay que respetarlo desde el minuto uno."
+    },
+    {
+     "id": "grabar",
+     "enunciado": "¿Te importa que grabe la reunión de mañana? Es solo para no estar tomando notas mientras me hablas; te paso el resumen a ti también.",
+     "tipo": "opcion_unica",
+     "obligatoria": true,
+     "opciones": [
+      "Sin problema",
+      "Prefiero que no"
+     ],
+     "por_que": "Deja el permiso pedido por escrito y con antelación, en vez de soltarlo a bocajarro cuando ya estamos sentados, que tensa el primer minuto. Si dice que no, lo sé antes y voy con boli. Y si dice que sí, el resumen de la propia reunión enviado esa misma tarde es la demostración más honesta de todas."
+    },
+    {
+     "id": "algo_mas",
+     "enunciado": "¿Algo que no te haya preguntado y que debería saber antes de vernos?",
+     "tipo": "texto_corto",
+     "obligatoria": false,
+     "por_que": "El hueco libre. Se lo salta mucha gente, pero quien lo contesta suele soltar aquí lo que de verdad le preocupa y no encajaba en ninguna casilla ('lo que me está matando en realidad son dos clientes concretos'). Y cierra con sensación de conversación, no de examen."
+    }
+   ]
+  }
+ ],
+ "cierre": "Ya está, gracias de verdad.\n\nMe lo leo entero esta noche, así que mañana no te voy a hacer repetir nada de esto. Llego con un par de cosas ya montadas sobre lo que me acabas de contar y, si me has pasado el @ de alguna cuenta, con esa cuenta concreta.\n\nSi al soltar el móvil se te ocurre algo más, mándamelo por WhatsApp tal cual, aunque sea un audio de dos minutos. Me vale igual.\n\nHasta mañana.",
+ "nota_privacidad": "Esto lo leo solo yo y lo uso únicamente para preparar nuestra reunión de mañana: no lo comparto con nadie ni lo meto en ninguna lista. Las respuestas se guardan en este móvil mientras lo rellenas; si quieres que lo borre después de vernos, me lo dices y lo borro.",
+ "whatsapp_corto": "Oye [Nombre], para lo de mañana: te paso esto para no quemarte media reunión preguntándote cosas que me puedes contar en dos toques 👇\n\n[enlace]\n\nSon unos 7 minutos y casi todo es darle a botones, se hace desde el móvil. No hace falta que mires ningún Excel, contesta a ojo.\n\nCon lo que me pongas preparo un par de cosas montadas sobre tus cuentas y mañana vamos directos a lo interesante. Si no te da tiempo, tampoco pasa nada, lo vemos allí.",
+ "whatsapp_calido": "[Nombre]! Me quedé dándole vueltas a lo que me dijiste de que se te va la vida en Canva y de que te pasas media semana auditando fotos 😅\n\nAntes de vernos mañana, ¿me contestas a esto? 👇\n[enlace]\n\nSon unos 7 minutos y casi todo es marcar opciones. Va sobre dónde se te va el tiempo de verdad: Canva, las fotos, perseguir a los clientes... Contesta a ojo, no hace falta que mires nada ni que cuentes publicaciones.\n\nTe lo pido porque quiero llegar mañana con algo hecho sobre tus cuentas y no con un PowerPoint genérico. Y al final te pregunto también si te importa que grabe la reunión, que es solo para no estar tomando notas mientras me hablas y para pasarte a ti el resumen.\n\nSi no te da tiempo a rellenarlo, me mandas un audio y listo."
+}

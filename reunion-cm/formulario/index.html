@@ -248,7 +248,7 @@ textarea::placeholder,input::placeholder{color:var(--ink-3)}
   font-family:var(--f-display);font-size:38px;font-weight:600;line-height:1;
   color:var(--ink);font-variant-numeric:tabular-nums;letter-spacing:-.02em;
 }
-.calculo .cifra small{font-size:16px;font-weight:400;color:var(--ink-2);margin-left:6px;font-family:var(--f-body)}
+.calculo .cifra small{display:block;font-size:15.5px;font-weight:400;color:var(--ink-2);margin-top:6px;font-family:var(--f-body);letter-spacing:0}
 .calculo .glosa{margin-top:9px;color:var(--ink-2);font-size:14.5px;max-width:48ch}
 .calculo .desglose{
   margin-top:12px;padding-top:11px;border-top:1px solid var(--gold-line);
@@ -346,13 +346,170 @@ pre.volcado{
 <script>
 /* ================= CONTENIDO ================= */
 const FORM = {
-  titulo: "…",
-  subtitulo: "",
-  intro: [],
-  meta: [],
-  cierre: "",
-  privacidad: "",
-  bloques: []
+  titulo: "Dónde se te va el tiempo",
+  subtitulo: "Casi todo es marcar opciones. Se hace desde el móvil.",
+  intro: [
+    "Te mando esto para no quemarnos media reunión mañana con que tú me cuentes cómo es tu semana y yo tomando notas.",
+    "Son unos 8 minutos y casi todo es marcar opciones: solo hay tres huecos para escribir y los tres son opcionales. Contesta a ojo, en serio — prefiero un número aproximado tuyo que uno exacto que te cueste media hora sacar. No mires ningún Excel ni cuentes publicaciones.",
+    "Y a cambio, mañana llego con un par de cosas ya montadas sobre lo que me cuentes aquí, en vez de con una presentación de las de siempre. Nada de lo que me pongas te lo voy a hacer repetir. Esto lo leo solo yo."
+  ],
+  meta: ["~8 minutos", "20 preguntas", "12 son de un toque", "3 de escribir, opcionales"],
+  cierre: "Ya está, gracias de verdad. Me lo leo entero esta noche, así que mañana no te voy a hacer repetir nada de esto: llego con un par de cosas montadas sobre lo que me acabas de contar y, si me has pasado el @ de alguna cuenta, con esa cuenta concreta.\n\nSi al soltar el móvil se te ocurre algo más, mándamelo por WhatsApp tal cual, aunque sea un audio de dos minutos. Me vale igual.",
+  privacidad: "Esto lo leo solo yo y lo uso únicamente para preparar la reunión de mañana: no lo comparto con nadie ni lo meto en ninguna lista. Mientras lo rellenas se guarda en este móvil, así que puedes cerrarlo y volver. Si quieres que lo borre después de vernos, me lo dices y lo borro.",
+  pie: "Preparado para nuestra reunión",
+
+  bloques: [
+    {
+      nombre: "Lo básico, para hacerme una idea",
+      contexto: "Cuatro preguntas rápidas para saber de qué tamaño estamos hablando. A ojo, sin mirar nada.",
+      preguntas: [
+        { id:"cuentas_total", tipo:"opcion_unica", obligatoria:true,
+          enunciado:"¿Cuántas cuentas llevas ahora mismo?",
+          opciones:["1-3","4-6","7-10","11-15","Más de 15"] },
+        { id:"cuentas_hosteleria", tipo:"opcion_unica", obligatoria:true,
+          enunciado:"De esas, ¿cuántas son de hostelería?",
+          ayuda:"Bares, restaurantes, cafeterías, obradores...",
+          opciones:["Ninguna","1-2","3-5","6-10","Más de 10"] },
+        { id:"sola_o_equipo", tipo:"opcion_unica", obligatoria:true,
+          enunciado:"¿Trabajas sola o hay alguien más metido?",
+          opciones:["Sola con todo","Sola, pero suelto algo puntual (vídeo, diseño...)","Tengo a alguien fijo ayudándome","Somos dos o más socias","Depende del mes"] },
+        { id:"piezas_mes", tipo:"opcion_unica", obligatoria:true,
+          enunciado:"En una cuenta normal, ¿cuántas piezas montas al mes?",
+          ayuda:"Posts, portadas y stories que hay que diseñar. Las stories del día a día, esas no las cuentes.",
+          opciones:["Menos de 8","8-12","13-20","21-30","Más de 30","Va por rachas, no hay dos meses iguales"] }
+      ]
+    },
+    {
+      nombre: "Dónde se te va la semana",
+      contexto: "Aquí no busco horas exactas, busco saber qué te come de verdad.",
+      preguntas: [
+        { id:"top3_tiempo", tipo:"ranking", obligatoria:true, max_elegidas:3,
+          enunciado:"Ordena las tres cosas que más tiempo te comen. Toca primero la que más.",
+          ayuda:"Solo puedes marcar tres. Toca otra vez para quitarla.",
+          opciones:["Diseñar en Canva desde cero","Sacar la misma pieza en varios formatos","Elegir, recortar y arreglar las fotos que me mandan","Escribir los textos","Montar y subtitular reels o vídeo","Perseguir al cliente para que mande material","Esperar a que el cliente apruebe y rehacer cambios","Programar y publicar","Contestar comentarios, mensajes y reseñas","Los informes de fin de mes","Reuniones, llamadas y correos","Mis facturas y mi papeleo"] },
+        { id:"video_vs_imagen", tipo:"opcion_unica", obligatoria:true,
+          enunciado:"De lo que entregas, ¿cuánto es vídeo o reels y cuánto imagen fija?",
+          opciones:["Casi todo imagen fija","Más imagen que vídeo","Mitad y mitad","Más vídeo que imagen","Casi todo vídeo"] },
+        { id:"resenas_google", tipo:"opcion_unica", obligatoria:true,
+          enunciado:"¿Llevas también las reseñas de Google de alguno de tus clientes?",
+          opciones:["Sí, las contesto yo","Las contesta el dueño, yo no me meto","Ni él ni yo, están sin contestar","No lo he mirado nunca","No sé si tengo acceso a eso"] }
+      ]
+    },
+    {
+      nombre: "Lo de Canva, en concreto",
+      contexto: "Me dijiste que se te va la vida en Canva. Quiero saber en qué parte exactamente, porque cada una se arregla de una forma distinta.",
+      preguntas: [
+        { id:"canva_que_parte", tipo:"opcion_multiple", obligatoria:true,
+          enunciado:"Cuando se te va el tiempo en Canva, ¿en qué se te va exactamente?",
+          ayuda:"Marca todo lo que te pase, aunque sean seis.",
+          opciones:["Buscar o adaptar la plantilla","Cambiar textos, precios y fechas uno a uno","Sacar la misma pieza en feed, story, portada, cartel...","Colocar y recortar las fotos dentro del diseño","Mantener los colores y la línea de cada marca","Hacer los cambios que me pide el cliente","Exportar, renombrar y ordenar los archivos","Encontrar un diseño antiguo entre todos los que tengo","Empezar casi de cero cada vez"] },
+        { id:"formatos_por_pieza", tipo:"opcion_unica", obligatoria:true,
+          enunciado:"Cuando haces una pieza, ¿en cuántos formatos o tamaños acaba?",
+          opciones:["1","2","3","4 o más","Depende, pero casi siempre varios"],
+          calculo_despues:"volumen" },
+        { id:"porcentaje_repetitivo", tipo:"opcion_unica", obligatoria:true,
+          enunciado:"De lo que haces, ¿cuánto es \"lo mismo de siempre cambiando los datos\"?",
+          ayuda:"El menú del día, el plato de la semana, el horario de fiestas, la promo del finde...",
+          opciones:["Casi nada, cada cosa es distinta","Como un cuarto","Como la mitad","La mayoría","Prácticamente todo"],
+          calculo_despues:"repetitivo" },
+        { id:"plan_canva", tipo:"opcion_unica", obligatoria:false,
+          enunciado:"¿Qué plan de Canva tienes?",
+          opciones:["El gratuito","Uno de pago (Pro)","Uno de equipo o empresa","Me han invitado al de un cliente","No estoy segura"] },
+        { id:"diseno_que_se_fue", tipo:"texto_largo", obligatoria:false,
+          enunciado:"Cuéntame el último diseño que se te fue de las manos: uno que te llevó mucho más tiempo del que debería.",
+          ayuda:"Del tipo: \"la carta de Navidad del bar X. Me mandaron los platos en tres audios, dos precios estaban mal, y luego había que sacarlo en cuatro tamaños. Se me fue la tarde entera.\" Tres líneas me sobran.",
+          placeholder:"Qué era y en qué se te fue el tiempo..." }
+      ]
+    },
+    {
+      nombre: "Las fotos y el material del cliente",
+      contexto: "Me dijiste que \"auditas fotos\" y quiero entender bien qué significa eso en tu día a día.",
+      preguntas: [
+        { id:"como_llega_material", tipo:"opcion_multiple", obligatoria:true,
+          enunciado:"¿Cómo te llega el material de un cliente de hostelería?",
+          ayuda:"Marca todo lo que te pase.",
+          opciones:["Fotos por WhatsApp, a montones","Audios de WhatsApp","Un PDF o una foto de la carta","Una carpeta compartida (Drive, Dropbox)","Por correo","Voy yo al local y lo hago","No me llega nada, tiro de fotos antiguas o de banco","Tengo que perseguirles cada vez"] },
+        { id:"fotos_descarte", tipo:"opcion_multiple", obligatoria:false,
+          enunciado:"¿Qué es lo que más te hace descartar una foto?",
+          ayuda:"Marca todo lo que aplique.",
+          opciones:["Está movida o desenfocada","Luz de bombilla, muy oscura o muy amarilla","La mesa está sin recoger o hay cosas por medio","Sale gente reconocible","Se ve algo que no toca (otra marca, un cable, el TPV)","Es horizontal y no me entra en vertical","Se ve pixelada o pesa poquísimo","Está repetida, casi igual que otra","No pega con el estilo de ese cliente"] }
+      ]
+    },
+    {
+      nombre: "Lo que no se ve en ningún sitio",
+      contexto: "Tres preguntas algo más personales. Contesta lo que te salga.",
+      preguntas: [
+        { id:"que_has_probado", tipo:"texto_corto", obligatoria:false,
+          enunciado:"¿Has intentado ya arreglar algo de esto con alguna herramienta o con IA?",
+          ayuda:"Vale con \"probé ChatGPT para los textos y me salían todos iguales\" o \"monté un Notion y no lo abrí nunca más\".",
+          placeholder:"Qué probaste y por qué lo dejaste" },
+        { id:"como_cobras", tipo:"opcion_unica", obligatoria:true,
+          enunciado:"Con tus clientes, ¿cómo cobras normalmente?",
+          opciones:["Una cuota fija al mes por cuenta","Por horas o por bolsa de horas","Por proyecto o por campaña","Un poco de cada, según el cliente","Prefiero no decirlo"] },
+        { id:"dos_horas", tipo:"opcion_unica", obligatoria:true,
+          enunciado:"Imagínate que un martes cualquiera terminas dos horas antes de lo normal. ¿Qué pasa con esas dos horas?",
+          opciones:["Meto otro cliente","Le doy más vueltas a lo que ya llevo","Me pongo con el vídeo, que lo tengo ahí pendiente","Suelto los clientes que no me compensan","Cierro el portátil y me voy","Se llenan solas de otra cosa, seguro"] }
+      ]
+    },
+    {
+      nombre: "Para mañana",
+      contexto: "Tres cosas rápidas y ya está.",
+      preguntas: [
+        { id:"herramientas", tipo:"opcion_multiple", obligatoria:true,
+          enunciado:"¿Con qué te apañas hoy? Marca lo que uses de verdad.",
+          ayuda:"No te pido claves ni accesos a nada, ni ahora ni mañana. Es para no proponerte cosas que ya estás pagando.",
+          opciones:["Canva","Metricool","El programador de Instagram y Facebook (Meta Business Suite)","Otro programador (Later, Buffer, Hootsuite, Planoly...)","CapCut o similar para vídeo","Lightroom o algo para retocar fotos","ChatGPT, Claude o Gemini","Hojas de cálculo","WhatsApp, que al final es mi gestor de proyectos"] },
+        { id:"cuenta_ejemplo", tipo:"texto_corto", obligatoria:false,
+          enunciado:"Si te parece bien, dime el @ de una de tus cuentas y preparo el ejemplo de mañana con esa.",
+          ayuda:"Solo el @ de Instagram, lo que se ve en público. Nada de claves ni de darme acceso a nada. Si prefieres que no, déjalo en blanco.",
+          placeholder:"@..." },
+        { id:"grabar", tipo:"opcion_unica", obligatoria:true,
+          enunciado:"¿Te importa que grabe la reunión de mañana?",
+          ayuda:"Es solo para no estar tomando notas mientras me hablas. El resumen te lo paso a ti también.",
+          opciones:["Sin problema","Prefiero que no"] }
+      ]
+    }
+  ],
+
+  calculos: [
+    {
+      id: "volumen",
+      etiqueta: "Con lo que llevas puesto",
+      calcular(r) {
+        const c = V.cuentas[r.cuentas_total], p = V.piezas[r.piezas_mes], f = V.formatos[r.formatos_por_pieza];
+        if (!c || !p || !f) return null;
+        const t = Math.round(c * p * f / 5) * 5;
+        return {
+          cifra: "≈ " + t,
+          unidad: "archivos al mes",
+          glosa: "Cada uno lo abres, lo colocas y lo exportas a mano. No es que diseñes mucho: es que diseñas lo mismo muchas veces.",
+          desglose: c + " cuentas × " + p + " piezas × " + f + " formatos — todo a ojo, con tus rangos"
+        };
+      }
+    },
+    {
+      id: "repetitivo",
+      etiqueta: "Y de esos",
+      calcular(r) {
+        const c = V.cuentas[r.cuentas_total], p = V.piezas[r.piezas_mes], f = V.formatos[r.formatos_por_pieza], k = V.repe[r.porcentaje_repetitivo];
+        if (!c || !p || !f || !k) return null;
+        const t = Math.round(c * p * f * k / 5) * 5;
+        return {
+          cifra: "≈ " + t,
+          unidad: "son lo mismo cambiando los datos",
+          glosa: "Esa parte se monta una vez y se rellena sola. La otra es la que tiene tu cabeza dentro, y ahí no me meto.",
+          desglose: "es lo que vamos a mirar mañana"
+        };
+      }
+    }
+  ]
+};
+
+const V = {
+  cuentas: {"1-3":2,"4-6":5,"7-10":8,"11-15":13,"Más de 15":18},
+  piezas:  {"Menos de 8":6,"8-12":10,"13-20":16,"21-30":25,"Más de 30":38,"Va por rachas, no hay dos meses iguales":15},
+  formatos:{"1":1,"2":2,"3":3,"4 o más":4.5,"Depende, pero casi siempre varios":2.5},
+  repe:    {"Casi nada, cada cosa es distinta":0.1,"Como un cuarto":0.25,"Como la mitad":0.5,"La mayoría":0.7,"Prácticamente todo":0.9}
 };
 /* ============ FIN CONTENIDO ============ */
 
@@ -537,23 +694,15 @@ function pintarProgreso() {
   $("#barra").style.width = pct + "%";
   $("#pcontador").innerHTML = "<b>" + hechas + "</b> de " + todas.length;
   const quedan = todas.length - hechas;
-  $("#ptiempo").textContent = quedan === 0 ? "listo ✓" : "~" + Math.max(1, Math.round(quedan * 0.55)) + " min";
+  $("#ptiempo").textContent = quedan === 0 ? "listo ✓" : "~" + Math.max(1, Math.round(quedan * 0.4)) + " min";
 }
 
 /* ---------- cálculo en vivo ---------- */
-const NUM = t => { const m = String(t || "").match(/\d+/g); return m ? m.map(Number) : []; };
-function medio(t, tope) {
-  const n = NUM(t);
-  if (!n.length) return 0;
-  if (n.length >= 2) return (n[0] + n[1]) / 2;
-  return /m[áa]s|\+/i.test(String(t)) ? n[0] * 1.35 : n[0];
-}
-
 function pintarCalculos() {
   (FORM.calculos || []).forEach(c => {
     const caja = document.getElementById("calc-" + c.id);
     if (!caja) return;
-    const r = c.calcular(respuestas, medio);
+    const r = c.calcular(respuestas);
     if (!r) { caja.hidden = true; return; }
     caja.hidden = false;
     caja.innerHTML =

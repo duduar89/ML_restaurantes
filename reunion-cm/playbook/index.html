@@ -1,0 +1,994 @@
+<title>Chuleta de la reunión</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Karla:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap">
+
+<style>
+:root{
+  --paper:#EFF2EE; --surface:#FFFFFF; --surface-2:#E4EBE5;
+  --ink:#141C18; --ink-2:#3C4F45; --ink-3:#74877C;
+  --line:#CFD9D1; --line-2:#B3C1B8;
+  --accent:#1B6250; --accent-soft:#DBEBE4;
+  --gold:#8E6212; --gold-soft:#F6E9CD; --gold-line:#DFC58C;
+  --rojo:#9C3126; --rojo-soft:#F8E3E0; --rojo-line:#E4B7B0;
+  --f-display:"Fraunces","Iowan Old Style",Georgia,serif;
+  --f-body:"Karla",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"DM Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#0D1310; --surface:#161F1A; --surface-2:#1E2922;
+  --ink:#E4ECE7; --ink-2:#ACBFB4; --ink-3:#7C9286;
+  --line:#293630; --line-2:#3A4B41;
+  --accent:#5EBC9E; --accent-soft:#182C25;
+  --gold:#E6B858; --gold-soft:#2A2213; --gold-line:#4A3C1D;
+  --rojo:#E4897C; --rojo-soft:#2E1917; --rojo-line:#4E2A25;
+}}
+:root[data-theme="dark"]{
+  --paper:#0D1310; --surface:#161F1A; --surface-2:#1E2922;
+  --ink:#E4ECE7; --ink-2:#ACBFB4; --ink-3:#7C9286;
+  --line:#293630; --line-2:#3A4B41;
+  --accent:#5EBC9E; --accent-soft:#182C25;
+  --gold:#E6B858; --gold-soft:#2A2213; --gold-line:#4A3C1D;
+  --rojo:#E4897C; --rojo-soft:#2E1917; --rojo-line:#4E2A25;
+}
+
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);
+  font-size:16px;line-height:1.55;padding:0 0 80px;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--f-display);margin:0;line-height:1.14;text-wrap:balance;font-weight:600}
+p,ul,ol{margin:0}
+a{color:var(--accent)}
+
+/* nav pegajosa: es lo que hace que sirva en una mesa */
+.nav{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--paper) 92%,transparent);
+  backdrop-filter:saturate(160%) blur(10px);border-bottom:1px solid var(--line)}
+.nav-int{max-width:760px;margin:0 auto;padding:0 16px;display:flex;gap:3px;
+  overflow-x:auto;scrollbar-width:none}
+.nav-int::-webkit-scrollbar{display:none}
+.nav a{flex:none;font-family:var(--f-mono);font-size:11.5px;letter-spacing:.04em;
+  color:var(--ink-3);text-decoration:none;padding:11px 9px;white-space:nowrap;
+  border-bottom:2px solid transparent}
+.nav a:hover{color:var(--ink)}
+.nav a.act{color:var(--accent);border-bottom-color:var(--accent)}
+
+.env{max-width:760px;margin:0 auto;padding:0 20px}
+
+header.top{padding:38px 0 26px}
+.kicker{font-family:var(--f-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--accent);display:flex;align-items:center;gap:9px;margin-bottom:16px}
+.kicker::before{content:"";width:20px;height:1px;background:var(--accent)}
+header.top h1{font-size:clamp(30px,7.5vw,42px);letter-spacing:-.022em}
+header.top .lead{margin-top:13px;color:var(--ink-2);max-width:60ch}
+
+section{padding:34px 0;border-top:1px solid var(--line);scroll-margin-top:52px}
+.sec-cab{display:flex;gap:13px;align-items:baseline;margin-bottom:8px}
+.sec-num{font-family:var(--f-mono);font-size:12px;color:var(--ink-3);flex:none}
+section h2{font-size:26px;letter-spacing:-.014em}
+.sec-sub{color:var(--ink-3);font-size:14.5px;margin:0 0 22px 33px;max-width:58ch}
+h3{font-size:18px;margin:26px 0 10px}
+h3:first-of-type{margin-top:14px}
+p + p, p + ul, p + ol, ul + p, ol + p{margin-top:11px}
+ul,ol{padding-left:20px}
+li{margin-bottom:5px}
+li::marker{color:var(--ink-3)}
+strong{font-weight:700}
+
+/* lo que dices literalmente */
+.decir{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);
+  border-radius:0 9px 9px 0;padding:15px 16px;margin:14px 0;position:relative}
+.decir p{font-size:16.5px;line-height:1.5}
+.decir p + p{margin-top:9px}
+.decir .et{font-family:var(--f-mono);font-size:10px;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--accent);display:block;margin-bottom:8px;padding-right:62px}
+.copiar{position:absolute;top:11px;right:11px;font-family:var(--f-mono);font-size:10.5px;
+  background:var(--surface-2);border:1px solid var(--line);color:var(--ink-3);
+  border-radius:5px;padding:4px 8px;cursor:pointer;letter-spacing:.03em}
+.copiar:hover{color:var(--ink);border-color:var(--line-2)}
+.copiar.hecho{color:var(--accent);border-color:var(--accent)}
+
+.alerta{background:var(--rojo-soft);border:1px solid var(--rojo-line);border-radius:9px;
+  padding:14px 16px;margin:14px 0}
+.alerta .et{font-family:var(--f-mono);font-size:10px;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--rojo);display:block;margin-bottom:7px}
+.ojo{background:var(--gold-soft);border:1px solid var(--gold-line);border-radius:9px;
+  padding:14px 16px;margin:14px 0}
+.ojo .et{font-family:var(--f-mono);font-size:10px;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--gold);display:block;margin-bottom:7px}
+
+/* linea de tiempo del guion */
+.reloj{list-style:none;padding:0;margin:16px 0 0;display:flex;flex-direction:column}
+.reloj > li{display:grid;grid-template-columns:62px 1fr;gap:14px;padding-bottom:22px;position:relative}
+.reloj > li::before{content:"";position:absolute;left:62px;top:8px;bottom:0;width:1px;background:var(--line)}
+.reloj > li:last-child{padding-bottom:0}
+.reloj > li:last-child::before{display:none}
+.hora{font-family:var(--f-mono);font-size:12px;color:var(--ink-3);padding-top:2px;
+  font-variant-numeric:tabular-nums;text-align:right;position:relative}
+.hora::after{content:"";position:absolute;right:-18px;top:7px;width:7px;height:7px;border-radius:50%;
+  background:var(--paper);border:1.5px solid var(--line-2)}
+.reloj .tit{font-weight:700;font-size:16.5px;display:block;margin-bottom:4px}
+.reloj .cuerpo{padding-left:6px}
+
+/* tarjetas de demo */
+.demo{background:var(--surface);border:1px solid var(--line);border-radius:11px;
+  padding:19px 19px 17px;margin:18px 0}
+.demo.principal{border-color:var(--accent)}
+.demo-cab{display:flex;flex-wrap:wrap;align-items:baseline;gap:9px;margin-bottom:5px}
+.demo h3{margin:0;font-size:19px}
+.chapa{font-family:var(--f-mono);font-size:10px;letter-spacing:.09em;text-transform:uppercase;
+  padding:3px 8px;border-radius:4px;border:1px solid var(--line-2);color:var(--ink-3)}
+.chapa.si{color:var(--accent);border-color:var(--accent);background:var(--accent-soft)}
+.chapa.no{color:var(--rojo);border-color:var(--rojo-line);background:var(--rojo-soft)}
+.demo dl{margin:13px 0 0;display:grid;grid-template-columns:auto 1fr;gap:7px 15px;font-size:14.5px}
+.demo dt{font-family:var(--f-mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--ink-3);padding-top:3px}
+.demo dd{margin:0}
+
+.obj{border-top:1px solid var(--line);padding-top:18px;margin-top:20px}
+.obj:first-of-type{border-top:none;padding-top:0}
+.obj .q{font-family:var(--f-display);font-size:18px;font-style:italic;color:var(--ink);
+  font-weight:400;margin-bottom:4px}
+
+pre{background:var(--surface-2);border:1px solid var(--line);border-radius:9px;
+  padding:15px;font-family:var(--f-mono);font-size:12.5px;line-height:1.5;
+  white-space:pre-wrap;word-break:break-word;overflow-x:auto;color:var(--ink-2);
+  margin:14px 0;position:relative}
+.bloque-pre{position:relative}
+.bloque-pre .copiar{top:12px;right:12px}
+
+table{width:100%;border-collapse:collapse;font-size:14.5px;margin:14px 0}
+.tabla-env{overflow-x:auto}
+th,td{text-align:left;padding:9px 11px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--ink-3);font-weight:400}
+
+.chuleta{background:var(--surface);border:1px solid var(--line-2);border-radius:11px;padding:20px}
+.chuleta ul{list-style:none;padding:0;display:flex;flex-direction:column;gap:11px}
+.chuleta li{margin:0;padding-left:17px;position:relative;font-size:16px}
+.chuleta li::before{content:"▸";position:absolute;left:0;color:var(--accent)}
+.chuleta em{color:var(--ink-3);font-style:normal;font-size:14px}
+
+.pie{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);
+  font-family:var(--f-mono);font-size:11px;color:var(--ink-3);letter-spacing:.03em}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important}html{scroll-behavior:auto}}
+@media (min-width:700px){html{scroll-behavior:smooth}}
+@media (max-width:520px){
+  .reloj > li{grid-template-columns:50px 1fr;gap:11px}
+  .reloj > li::before{left:50px}
+  .hora::after{right:-15px}
+  .demo dl{grid-template-columns:1fr;gap:2px 0}
+  .demo dt{padding-top:8px}
+}
+</style>
+
+<nav class="nav"><div class="nav-int">
+  <a href="#noche">Esta noche</a>
+  <a href="#regla">Qué demo</a>
+  <a href="#grabar">Grabar</a>
+  <a href="#permiso">Permiso</a>
+  <a href="#guion">Guion</a>
+  <a href="#demos">Demos</a>
+  <a href="#objeciones">Objeciones</a>
+  <a href="#nunca">Nunca</a>
+  <a href="#despues">Después</a>
+  <a href="#chuleta">Chuleta</a>
+</div></nav>
+
+<div class="env">
+
+<header class="top">
+  <div class="kicker">Uso interno · no se lo enseñes</div>
+  <h1>Chuleta de la reunión</h1>
+  <p class="lead">Ábrelo en el móvil o en la segunda pantalla. Los bloques con borde verde son cosas
+  que dices <strong>literalmente</strong>: tienen botón de copiar. Los rojos son los que te pueden
+  costar la reunión.</p>
+
+  <div class="alerta">
+    <span class="et">La regla que no se salta</span>
+    <p><strong>No dices ni una cifra de precio en voz alta.</strong> Ni de Canva, ni de Metricool, ni
+    tuya. Ninguno de los precios que salieron en la investigación está verificado: el proxy bloqueaba
+    las páginas oficiales. Equivocarte en tres euros delante de quien paga esa factura todos los meses
+    te tumba todo lo demás.</p>
+    <p style="margin-top:9px">Si sale el tema: <em>«no te digo una cifra a boleo, lo miro y te lo paso
+    hoy mismo»</em>. Y lo apuntas delante de ella — es la única promesa de la reunión que se cumple en
+    horas, y es la que demuestra que eres fiable. Si se te olvida, es peor que no haberlo dicho.</p>
+  </div>
+</header>
+
+<section id="noche">
+  <div class="sec-cab"><span class="sec-num">01</span><h2>Esta noche, por orden</h2></div>
+  <p class="sec-sub">Todo no cabe. Este es el orden de sacrificio: lo de abajo se cae antes que lo de arriba.</p>
+
+  <div class="tabla-env"><table>
+    <tr><th>·</th><th>Qué</th><th>Rato</th><th>Si no da tiempo</th></tr>
+    <tr><td>1</td><td><strong>Mandarle el formulario.</strong> Antes que nada.</td><td>5 min</td><td>No se cae. Ver el plan B de abajo.</td></tr>
+    <tr><td>2</td><td><strong>Elegir tú el cliente de las demos</strong> mirando su Instagram profesional: a quién menciona, a quién tiene en destacados, quién la etiqueta.</td><td>15 min</td><td>No se cae. Sin cliente no hay demos.</td></tr>
+    <tr><td>3</td><td><strong>Demo de las reseñas.</strong> Es la que funciona seguro.</td><td>60 min</td><td>No se cae.</td></tr>
+    <tr><td>4</td><td><strong>Criba de fotos.</strong> Te vas a un bar, disparas 150-200 fotos a propósito mal, y le pasas el script.</td><td>60 min</td><td>Se puede dejar sólo el script y enseñarlo el jueves.</td></tr>
+    <tr><td>5</td><td><strong>Leer sus respuestas</strong> y subrayar su frase textual.</td><td>20 min</td><td>Se lee por la mañana.</td></tr>
+    <tr><td>6</td><td>La demo de la hoja de cálculo.</td><td>2-3 h</td><td><strong>Esta es la primera que se cae.</strong></td></tr>
+  </table></div>
+
+  <h3>Plan B: y si no rellena el formulario</h3>
+  <p>Una freelance con doce cuentas a la que le llega un formulario a última hora no lo rellena
+  necesariamente. Todo lo demás tiene que funcionar igual.</p>
+  <ul>
+    <li><strong>El cliente de las demos lo eliges tú</strong>, rellene o no. Si luego resulta que ya no
+      lo lleva, la frase es: <em>«he cogido este porque te vi etiquetada, dime si me he colado»</em>.</li>
+    <li><strong>Si a las 22:00 no ha contestado</strong>, mándale un audio de veinte segundos: <em>«no te
+      agobies con el formulario, si no te da tiempo lo vemos mañana en un minuto»</em>. Quita presión y
+      te da una excusa para un contacto más.</li>
+    <li><strong>Si el formulario no puede salir antes de las 21:00</strong>, no lo mandes: mándale por
+      WhatsApp cinco preguntas sueltas que se contestan en noventa segundos — cuántas cuentas, cuántas
+      de hostelería, cómo cobra, cuánto es vídeo, y el @ de un cliente. El formulario completo lo
+      guardas para después de la reunión, como herramienta de diagnóstico. Un formulario perfecto sin
+      rellenar vale cero.</li>
+  </ul>
+
+  <div class="ojo">
+    <span class="et">Compruébalo antes de mandarlo</span>
+    <p>Abre el enlace del formulario <strong>desde tu móvil, en una ventana de incógnito</strong>, y
+    dale a «Enviar mis respuestas» con dos preguntas contestadas. Si el envío directo no funciona en
+    su navegador, el formulario cae solo a «copia esto y pégamelo por WhatsApp» — pero conviene que
+    sepas cuál de las dos vías va a usar ella <em>antes</em> de mandárselo, no después.</p>
+  </div>
+</section>
+
+<section id="regla">
+  <div class="sec-cab"><span class="sec-num">02</span><h2>Qué demo enseñas, según lo que conteste</h2></div>
+  <p class="sec-sub">Míralo por la mañana con sus respuestas delante. Es una regla, no una intuición.</p>
+
+  <div class="tabla-env"><table>
+    <tr><th>Si contesta</th><th>Entonces</th></tr>
+    <tr><td>En <em>Canva</em> marca «sacar la misma pieza en varios formatos» o «cambiar textos, precios y fechas uno a uno»</td><td>La demo de la hoja gana peso. Si te dio tiempo a montarla, va segunda.</td></tr>
+    <tr><td>En <em>Canva</em> marca «empezar casi de cero cada vez» o «mantener la línea de cada marca»</td><td>Eso es creativo, no repetitivo. <strong>La demo de la hoja se cae.</strong> Reseñas y criba.</td></tr>
+    <tr><td>En el ranking pone arriba «perseguir al cliente» o «esperar aprobación»</td><td>Su atasco no es producir, es la entrada y la salida. Las dos demos pasan a secundarias y la conversación va sobre cómo recoge material y cómo aprueba el cliente.</td></tr>
+    <tr><td>En el ranking pone arriba «elegir, recortar y arreglar las fotos»</td><td><strong>La criba es la principal.</strong> Es literalmente lo que te dijo por teléfono.</td></tr>
+    <tr><td>Dice «más vídeo que imagen» o «casi todo vídeo»</td><td>Tus dos demos apuntan al sitio equivocado. <strong>Dilo tú antes de enseñarlas</strong> (frase abajo).</td></tr>
+    <tr><td>En reseñas dice «yo no me meto» o «no sé si tengo acceso»</td><td>La demo de reseñas pierde casi todo su valor. Sube la criba a principal.</td></tr>
+    <tr><td>Dice que cobra <strong>por horas</strong></td><td>Cambia el encuadre entero: no vendes ahorrar tiempo, vendes <em>caber más clientes en las mismas horas</em>. Ahorrarle tiempo sería quitarle ingresos.</td></tr>
+    <tr><td>Dice <strong>cuota fija al mes</strong></td><td>Cada hora ahorrada es margen suyo. El discurso de ahorro funciona tal cual.</td></tr>
+    <tr><td>En las dos horas libres marca «se llenan solas de otra cosa, seguro»</td><td>Es escéptica y tiene razón. No le vendas tiempo libre: véndele <em>quitarte de encima la parte tonta</em>, sin prometer que va a trabajar menos.</td></tr>
+  </table></div>
+
+  <div class="decir">
+    <span class="et">Si resulta que está sobre todo en vídeo</span>
+    <p>Te voy a enseñar dos cosas de imagen fija, y por lo que me pusiste tú estás sobre todo en vídeo.
+    Así que dime tú si esto te sirve de algo o nos vamos directamente a otra cosa.</p>
+  </div>
+  <p>Reconocerlo tú antes vale más que la demo.</p>
+</section>
+
+<section id="grabar">
+  <div class="sec-cab"><span class="sec-num">03</span><h2>Cómo grabar</h2></div>
+  <p class="sec-sub">Lo importante no es la herramienta: es que no se caiga y que no la incomode.</p>
+
+  <h3>Si es presencial (lo más probable si quedáis en un local)</h3>
+  <p><strong>La grabadora de voz de tu propio móvil.</strong> Nada de bots, nada de apps nuevas, nada
+  que dependa del wifi del bar. Es lo único que no se cae.</p>
+  <ol>
+    <li>Abre la grabadora del móvil (Grabadora de Google / Notas de voz de iPhone) y ponla en la mejor
+      calidad que tenga.</li>
+    <li>Comprueba que <strong>no tiene límite de duración</strong>: graba dos minutos y para.</li>
+    <li><strong>No Molestar activado</strong> antes de darle a grabar. En muchos móviles una llamada
+      entrante corta o pausa la grabación. No Molestar en vez de modo avión, por si necesitas datos
+      para alguna demo.</li>
+    <li>Prueba de ruido, hoy: graba treinta segundos en una cafetería y escúchalo. Si no te entiendes,
+      cambia el sitio de mañana. Esto es más importante que cualquier demo.</li>
+    <li>Espacio libre en el móvil: dos gigas mínimo.</li>
+  </ol>
+  <p><strong>En la mesa:</strong> móvil boca arriba, el borde de abajo apuntando al hueco entre los dos,
+  a treinta o cuarenta centímetros. Sobre la mesa desnuda, no sobre una servilleta ni dentro de una
+  funda gruesa. Ni al lado del vaso ni en el paso de camareros.</p>
+  <p><strong>Redundancia gratis:</strong> graba <em>también</em> con el portátil a la vez (Grabadora de
+  Windows o QuickTime). Dos grabaciones independientes, coste cero, y una salva a la otra.</p>
+  <p><strong>Míralo de reojo al minuto 10 y al minuto 30</strong> para confirmar que sigue grabando,
+  sin cortar la conversación.</p>
+
+  <div class="alerta">
+    <span class="et">Nada de bots en una reunión presencial</span>
+    <p>No hay dónde meterlo y sólo genera preguntas raras.</p>
+  </div>
+
+  <h3>Si es online</h3>
+  <p><strong>La grabación nativa de la plataforma</strong> (Meet o Zoom), porque avisa a todos con un
+  cartel visible y eso resuelve el permiso de forma transparente. <em>Si la grabación nativa está
+  disponible en tu plan es algo que tienes que comprobar hoy en tu cuenta: no está verificado.</em></p>
+  <p><strong>Plan B:</strong> grabación local de tu lado — OBS (gratis, graba pantalla, audio de sistema
+  y micro) o la grabadora del móvil apuntando al altavoz, que es feo pero nunca falla.</p>
+
+  <div class="alerta">
+    <span class="et">Bots transcriptores: no, en la primera</span>
+    <p>Que aparezca un participante llamado «Fireflies Notetaker» en la primera conversación con alguien
+    que no es técnica se lee como <em>«me está procesando»</em> y te enfría los primeros cinco minutos.
+    Bots a partir de la segunda, y con ella avisada.</p>
+  </div>
+
+  <h3>Y después, para transcribir</h3>
+  <p>La ruta sin sorpresas: subes el audio (partido en trozos si hace falta) a la IA que ya pagas y le
+  pasas el prompt de la sección 8. Si prefieres una herramienta dedicada, la investigación menciona
+  planes gratuitos de Fireflies, tl;dv y Notta, y que Voicit está orientada al español —
+  <strong>ninguno verificado</strong>, compruébalo tú antes de depender de ello mañana.</p>
+</section>
+
+<section id="permiso">
+  <div class="sec-cab"><span class="sec-num">04</span><h2>Pedirle permiso</h2></div>
+  <p class="sec-sub">Ya se lo preguntaste en el formulario. Aun así lo repites en voz alta, con la grabadora ya en marcha, para que el «sí» quede en el audio.</p>
+
+  <div class="decir">
+    <span class="et">Lo primero que dices, sentado</span>
+    <p>Antes de empezar: le doy a grabar, ¿vale? Es sólo para no estar tomando notas mientras me hablas.
+    Lo escucho yo, no lo ve nadie más, y esta misma tarde te paso a ti el resumen. Si en algún momento
+    quieres que lo pare, me lo dices y lo paro.</p>
+  </div>
+
+  <div class="decir">
+    <span class="et">Si pone cara o duda</span>
+    <p>Nada, sin problema, lo apago. Tiro de libreta, que también sé.</p>
+  </div>
+  <p>Y lo apagas de verdad, delante de ella, y sacas el boli. Si duda pero no llega a decir que no:</p>
+  <div class="decir">
+    <span class="et">Segunda y última</span>
+    <p>Te lo digo de otra forma: lo grabo, y si al terminar no te convence, lo borro delante de ti. Lo
+    único que quiero es no estar mirando el cuaderno mientras me cuentas cosas.</p>
+  </div>
+
+  <div class="alerta">
+    <span class="et">A la primera negativa, se acabó</span>
+    <p>No insistas una segunda vez ni pongas cara. La confianza que estás construyendo vale mil veces
+    más que la transcripción.</p>
+  </div>
+
+  <div class="ojo">
+    <span class="et">Si se sienta alguien más</span>
+    <p>Puede aparecer una socia, la persona que le monta los vídeos, quien sea. El permiso que tienes
+    es de ella, no de un tercero. Paras, lo dices en voz alta y lo vuelves a pedir:
+    <em>«perdona, que estoy grabando para no tomar notas, ¿te parece bien?»</em>. Tres segundos, y te
+    cierra el único agujero que queda abierto.</p>
+    <p style="margin-top:9px">Y aprovecha: pregunta quién hace qué antes de seguir. Si hay dos personas,
+    el discurso deja de ser «te ahorro tiempo a ti» y pasa a ser «os quito trabajo de encima», que es
+    otra venta — porque el ahorro puede ser el sueldo de la otra persona.</p>
+  </div>
+
+  <h3>La situación legal en España, en corto</h3>
+  <p><strong>Esto no es asesoramiento jurídico.</strong> Es para que sepas por dónde te mueves; si
+  necesitas certeza, pregunta a un abogado. Y no le cites a ella ni artículos ni sentencias: queda
+  fatal y no hace falta.</p>
+  <ul>
+    <li><strong>Vía penal (art. 197 del Código Penal):</strong> lo que se castiga es interceptar o grabar
+      comunicaciones <em>ajenas</em>, de las que no formas parte. Grabar una conversación <em>en la que
+      tú participas</em> no encaja ahí, y la doctrina consolidada desde la STC 114/1984 va en esa línea.
+      Grabar tu propia conversación no es, en principio, delito.</li>
+    <li><strong>Vía protección de datos (RGPD y LOPDGDD):</strong> aquí sí hay obligaciones, y es la
+      parte que la gente se salta. Una grabación de voz es un dato personal. Lo que importa no es tanto
+      grabar como <strong>qué haces después</strong>: guardarla, pasarla por una herramienta de terceros,
+      compartirla o usarla para otra finalidad requiere que la persona lo sepa.</li>
+    <li>Por eso la fórmula es siempre la misma: <strong>se lo dices, le dices para qué, y le dices que
+      se lo mandas a ella.</strong> «No es delito» y «cumples el RGPD» son dos cosas distintas, y la
+      segunda es la que se te puede escapar.</li>
+    <li>Y un matiz que sí es tuyo: si en la conversación salen <strong>datos de sus clientes</strong>,
+      no metas el audio en cualquier sitio. Ver la objeción sobre datos.</li>
+  </ul>
+  <p><strong>Regla práctica:</strong> permiso por escrito anoche (ya está, en el formulario) + permiso
+  en voz alta hoy + resumen enviado a ella hoy. Con eso vas limpio y además quedas como un profesional.</p>
+</section>
+
+<section id="guion">
+  <div class="sec-cab"><span class="sec-num">05</span><h2>El guion, minuto a minuto</h2></div>
+  <p class="sec-sub">Setenta por ciento escuchar, treinta enseñar. La primera demo no sale antes del minuto 27.</p>
+
+  <ul class="reloj">
+    <li>
+      <div class="hora">00 – 02</div>
+      <div class="cuerpo"><span class="tit">Permiso y a grabar</span>
+        <p>Nada más. No sueltes agenda todavía.</p></div>
+    </li>
+    <li>
+      <div class="hora">02 – 05</div>
+      <div class="cuerpo"><span class="tit">El encuadre</span>
+        <p>Esto vale toda la reunión. Dilo pronto, dilo entero y no lo endulces.</p>
+        <div class="decir">
+          <span class="et">Literal</span>
+          <p>Te cuento en treinta segundos a qué vengo, para que no estés esperando a ver por dónde salgo.</p>
+          <p>No vengo a venderte que la IA te hace los diseños. Eso ni me interesa ni funciona: lo que tú
+          haces bien —el concepto, el tono de cada marca, elegir la foto que cuenta la historia— eso no
+          lo toco, es tuyo y es por lo que te pagan.</p>
+          <p>A lo que vengo es a la parte tonta. Cambiar la hora de un evento en un cartel ya hecho.
+          Sacar la misma pieza en cuatro tamaños. Abrir doscientas fotos para tirar ciento ochenta. Eso.</p>
+          <p>Y hoy quiero escucharte más que enseñarte. Si en algún momento te aburro con una pantalla,
+          me cortas.</p>
+        </div>
+        <div class="decir">
+          <span class="et">La agenda, en una línea</span>
+          <p>Media hora tú contándome cómo va tu semana, y al final te enseño dos cosas que he montado
+          con lo que me pusiste anoche.</p>
+        </div>
+      </div>
+    </li>
+    <li>
+      <div class="hora">05 – 22</div>
+      <div class="cuerpo"><span class="tit">Escucha. Aquí te callas.</span>
+        <p>Empiezas devolviéndole lo que ella escribió. Es lo que más rendimiento te da del formulario.</p>
+        <div class="decir">
+          <span class="et">Apertura de la escucha</span>
+          <p>Me leí lo que me mandaste. Me quedé con esto: [lees LITERALMENTE lo que puso arriba del
+          todo en el ranking]. Me lo pusiste por delante de todo lo demás. Cuéntame.</p>
+        </div>
+        <p>Y ya está. Callado.</p>
+        <ul>
+          <li>Cuando termine una frase, <strong>cuenta tres segundos antes de hablar</strong>. Lo bueno
+            sale en ese hueco.</li>
+          <li>Apunta <strong>sus palabras exactas</strong>, no tu traducción. Si dice «es que me vuelven
+            loca con los cambios», eso es oro. «Gestión de correcciones» no vale nada.</li>
+          <li><strong>No propongas soluciones todavía.</strong> Ni una, aunque te queme en la boca. Si
+            sueltas la solución en el minuto 8, deja de contarte cosas.</li>
+          <li>Si no rellenó el formulario, abres con: <em>«cuéntame la semana pasada, la de verdad, de
+            lunes a viernes. Empieza por el lunes»</em>.</li>
+        </ul>
+        <div class="decir">
+          <span class="et">A mitad del bloque — la jugada de más valor de la reunión</span>
+          <p>¿Me enseñas una? Abre Canva y monta una pieza como la montarías un martes cualquiera. No me
+          la expliques, hazla y ya. Yo miro.</p>
+        </div>
+        <p>Mira el reloj sin que se note. Vas a ver en cinco minutos lo que ningún formulario te cuenta:
+        cuántas veces cambia de pestaña, dónde busca la foto, cuántas veces arrastra la imagen dentro
+        del marco, cómo se llama el archivo. <strong>Este es tu diagnóstico de verdad.</strong></p>
+      </div>
+    </li>
+    <li>
+      <div class="hora">22 – 32</div>
+      <div class="cuerpo"><span class="tit">Las cuatro preguntas que no estaban en el formulario</span>
+        <p>Están elegidas porque por escrito no funcionan: o son incómodas, o dan respuestas de cuatro
+        palabras, o hay que verle la cara. Diez minutos para cuatro, no cinco para siete.</p>
+        <div class="decir">
+          <span class="et">1 · confirmar lo del cobro (ya te lo puso por escrito)</span>
+          <p>Me pusiste que cobras [lo que haya marcado]. ¿Es así con todos o hay alguno raro?</p>
+        </div>
+        <div class="decir">
+          <span class="et">2 · la que gana la reunión</span>
+          <p>De todo lo que haces, ¿qué no delegarías nunca, ni aunque una máquina lo hiciera bien?</p>
+        </div>
+        <p>Cuando conteste, <strong>repítesela con sus palabras y prométele en voz alta que no la vas a
+        cruzar</strong>. Ahí es donde se gana.</p>
+        <div class="decir">
+          <span class="et">3 · la que hace que lo descubra ella sola</span>
+          <p>Cuando estás en Canva perdiendo tiempo… ¿qué te ha pasado justo antes?</p>
+        </div>
+        <p>Casi siempre el problema empieza tres pasos antes de Canva. Que la conclusión la saque ella;
+        tú no se la des.</p>
+        <div class="decir">
+          <span class="et">4 · la más potente, y necesita silencio</span>
+          <p>¿Qué pasa cuando te pones mala o te vas de vacaciones?</p>
+        </div>
+        <p>Ahí es donde de verdad duele: no puede parar. Es el mejor argumento para un sistema y no
+        tienes que decirlo tú. Déjala hablar todo lo que quiera.</p>
+      </div>
+    </li>
+    <li>
+      <div class="hora">32 – 45</div>
+      <div class="cuerpo"><span class="tit">Las demos. Dos, no cinco.</span>
+        <p>Antes de abrir el portátil, la frase que más confianza te va a comprar de toda la reunión:</p>
+        <div class="decir">
+          <span class="et">Di tú primero lo que NO se puede</span>
+          <p>Te enseño dos cosas. Y antes te digo lo que no se puede hacer, para no venderte humo.</p>
+          <p>Que tu Canva quede enchufado a una hoja y se actualice solo, sin que tú abras nada: eso es
+          de plan de empresa y ni te lo planteo. Subir una hoja y que te saque las piezas de golpe, eso
+          sí se puede y creo que tu plan ya lo hace, pero no te doy ni el nombre ni el precio de memoria:
+          lo miro esta tarde y te lo paso por escrito.</p>
+          <p>Y que las respuestas a las reseñas se envíen solas hay que pedirle permiso a Google, y el
+          plazo no depende de nosotros. Hoy te enseño borradores, no envíos automáticos.</p>
+        </div>
+        <p>Empezar descartando cosas te hace creíble en todo lo demás — pero sólo si lo que descartas es
+        verdad. Por eso la frase distingue entre «subir una hoja» y «quedar conectado»: son dos cosas
+        distintas y la segunda sí es territorio de empresa.</p>
+      </div>
+    </li>
+    <li>
+      <div class="hora">45 – 52</div>
+      <div class="cuerpo"><span class="tit">Objeciones. No las esquives: provócalas.</span>
+        <div class="decir"><span class="et">Literal</span><p>¿Qué es lo que más te chirría de todo esto?</p></div>
+      </div>
+    </li>
+    <li>
+      <div class="hora">52 – 58</div>
+      <div class="cuerpo"><span class="tit">Cierre con un siguiente paso concreto</span>
+        <p>La reunión puede ser fantástica y morir aquí. No salgas con «ya hablamos». Pides
+        <strong>una sola cosa: pequeña, gratis, con fecha y con tope</strong>.</p>
+        <div class="decir">
+          <span class="et">El cierre</span>
+          <p>Te propongo una cosa muy pequeña. Elige tú un cliente y mándame lo que te haya llegado de
+          él en el último mes, hasta unas doscientas fotos, tal cual, sin filtrar, aunque sean malas.</p>
+          <p>El jueves te devuelvo una hoja con todas en pequeño y un semáforo: verde, ámbar y rojo, con
+          el motivo debajo de cada una. La decisión final es tuya, yo sólo te quito de encima las que no
+          hay por dónde cogerlas. Sin cobrarte nada y sin compromiso.</p>
+          <p>Si te sirve, seguimos hablando. Y si no, me lo dices y tan amigos.</p>
+        </div>
+        <p>El tope importa: «la carpeta» pueden ser sesenta fotos o novecientas, y el jueves es pasado
+        mañana. Y la promesa es un semáforo con motivos, no «te elijo las buenas» — eso es criterio suyo
+        y no lo prometas nunca.</p>
+        <div class="decir">
+          <span class="et">Y añades, sin que te lo pida</span>
+          <p>Y antes de que me mandes nada, si quieres te lo pongo por escrito por WhatsApp ahora mismo:
+          lo que me mandes lo uso sólo para esto y lo borro cuando me lo digas. Es material de tus
+          clientes, no mío.</p>
+        </div>
+        <p>Un WhatsApp también es un compromiso escrito, y ése sí lo puedes cumplir en la mesa. No
+        prometas «un papel de confidencialidad de una página» si no lo llevas redactado.</p>
+        <p><strong>Cierra con la fecha en voz alta:</strong> «¿el jueves te va bien?». Y lo apuntas
+        delante de ella.</p>
+      </div>
+    </li>
+  </ul>
+</section>
+
+<section id="demos">
+  <div class="sec-cab"><span class="sec-num">06</span><h2>Las demos</h2></div>
+  <p class="sec-sub">Cinco demos regulares se recuerdan como «me enseñó unas cosas». Dos impecables se recuerdan como «esto lo necesito».</p>
+
+  <div class="ojo">
+    <span class="et">Regla de oro para las tres</span>
+    <p>Todo tiene que existir <strong>ya generado</strong> en tu portátil —PNG, PDF, capturas— y además
+    grabado en vídeo de pantalla de sesenta segundos en el móvil. Si falla el wifi del bar, no se nota.</p>
+  </div>
+
+  <div class="demo principal">
+    <div class="demo-cab"><h3>Las reseñas de su cliente, ya contestadas</h3><span class="chapa si">principal</span></div>
+    <p>Una tabla con veinticinco o treinta reseñas reales y públicas de Google Maps de uno de sus
+    clientes y, al lado de cada una, la respuesta ya redactada en el tono de esa marca.</p>
+    <dl>
+      <dt>Qué ve</dt><dd>Las de cinco estrellas sin texto, agradecidas <strong>y todas distintas</strong>.
+        Las de tres, con matiz. Las de una y dos, marcadas en rojo con la etiqueta «esto lo contestas tú»
+        y un borrador de partida.</dd>
+      <dt>Por qué le llega</dt><dd>Es trabajo que o no se está haciendo, o lo hace el dueño mal, o se le
+        acumula a ella. No toca su diseño, no toca su criterio, no la amenaza en nada — y sobre todo
+        <strong>es un servicio nuevo que ella puede facturarle a cada restaurante</strong>. Es la única
+        demo que le hace ganar dinero en vez de ahorrarle tiempo.</dd>
+      <dt>Rato</dt><dd>60 minutos. El material es público: copias y pegas de Google Maps.</dd>
+      <dt>El riesgo</dt><dd>Que piense «eso lo hago yo con ChatGPT en cinco minutos». <strong>La
+        diferencia tiene que verse, no explicarse:</strong> que al menos tres respuestas citen algo
+        específico —el plato por su nombre, el camarero, la terraza, «la espera del sábado»— porque eso
+        es lo que ChatGPT a pelo no da sin que ella pegue el contexto cada vez.</dd>
+      <dt>La prueba</dt><dd>Pon las ocho reseñas de cinco estrellas sin texto, con ocho respuestas
+        distintas, una debajo de otra. Ahí se ve que no es una plantilla.</dd>
+      <dt>Sin wifi</dt><dd>Es una tabla. Llévala en PDF. <strong>No necesita internet.</strong></dd>
+    </dl>
+    <div class="decir">
+      <span class="et">Antes de enseñarla — enlázala con lo que te dijo ella</span>
+      <p>Esto no es lo que me pediste. Es lo que vi cuando me puse a mirar a tu cliente.</p>
+    </div>
+    <div class="decir">
+      <span class="et">Y lo que tienes que decir tú, sin que te lo pregunte</span>
+      <p>Ojo: esto son borradores. Para que se envíen solas hay que pedirle permiso a Google y el plazo
+      no lo controlamos nosotros. Y además el cliente tiene que autorizarte a responder en su nombre.
+      Hoy es «te lo dejo escrito y lo apruebas desde el móvil».</p>
+    </div>
+    <div class="decir">
+      <span class="et">La frase que la remata</span>
+      <p>Lo aburrido lo contesta la máquina. Lo delicado pasa siempre por una persona. Las de una y dos
+      estrellas no salen solas jamás.</p>
+    </div>
+  </div>
+
+  <div class="demo principal">
+    <div class="demo-cab"><h3>La criba de doscientas fotos</h3><span class="chapa si">segunda</span></div>
+    <p>Le pasas una carpeta de fotos al script y devuelve una hoja de contactos con semáforo y el motivo
+    debajo de cada foto. Está montada y probada: <code>reunion-cm/criba/criba.py</code>.</p>
+    <dl>
+      <dt>Por qué esta</dt><dd>Porque ella dijo dos cosas —«pierdo mucho tiempo en Canva» y «audito
+        fotos»— y sin esto no tocas la segunda. <strong>Ataca literalmente la palabra que usó ella.</strong></dd>
+      <dt>Qué ve</dt><dd>Doscientas fotos en una pantalla, con el motivo escrito debajo de cada
+        descarte: movida, quemada, luz de bombilla, resolución corta, horizontal que pierde el 55% al
+        pasarla a vertical, y las ráfagas agrupadas con la más nítida marcada.</dd>
+      <dt>Por qué convence</dt><dd>No hay ningún modelo detrás: es aritmética sobre los píxeles. Eso
+        significa que <strong>cualquier descarte se puede comprobar mirando la foto</strong>, y que no
+        se inventa nada. Es un argumento que ella entiende en una frase.</dd>
+      <dt>Material</dt><dd>No tienes fotos suyas. Vete esta tarde a un bar y dispara 150-200 fotos a
+        propósito mal: movidas, oscuras, con la mesa sin recoger, seis casi iguales del mismo plato.
+        Es material real, es tuyo, y es exactamente lo que le vas a devolver el jueves.</dd>
+      <dt>Rato</dt><dd>60 minutos contando el paseo. El script ya está.</dd>
+      <dt>Sin wifi</dt><dd>Corre en local y la salida es un HTML. Cero internet.</dd>
+    </dl>
+    <div class="decir">
+      <span class="et">La frase, y es la más importante del día</span>
+      <p>La máquina tira la basura. La foto buena la eliges tú, que para eso te pagan.</p>
+    </div>
+    <div class="alerta">
+      <span class="et">No te pases de aquí</span>
+      <p>No prometas que elige las buenas, ni que detecta si la mesa está sucia, ni si sale gente
+      reconocible. Eso no lo hace y no lo va a hacer el jueves. Lo que hace es descartar lo que es
+      indiscutiblemente inservible, que ya es el 60% del trabajo.</p>
+    </div>
+  </div>
+
+  <div class="demo">
+    <div class="demo-cab"><h3>Una pieza, cuatro formatos, en el acto</h3><span class="chapa">sólo si da tiempo</span></div>
+    <p>El ángulo no es «genero veinte carteles»: es <strong>«una pieza y sus cuatro tamaños, y si cambias
+    un dato se rehacen los cuatro»</strong>. Eso ataca un dolor que ella misma nombra y no compite con
+    nada que ya use.</p>
+    <dl>
+      <dt>Cuidado</dt><dd>El momento «cambio un precio y en ocho segundos está» <strong>no se puede hacer
+        con Crear en lote de Canva</strong>: Crear en lote genera el lote entero, no una fila suelta. Ese
+        momento sólo existe por la vía de una plantilla HTML renderizada por script. Si la montas en
+        Canva, no prometas ese momento.</dd>
+      <dt>Y otro</dt><dd>Ella es diseñadora. Veinte carteles regulares son veinte oportunidades de ver
+        que el diseño es cutre. Baja a seis u ocho bien hechos, y no diseñes desde cero: copia el layout
+        y la tipografía de una plantilla que ya se vea bien y adáptala a los colores de su cliente.</dd>
+      <dt>Y otro más</dt><dd>Hay bastante probabilidad de que ya conozca Crear en lote: es una función
+        nativa y ella vive en Canva. <strong>Pregúntaselo antes de enseñar nada:</strong> «¿tú usas Crear
+        en lote?». Si dice que sí, subes la apuesta: «vale, pues lo siguiente es que la hoja no la
+        rellenes tú, la rellene el del bar y a ti te llegue hecho».</dd>
+      <dt>Los precios</dt><dd>Si los sacas de su web, dilo tú primero: «los he cogido de su web, dime si
+        están desfasados». Si hay uno mal, no te hunde: es exactamente el problema de mantenimiento que
+        estás vendiendo.</dd>
+      <dt>Rato</dt><dd>2-3 horas de verdad, no 90 minutos. Por eso es la primera que se cae.</dd>
+    </dl>
+    <div class="decir">
+      <span class="et">Si la enseñas, la remata así</span>
+      <p>Esto no sustituye tu diseño. Esto es que tu diseño se rellene solo.</p>
+    </div>
+    <p>Y después te callas y preguntas: <em>«esto a mano, ¿cuánto te habría llevado?»</em>. El número lo
+    pone ella, nunca tú.</p>
+  </div>
+
+  <div class="demo">
+    <div class="demo-cab"><h3>El resumen de esta misma reunión</h3><span class="chapa no">no la prometas en la mesa</span></div>
+    <p>Es la mejor idea de todas —es sobre ella y ocurre delante de sus ojos— pero transcribir cincuenta
+    minutos de audio de bar y sacar el resumen no son dos minutos: entre subida, transcripción y proceso
+    te vas a diez o veinte, con el ruido en contra y tirando de datos del móvil. Si falla delante de
+    ella, pierdes justo la credibilidad que habías comprado.</p>
+    <dl>
+      <dt>Opción segura</dt><dd>No la enseñas. El resumen le llega por WhatsApp en menos de dos horas
+        (sección 8). Es igual de potente y sin riesgo.</dd>
+      <dt>Opción en directo</dt><dd>Paras la grabación, coges <strong>sólo los últimos ocho o diez
+        minutos</strong> y procesas ese trozo delante de ella. Eso sí cabe en dos minutos.</dd>
+      <dt>Ensáyalo</dt><dd>Esta noche, con un audio tuyo de veinte minutos grabado en una cafetería, y
+        <strong>cronometrando</strong>. Si tarda más de tres minutos, opción segura.</dd>
+    </dl>
+  </div>
+
+  <h3>Lo que NO enseñas mañana</h3>
+  <ul>
+    <li><strong>El formulario que alimenta la carpeta de Drive.</strong> No cabe, y encima se come la
+      objeción «mis clientes no rellenan formularios», que es legítima.</li>
+    <li><strong>Nada con n8n, Make, código o una terminal en pantalla.</strong> En cuanto vea código,
+      desconecta. Sólo el antes y el después.</li>
+  </ul>
+</section>
+
+<section id="objeciones">
+  <div class="sec-cab"><span class="sec-num">07</span><h2>Las seis objeciones</h2></div>
+  <p class="sec-sub">Con la respuesta ya redactada. Provócalas tú, no esperes a que salgan.</p>
+
+  <div class="obj">
+    <p class="q">«Es que esto al final es que la IA me quita el trabajo»</p>
+    <div class="decir"><span class="et">Literal</span>
+      <p>Si viniera a eso sería idiota: te estaría vendiendo que te sustituyan y encima te lo cobraría.</p>
+      <p>Mira lo que he tocado hoy: cambiar un precio en un cartel, sacar la misma pieza en cuatro
+      tamaños y escribir «gracias por tu visita» treinta veces. Nada de eso es tu trabajo. Es el peaje
+      de tu trabajo.</p>
+      <p>Lo que tú haces —saber que a este dueño hay que llamarle en vez de escribirle, elegir la foto
+      que cuenta cómo es ese sitio, encontrar el ángulo del reel— eso no lo sabe hacer una máquina y yo
+      no me voy a meter ahí. Lo que quiero es que tengas el doble de horas para eso.</p>
+    </div>
+    <p>Y si en la pregunta 2 te dijo qué no delegaría nunca, repíteselo con sus palabras: «me dijiste que
+    [X] no lo sueltas. Pues [X] ni lo toco».</p>
+  </div>
+
+  <div class="obj">
+    <p class="q">«Ya, pero mis clientes quieren algo hecho a mano, no plantillas»</p>
+    <div class="decir"><span class="et">Literal</span>
+      <p>Y lo van a seguir teniendo. Fíjate en lo que ha pasado en la demo: la plantilla la has diseñado
+      tú. Lo único que se automatiza es rellenarla veinte veces.</p>
+      <p>Es como cuando montas una plantilla en Canva y la reutilizas: nadie dice que eso sea hecho a
+      máquina. Lo que hemos hecho es que en vez de duplicar, cambiar y exportar veinte veces, lo haga el
+      ordenador.</p>
+      <p>Y hay una cosa que no te voy a proponer nunca, por si acaso: generar fotos de platos con IA. En
+      hostelería eso es un marrón —el cliente llega, ve el plato y no se parece— y el problema se lo come
+      tu restaurante. Mejoramos fotos reales, no inventamos comida.</p>
+    </div>
+  </div>
+
+  <div class="obj">
+    <p class="q">«Es que no tengo tiempo de aprender otra herramienta»</p>
+    <div class="decir"><span class="et">Literal</span>
+      <p>Es que no te voy a pedir que aprendas nada. Ese es justo el error que comete todo el mundo con
+      esto.</p>
+      <p>El plan no es que tú te montes flujos raros: es que yo monte la fontanería y a ti te llegue el
+      resultado donde ya trabajas. Tú sigues en Canva y en lo que uses para programar.</p>
+      <p>Y el primer paso que te propongo no requiere que aprendas absolutamente nada: me mandas una
+      carpeta de fotos y el jueves te llega la criba hecha. Cero herramientas nuevas. Si eso te sirve,
+      seguimos; y si no, no has perdido nada.</p>
+    </div>
+  </div>
+
+  <div class="obj">
+    <p class="q">«Eso ya lo probé y no funcionaba»</p>
+    <p><strong>No lo rebatas. Pregúntale.</strong></p>
+    <div class="decir"><span class="et">Primero</span>
+      <p>Cuéntame, ¿qué probaste exactamente y en qué momento lo dejaste?</p>
+    </div>
+    <p>Escuchas entero. Y luego:</p>
+    <div class="decir"><span class="et">Después</span>
+      <p>Vale, entiendo perfectamente por qué lo dejaste. [Repites el motivo con sus palabras.]</p>
+      <p>El problema de las herramientas de IA genéricas es que no saben nada de tu cliente: le pides un
+      texto y te sale el mismo que a otras cinco mil personas, y acabas reescribiéndolo entero, así que
+      no te ahorra nada. Eso es verdad.</p>
+      <p>La diferencia está en darle contexto: sus quince mejores publicaciones, cómo habla esa marca,
+      qué palabras no usa nunca. Ahí deja de ser genérico. Pero mira, esto no te lo discuto: te lo enseño
+      el jueves con un cliente tuyo y lo juzgas tú.</p>
+    </div>
+  </div>
+
+  <div class="obj">
+    <p class="q">«¿Y esto cuánto me va a costar?»</p>
+    <div class="alerta"><span class="et">Nada de precios en la primera reunión</span>
+      <p>Ni de herramientas, ni tuyo.</p></div>
+    <div class="decir"><span class="et">Literal</span>
+      <p>Todavía no te lo puedo decir, y te explico por qué: no sé lo que te duele de verdad hasta que
+      no vea tu carpeta de fotos y tu mes real. Darte un número ahora sería inventármelo.</p>
+      <p>Lo que sí te digo: el primer paso no cuesta nada. Me das la carpeta, te devuelvo la criba el
+      jueves, y ahí ya sabemos los dos si esto tiene sentido o no.</p>
+      <p>Y cuando toque hablar de dinero, la cuenta la vas a hacer tú, no yo: tú sabes cuánto vale tu
+      hora y cuántos clientes más te cabrían. Yo te digo cuánto cuesta montarlo y ya está.</p>
+    </div>
+    <p>Si insiste con el precio de una herramienta: <em>«lo miro esta tarde y te lo paso por escrito con
+    el enlace, que no quiero decirte una cifra de memoria y equivocarme por tres euros»</em>. Y lo cumples.</p>
+  </div>
+
+  <div class="obj">
+    <p class="q">«¿Y mis datos? ¿Y las fotos de mis clientes, dónde acaban?»</p>
+    <p><strong>Es la pregunta correcta y hay que celebrarla.</strong> Mejor todavía: sácala tú antes de
+    que la haga.</p>
+    <div class="decir"><span class="et">Literal</span>
+      <p>Muy buena pregunta, y te la contesto antes de que me la acabes de hacer.</p>
+      <p>Uno: no meto material de tus clientes en cuentas gratuitas. Cada herramienta tiene sus
+      condiciones y no son todas iguales, así que lo que hago es sencillo: te digo por escrito qué
+      herramienta uso para qué antes de tocar nada tuyo, y si alguna no te convence, la cambio.</p>
+      <p>Dos: las fotos que me mandes las uso sólo para esto, están en mi ordenador y las borro cuando
+      terminemos.</p>
+      <p>Tres: la criba que te voy a enseñar corre entera en mi portátil, sin subir nada a ningún sitio.</p>
+      <p>Y una cosa que te va a servir aunque no trabajes conmigo: en las fotos donde salen clientes
+      reconocibles, el permiso para hacer la foto no es lo mismo que el permiso para publicarla. Lo legal
+      fino, con un abogado, que yo no lo soy.</p>
+    </div>
+    <div class="ojo"><span class="et">Lo que NO puedes decir</span>
+      <p>No digas «en los planes gratuitos usan tus datos para entrenar y en los de pago no». La segunda
+      mitad no es cierta como regla general, y ella va a repetírselo a sus clientes. Un compromiso
+      verificable —«te digo por escrito qué uso para qué»— vale más que una afirmación que no puedes
+      sostener.</p>
+    </div>
+  </div>
+</section>
+
+<section id="nunca">
+  <div class="sec-cab"><span class="sec-num">08</span><h2>Lo que arruina esta reunión</h2></div>
+  <ol>
+    <li><strong>Decir un precio de memoria.</strong> Ni de Canva, ni de nada. No los tienes verificados.</li>
+    <li><strong>Abrir con demos.</strong> Si entras disparando pantallazos se convierte en público y deja
+      de contarte cosas. Nada de pantalla antes del minuto 27.</li>
+    <li><strong>Dar por hecho que el problema es Canva.</strong> Ella lo dijo; tú vas con la hipótesis
+      abierta. Y si resulta ser otro, que lo descubra ella con «¿qué te ha pasado justo antes?». No la
+      corrijas.</li>
+    <li><strong>Vender «la IA te hace los diseños».</strong> Se cierra en el minuto tres.</li>
+    <li><strong>Automatizar la elección de la foto en vez del descarte.</strong> «La máquina tira la
+      basura, la foto la eliges tú.» Si dices lo contrario, oye «la IA hace tu ojo».</li>
+    <li><strong>Insinuar, ni de refilón, que ella es tu vía de entrada a sus clientes.</strong> Es cierto
+      y es la razón estratégica de la reunión, pero si lo huele hoy protege su cartera y se acabó. Ni
+      siquiera lo lleves escrito en un papel que pueda leer de reojo.
+      <div class="decir"><span class="et">Y si lo saca ELLA — que es probable</span>
+        <p>Eso lo decides tú y es tu negocio, yo no me meto ahí. De momento vamos a ver si esto te sirve
+        a ti.</p>
+      </div>
+      Si se entusiasma con vendérselo a diez restaurantes, la respuesta correcta sigue siendo frenar, no
+      acelerar. Mañana no se cierra ese acuerdo.</li>
+    <li><strong>Pedirle accesos, contraseñas o que te añada a las cuentas de sus clientes.</strong> Es
+      prematuro y la pone en un compromiso con terceros. Lo único que pides es una carpeta de fotos.</li>
+    <li><strong>Prometer lo que depende de terceros como si estuviera listo.</strong> El envío automático
+      de reseñas, el WhatsApp por API, conectar Canva por API. Se dicen con las palabras «eso es fase
+      dos», en voz alta.</li>
+    <li><strong>Enseñar código, JSON o una terminal.</strong> Sólo el antes y el después.</li>
+    <li><strong>Dar consejo fiscal.</strong> Si sale el tema de la facturación o de Verifactu:
+      <em>«de eso no te digo ni media palabra, que me la pegaría. Eso es de tu gestora»</em>. Punto. Nada
+      de «creo que se aplazó»: un «creo que» sobre normativa delante de una autónoma es exactamente el
+      consejo fiscal que no debes dar.</li>
+    <li><strong>Hacer la cuenta de horas por tarifa con una tarifa que te has inventado.</strong> Si su
+      hora real es 18 € y tú dices 30, se desinfla en directo. Que el número lo ponga ella: «¿tú a cuánto
+      valoras tu hora?».</li>
+    <li><strong>Soltar cifras de horas ahorradas.</strong> Ninguna estimación está medida. Pregunta
+      «esto a mano, ¿cuánto te lleva?» y usa su número.</li>
+    <li><strong>Jerga de consultoría.</strong> Nada de <em>workflow, onboarding, pipeline, escalar,
+      optimizar procesos, punto de dolor, cuello de botella, palanca, quick win</em>. Se dice: el lío de
+      las fotos, las correcciones, el informe, perseguir al cliente, llevar más cuentas sin morir, lo que
+      te frena, algo que se arregla en una tarde.</li>
+    <li><strong>Irte sin siguiente paso con fecha.</strong> Un compromiso minúsculo y cumplido vale más
+      que una propuesta de doce páginas.</li>
+    <li><strong>Insistir si dice que no a la grabación.</strong> A la primera, y sin cara rara.</li>
+  </ol>
+</section>
+
+<section id="despues">
+  <div class="sec-cab"><span class="sec-num">09</span><h2>Después</h2></div>
+  <p class="sec-sub">El resumen enviado en menos de dos horas es, en sí mismo, la mejor demostración de automatización de todo el día.</p>
+
+  <h3>El prompt sobre la transcripción</h3>
+  <p>Cópialo tal cual y pega debajo la transcripción entera.</p>
+  <div class="bloque-pre"><button class="copiar" data-pre="prompt">copiar</button><pre id="prompt">Eres mi analista. Te paso la transcripción de una reunión de trabajo de hoy entre
+dos personas: yo (Eduardo) y una community manager freelance española que lleva
+varias cuentas de negocios, sobre todo hostelería (bares, restaurantes,
+cafeterías). La reunión iba sobre dónde se le va el tiempo y qué se le puede
+automatizar con IA.
+
+La transcripción es automática: tendrá errores, palabras cortadas y frases mal
+atribuidas. Si algo no se entiende, no lo rellenes con lo que te parezca
+razonable: escribe [NO SE ENTIENDE] y sigue. Prefiero un hueco a un invento.
+
+Todo en castellano de España, tuteando, sin jerga de consultoría. No uses las
+palabras "workflow", "onboarding", "pipeline", "escalar", "optimizar procesos",
+"punto de dolor", "cuello de botella", "palanca" ni "quick win".
+
+Dame exactamente estas ocho secciones, en este orden:
+
+1. RESUMEN EN 10 LÍNEAS
+   Qué se habló y en qué quedamos. Sin adornos.
+
+2. MAPA DE SU SEMANA
+   Todas las tareas que menciona que hace, en el orden en que aparecen. Para
+   cada una:
+   - Nombre de la tarea con SUS palabras, no con las mías
+   - Qué implica exactamente, según lo que ha contado
+   - Con qué herramienta la hace
+   - Qué la desencadena y qué pasa después (de dónde le viene el material y a
+     dónde va el resultado)
+   Si de una tarea sólo hay una frase suelta, dilo: "sólo hay una mención de
+   pasada, hay que preguntarlo".
+
+3. HORAS POR TAREA
+   Tabla: tarea | horas que ELLA ha dicho | cita literal de dónde sale el número.
+   REGLA ESTRICTA: sólo pones un número si ella lo dijo en voz alta. Si no dio
+   número, escribe "no lo dijo". No estimes, no interpoles, no calcules
+   promedios del sector. Si un número lo dije yo y ella sólo asintió, márcalo
+   como "lo dije yo, ella no lo confirmó".
+   Al final, la suma de lo que sí dijo y cuántas tareas quedaron sin cuantificar.
+
+4. SUS FRASES TEXTUALES
+   Las 10 frases más reveladoras, transcritas literalmente, entre comillas, sin
+   corregirle la gramática. Especialmente: lo que le quema, lo que le da miedo,
+   lo que no delegaría nunca y cómo describe su propio trabajo. Debajo de cada
+   una, una línea con por qué importa.
+
+5. LA LÍNEA ROJA
+   Qué ha dicho, explícita o implícitamente, que NO quiere que se toque. Y qué
+   señales de incomodidad se detectan (cambios de tema, respuestas cortas, "ya,
+   pero...", peros que no llegó a terminar). Si no hay señales claras, dilo en
+   vez de inventarlas.
+
+6. QUÉ SE PUEDE AUTOMATIZAR, ORDENADO
+   Tabla: tarea | cuánto le ahorraría (sólo si ella dio números) | lo difícil que
+   es de montar (fácil / media / difícil) | qué hace falta de ella para empezar |
+   qué riesgo tiene.
+   Ordenado por lo que debería atacar primero, y una línea explicando ese orden.
+   Separa claramente lo que se puede hacer YA de lo que depende de permisos de
+   terceros (Google, Meta) o de que ella cambie de plan de alguna herramienta.
+
+7. LOS COMPROMISOS
+   Todo lo que alguno de los dos dijo que iba a hacer. Tabla: qué | quién | para
+   cuándo | cita literal donde se acuerda. Si no se dijo fecha, ponlo como "sin
+   fecha" y márcalo como cabo suelto.
+
+8. LO QUE NO PREGUNTÉ Y DEBERÍA
+   Los 8 huecos más importantes que quedaron sin cubrir, con la pregunta ya
+   redactada tal como se la haría la próxima vez.
+
+Al final, y separado del resto, escríbeme un borrador de mensaje de WhatsApp para
+ella: máximo 8 líneas, tono normal entre dos profesionales que se acaban de
+conocer y se han caído bien, tuteando, sin emojis de más, que le resuma lo
+hablado, le recuerde el compromiso concreto con su fecha y no le venda nada.</pre></div>
+
+  <h3>El mensaje de seguimiento, en menos de dos horas</h3>
+  <p>Por WhatsApp, no por email: es el canal donde ella vive. Y hoy, aunque sea corto — la velocidad vale
+  más que la elaboración.</p>
+  <div class="bloque-pre"><button class="copiar" data-pre="segui">copiar</button><pre id="segui">[Nombre], gracias por el rato de hoy, me ha servido muchísimo.
+
+Te paso el resumen de lo que hemos hablado, sacado de la grabación como te dije 👇
+[enlace o PDF]
+
+Me quedo con esto, que lo dijiste tú y me lo apunto tal cual:
+"[SU FRASE TEXTUAL SOBRE LO QUE MÁS LE QUEMA]"
+
+Quedamos en que me mandas lo que te haya llegado de [cliente] este último mes,
+hasta unas 200 fotos, tal cual. El jueves te devuelvo la hoja con el semáforo y
+el motivo de cada una. Sin coste y sin compromiso.
+
+Y lo del precio de [herramienta que preguntó]: es [X]. Te dejo el enlace oficial
+para que lo veas tú: [enlace]
+
+Cualquier cosa, me escribes.</pre></div>
+
+  <ul>
+    <li><strong>Menos de dos horas.</strong> Prometiste el resumen; cumplirlo el mismo día es media demo.</li>
+    <li><strong>Cita textual suya, obligatoria.</strong> Es lo que le demuestra que la escuchaste.</li>
+    <li><strong>Un solo compromiso, con fecha.</strong> No metas tres.</li>
+    <li><strong>Cero venta.</strong> Ni propuesta, ni presupuesto, ni PDF de servicios. Eso viene después
+      de que el entregable del jueves le guste.</li>
+    <li><strong>El precio que dijiste que le mirarías, míralo y mándaselo.</strong> Es lo que separa a
+      alguien fiable de alguien simpático.</li>
+    <li><strong>El jueves, entrega.</strong> Aunque el resultado sea regular. Un compromiso pequeño y
+      cumplido vale más que cualquier reunión brillante.</li>
+  </ul>
+</section>
+
+<section id="chuleta">
+  <div class="sec-cab"><span class="sec-num">10</span><h2>Chuleta</h2></div>
+  <p class="sec-sub">Para mirar de reojo encima de la mesa.</p>
+  <div class="chuleta"><ul>
+    <li>No vengo a que la IA te haga los diseños. Vengo a la parte tonta.</li>
+    <li>La máquina tira la basura. La foto buena la eliges tú, que para eso te pagan.</li>
+    <li>Esto no sustituye tu diseño. Es que tu diseño se rellene solo.</li>
+    <li>Lo aburrido lo contesta la máquina. Lo delicado, siempre una persona.</li>
+    <li>Esto a mano, ¿cuánto te habría llevado? <em>— y te callas</em></li>
+    <li>¿Tú a cuánto valoras tu hora? <em>— y te callas</em></li>
+    <li>Lo que no se puede hacer es… <em>— dilo tú primero</em></li>
+    <li>De eso no te digo ni media palabra. Eso es de tu gestora. <em>— si sale lo fiscal</em></li>
+    <li>Lo miro esta tarde y te lo paso por escrito. <em>— y lo apuntas delante de ella</em></li>
+  </ul></div>
+</section>
+
+<footer class="pie">Uso interno · precios sin verificar · no es asesoramiento jurídico</footer>
+
+</div>
+
+<script>
+document.querySelectorAll(".copiar").forEach(function (b) {
+  b.addEventListener("click", function () {
+    var pre = b.dataset.pre ? document.getElementById(b.dataset.pre) : null;
+    var texto = pre
+      ? pre.textContent
+      : Array.from(b.parentElement.querySelectorAll("p")).map(function (p) { return p.textContent.trim(); }).join("\n\n");
+    var ok = function () {
+      b.textContent = "copiado";
+      b.classList.add("hecho");
+      setTimeout(function () { b.textContent = "copiar"; b.classList.remove("hecho"); }, 1600);
+    };
+    if (navigator.clipboard) navigator.clipboard.writeText(texto).then(ok, function () { b.textContent = "no se pudo"; });
+    else b.textContent = "no se pudo";
+  });
+});
+
+// botón de copiar en cada bloque de "esto lo dices literalmente"
+document.querySelectorAll(".decir").forEach(function (d) {
+  var b = document.createElement("button");
+  b.className = "copiar";
+  b.textContent = "copiar";
+  b.addEventListener("click", function () {
+    var texto = Array.from(d.querySelectorAll("p")).map(function (p) { return p.textContent.trim(); }).join("\n\n");
+    var ok = function () {
+      b.textContent = "copiado";
+      b.classList.add("hecho");
+      setTimeout(function () { b.textContent = "copiar"; b.classList.remove("hecho"); }, 1600);
+    };
+    if (navigator.clipboard) navigator.clipboard.writeText(texto).then(ok, function () { b.textContent = "no se pudo"; });
+    else b.textContent = "no se pudo";
+  });
+  d.appendChild(b);
+});
+
+// la nav marca dónde estás
+var secciones = Array.from(document.querySelectorAll("section[id]"));
+var enlaces = new Map(Array.from(document.querySelectorAll(".nav a")).map(function (a) {
+  return [a.getAttribute("href").slice(1), a];
+}));
+if ("IntersectionObserver" in window) {
+  var obs = new IntersectionObserver(function (entradas) {
+    entradas.forEach(function (e) {
+      var a = enlaces.get(e.target.id);
+      if (!a) return;
+      if (e.isIntersecting) {
+        enlaces.forEach(function (x) { x.classList.remove("act"); });
+        a.classList.add("act");
+        a.scrollIntoView({ block: "nearest", inline: "nearest" });
+      }
+    });
+  }, { rootMargin: "-52px 0px -70% 0px" });
+  secciones.forEach(function (s) { obs.observe(s); });
+}
+</script>

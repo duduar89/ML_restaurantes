@@ -1,0 +1,314 @@
+<title>Qué te he montado</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Karla:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap">
+
+<style>
+:root{
+  --paper:#F1F4F0; --surface:#FFFFFF; --surface-2:#E7EDE8;
+  --ink:#17211C; --ink-2:#3F5349; --ink-3:#77897E;
+  --line:#D2DBD4; --line-2:#B7C4BB;
+  --accent:#1F6B57; --accent-ink:#FFF; --accent-soft:#DFEDE6;
+  --gold:#9A6B14; --gold-soft:#F7EBD1; --gold-line:#E3CB95;
+  --f-display:"Fraunces","Iowan Old Style",Georgia,serif;
+  --f-body:"Karla",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"DM Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#0F1512; --surface:#18211C; --surface-2:#202B24;
+  --ink:#E6EDE8; --ink-2:#AFC1B6; --ink-3:#7F9488;
+  --line:#2B3931; --line-2:#3B4C42;
+  --accent:#63C0A2; --accent-ink:#0F1512; --accent-soft:#1B2F28;
+  --gold:#E9BB5E; --gold-soft:#2A2314; --gold-line:#4A3D1E;
+}}
+:root[data-theme="dark"]{
+  --paper:#0F1512; --surface:#18211C; --surface-2:#202B24;
+  --ink:#E6EDE8; --ink-2:#AFC1B6; --ink-3:#7F9488;
+  --line:#2B3931; --line-2:#3B4C42;
+  --accent:#63C0A2; --accent-ink:#0F1512; --accent-soft:#1B2F28;
+  --gold:#E9BB5E; --gold-soft:#2A2314; --gold-line:#4A3D1E;
+}
+
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);
+  font-size:16.5px;line-height:1.58;padding:0 0 70px;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--f-display);font-weight:600;margin:0;line-height:1.16;text-wrap:balance}
+p,ul,ol{margin:0}
+a{color:var(--accent)}
+code{font-family:var(--f-mono);font-size:.88em;background:var(--surface-2);
+  padding:1px 5px;border-radius:4px;border:1px solid var(--line)}
+
+.env{max-width:700px;margin:0 auto;padding:0 20px}
+
+header.top{padding:46px 0 30px}
+.kicker{font-family:var(--f-mono);font-size:11px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--accent);display:flex;align-items:center;gap:9px;margin-bottom:18px}
+.kicker::before{content:"";width:20px;height:1px;background:var(--accent)}
+header.top h1{font-size:clamp(32px,8vw,44px);letter-spacing:-.022em}
+header.top .lead{margin-top:14px;color:var(--ink-2);max-width:58ch;font-size:17.5px}
+
+section{padding:36px 0;border-top:1px solid var(--line);scroll-margin-top:20px}
+section h2{font-size:25px;letter-spacing:-.015em;margin-bottom:6px}
+.dice{color:var(--ink-3);font-size:14.5px;margin-bottom:20px;max-width:56ch}
+h3{font-size:18px;margin:26px 0 9px}
+p + p, p + ul, p + ol, ul + p, ol + p, p + .caja, .caja + p{margin-top:12px}
+ul,ol{padding-left:21px}
+li{margin-bottom:6px}
+li::marker{color:var(--ink-3)}
+
+.caja{background:var(--surface);border:1px solid var(--line);border-radius:10px;
+  padding:17px 18px;margin:16px 0}
+.caja.ojo{background:var(--gold-soft);border-color:var(--gold-line)}
+.caja .et{font-family:var(--f-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ink-3);display:block;margin-bottom:8px}
+.caja.ojo .et{color:var(--gold)}
+
+/* las tres piezas */
+.piezas{display:flex;flex-direction:column;gap:12px;margin-top:20px}
+.pieza{background:var(--surface);border:1px solid var(--line);border-radius:10px;
+  padding:17px 18px;border-left:3px solid var(--accent)}
+.pieza-cab{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px;margin-bottom:7px}
+.pieza h3{margin:0;font-size:19px}
+.quien{font-family:var(--f-mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;
+  padding:3px 8px;border-radius:4px;border:1px solid var(--line-2);color:var(--ink-3)}
+.quien.ella{color:var(--accent);border-color:var(--accent);background:var(--accent-soft)}
+.pieza p{font-size:15.5px;color:var(--ink-2)}
+.pieza .archivo{font-family:var(--f-mono);font-size:12px;color:var(--ink-3);margin-top:9px;
+  display:block;word-break:break-all}
+
+/* comparación de las dos versiones */
+.dos{display:grid;grid-template-columns:1fr;gap:13px;margin-top:18px}
+@media (min-width:640px){.dos{grid-template-columns:1fr 1fr}}
+.opcion{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;
+  display:flex;flex-direction:column}
+.opcion.reco{border-color:var(--accent);border-width:2px}
+.opcion h3{margin:0 0 3px;font-size:18px}
+.opcion .tag{font-family:var(--f-mono);font-size:10px;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--ink-3);margin-bottom:11px;display:block}
+.opcion.reco .tag{color:var(--accent)}
+.opcion ul{padding-left:0;list-style:none;display:flex;flex-direction:column;gap:7px}
+.opcion li{margin:0;padding-left:20px;position:relative;font-size:14.5px;color:var(--ink-2)}
+.opcion li.si::before{content:"✓";position:absolute;left:0;color:var(--accent);font-weight:700}
+.opcion li.no::before{content:"—";position:absolute;left:0;color:var(--ink-3)}
+
+/* recorrido */
+.pasos{list-style:none;padding:0;counter-reset:p;margin-top:18px;
+  display:flex;flex-direction:column;gap:0}
+.pasos li{counter-increment:p;display:grid;grid-template-columns:30px 1fr;gap:14px;
+  padding-bottom:20px;position:relative;margin:0}
+.pasos li::before{content:counter(p);grid-column:1;
+  width:26px;height:26px;border-radius:50%;background:var(--accent);color:var(--accent-ink);
+  display:grid;place-items:center;font-family:var(--f-mono);font-size:12px;z-index:1}
+.pasos li::after{content:"";position:absolute;left:13px;top:26px;bottom:0;width:1px;background:var(--line)}
+.pasos li:last-child{padding-bottom:0}
+.pasos li:last-child::after{display:none}
+.pasos b{display:block;margin-bottom:3px}
+.pasos .det{color:var(--ink-2);font-size:15.5px}
+
+.tabla-env{overflow-x:auto;margin:16px 0}
+table{width:100%;border-collapse:collapse;font-size:15px;min-width:420px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--ink-3);font-weight:400}
+td:first-child{white-space:nowrap;color:var(--ink-2)}
+
+.pie{margin-top:36px;padding-top:18px;border-top:1px solid var(--line);
+  font-family:var(--f-mono);font-size:11px;color:var(--ink-3);letter-spacing:.03em}
+</style>
+
+<div class="env">
+
+<header class="top">
+  <div class="kicker">Léelo una vez y ya está</div>
+  <h1>Qué te he montado</h1>
+  <p class="lead">Sin palabras raras. Lo que hay, para qué sirve cada cosa, y qué tienes que hacer tú
+  esta noche.</p>
+</header>
+
+<section>
+  <h2>Primero: lo de «motor» fue culpa mía</h2>
+  <p class="dice">Te dije «ya tengo escrito el motor del formulario» y no significaba nada.</p>
+  <p>No es ninguna herramienta, ni un programa que haya que instalar, ni nada que tengas que entender.
+  Lo dije como quien dice «ya tengo el chasis del coche y ahora le meto los asientos».</p>
+  <p>Un formulario tiene dos partes. Una es <strong>las preguntas</strong>: el texto, las opciones, el
+  orden. La otra es <strong>la maquinaria</strong>: lo que hace que al tocar una opción se ponga verde,
+  que la barra de arriba avance, que si cierra el móvil no pierda lo escrito, y que aparezcan solas las
+  cuentas de cuántos archivos exporta al mes. A esa segunda parte la llamé «el motor», y la escribí
+  primero para luego meterle las preguntas dentro. Eso es todo.</p>
+  <p><strong>Tú no tienes que tocar nada de eso.</strong> Es un archivo que se abre y funciona.</p>
+</section>
+
+<section>
+  <h2>Hay tres cosas, y sólo una la ve ella</h2>
+  <p class="dice">Esto es lo importante de todo el documento.</p>
+
+  <div class="piezas">
+    <div class="pieza">
+      <div class="pieza-cab"><h3>El formulario</h3><span class="quien ella">esto sí se lo mandas</span></div>
+      <p>Las veinte preguntas. Se rellena desde el móvil en unos ocho minutos. Es lo único que ella ve.</p>
+      <span class="archivo">reunion-cm/formulario/</span>
+    </div>
+    <div class="pieza">
+      <div class="pieza-cab"><h3>La chuleta de la reunión</h3><span class="quien">sólo tú</span></div>
+      <p>El guion minuto a minuto, las frases que dices literalmente, cómo grabar, qué demo enseñar
+      según lo que ella conteste, y las objeciones con la respuesta preparada. <strong>Esto no se lo
+      enseñas ni de reojo.</strong></p>
+      <span class="archivo">reunion-cm/playbook/</span>
+    </div>
+    <div class="pieza">
+      <div class="pieza-cab"><h3>La criba de fotos</h3><span class="quien">herramienta</span></div>
+      <p>Un programa que coge una carpeta de fotos y te dice cuáles no valen y por qué. Es la segunda
+      demo de la reunión y es lo que le entregas el jueves.</p>
+      <span class="archivo">reunion-cm/criba/criba.py</span>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>El formulario tiene dos versiones</h2>
+  <p class="dice">Son las mismas veinte preguntas. Lo único que cambia es cómo te llegan las respuestas.</p>
+
+  <div class="dos">
+    <div class="opcion reco">
+      <span class="tag">recomendada</span>
+      <h3>El enlace</h3>
+      <p style="font-size:15px;color:var(--ink-2);margin-bottom:14px">Le mandas un enlace, ella lo abre
+      y al terminar le da a «Enviar». Las respuestas me llegan a mí y yo te las paso.</p>
+      <ul>
+        <li class="si">No tiene que descargar nada</li>
+        <li class="si">Se abre en cualquier móvil</li>
+        <li class="si">Tú ves si lo ha rellenado o no</li>
+        <li class="no">Tienes que compartirlo antes o ella verá un error</li>
+      </ul>
+    </div>
+    <div class="opcion">
+      <span class="tag">de repuesto</span>
+      <h3>El archivo suelto</h3>
+      <p style="font-size:15px;color:var(--ink-2);margin-bottom:14px">Un archivo <code>.html</code> que
+      le mandas adjunto. Al terminar, ella le da a un botón y se le abre WhatsApp con las respuestas ya
+      escritas para mandártelas.</p>
+      <ul>
+        <li class="si">No depende de ningún enlace ni de que yo esté</li>
+        <li class="si">Funciona aunque no tenga cobertura mientras lo rellena</li>
+        <li class="no">Tiene que abrir un adjunto, y hay quien no se fía</li>
+        <li class="no">Te llega como un mensaje de texto, no ordenado</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="caja ojo">
+    <span class="et">Lo que yo haría</span>
+    <p>Mándale <strong>el enlace</strong>. Y ten el archivo suelto a mano por si te dice «no me abre» —
+    en ese caso se lo mandas adjunto y listo, sin darle más vueltas delante de ella.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Qué hace el formulario mientras ella lo rellena</h2>
+  <p class="dice">Para que sepas qué está viendo, y por qué está hecho así.</p>
+
+  <div class="tabla-env"><table>
+    <tr><th>Lo que ve ella</th><th>Para qué está</th></tr>
+    <tr><td>Barra arriba: «6 de 20 · ~8 min»</td><td>Los formularios se abandonan cuando no sabes
+      cuánto queda. Que el tiempo que pone sea verdad importa: si pone 8 y tarda 15, la próxima vez
+      no te contesta.</td></tr>
+    <tr><td>Se guarda solo</td><td>Puede cerrar el móvil a mitad y volver luego sin perder nada. Se
+      guarda en su teléfono, no en ningún sitio mío.</td></tr>
+    <tr><td>Las tres tareas, numeradas 1-2-3</td><td>No son casillas: sólo puede marcar tres y las
+      marca <em>en orden</em>. Así sabes cuál es la primera, no tres empatadas. Con eso abres la
+      escucha en la reunión.</td></tr>
+    <tr><td>Un recuadro dorado con un número grande</td><td><strong>Esto es lo que más le va a mover.</strong>
+      Según mete cuentas, piezas y formatos, le sale sola la cuenta: «≈ 385 archivos al mes». Y debajo,
+      cuántos de esos son «lo mismo cambiando los datos». Su propio número duele más que cualquier cosa
+      que le digas tú.</td></tr>
+    <tr><td>Si se salta algo obligatorio</td><td>Se lo dice una vez y le deja mandarlo igual. No la
+      bloquea: media respuesta vale más que ninguna.</td></tr>
+  </table></div>
+</section>
+
+<section>
+  <h2>Qué hace la criba de fotos</h2>
+  <p class="dice">Es un programa que se ejecuta en tu ordenador. Nada sube a internet.</p>
+  <p>Le das una carpeta de fotos y te devuelve una página con todas en pequeño, cada una con un
+  semáforo y el motivo escrito debajo: movida, quemada, luz de bombilla, resolución corta, horizontal
+  que pierde el 55% al pasarla a vertical, o repetida de una ráfaga.</p>
+
+  <div class="caja">
+    <span class="et">Cómo se usa</span>
+    <p style="font-family:var(--f-mono);font-size:13.5px;line-height:1.7">pip install Pillow numpy<br>
+    python3 criba.py ~/fotos-del-bar -o criba.html</p>
+    <p style="margin-top:11px;font-size:15px">Y abres <code>criba.html</code>. El archivo lleva las
+    miniaturas dentro, así que lo puedes mandar por WhatsApp o imprimirlo a PDF y no se rompe.</p>
+  </div>
+
+  <p>No hay ninguna inteligencia artificial detrás: son cuentas sobre los píxeles. Eso es justamente
+  el argumento de venta — <strong>cualquier descarte se comprueba mirando la foto</strong>, y no se
+  inventa nada.</p>
+
+  <div class="caja ojo">
+    <span class="et">Y esto es lo que NO puedes prometer</span>
+    <p>No elige la foto buena. No sabe si la mesa está sin recoger, si sale gente reconocible o si se ve
+    la marca de la competencia al fondo. Eso es criterio suyo. Y ahí está la frase de la reunión:
+    <strong>«la máquina tira la basura; la foto buena la eliges tú, que para eso te pagan»</strong>.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Qué haces tú, por orden</h2>
+  <p class="dice">Si sólo haces los tres primeros, la reunión ya sale bien.</p>
+
+  <ol class="pasos">
+    <li>
+      <div><b>Comparte el formulario y pruébalo tú</b>
+      <span class="det">Ábrelo desde tu móvil en una ventana de incógnito, contesta dos preguntas y
+      dale a «Enviar». Así sabes lo que va a ver ella antes de que lo vea.</span></div>
+    </li>
+    <li>
+      <div><b>Mándaselo antes de las 21:00</b>
+      <span class="det">Un formulario de veinte preguntas que llega a las 23:30 no se rellena. Si no
+      llegas, no lo mandes: hay un plan B de cinco preguntas sueltas por WhatsApp que se contestan en
+      noventa segundos.</span></div>
+    </li>
+    <li>
+      <div><b>Elige tú el cliente de las demos</b>
+      <span class="det">Mirando su Instagram profesional: a quién menciona, a quién tiene en
+      destacados, quién la etiqueta. Esto lo haces rellene ella o no rellene.</span></div>
+    </li>
+    <li>
+      <div><b>Monta la demo de las reseñas</b>
+      <span class="det">Una hora. Es la que funciona seguro y no depende del wifi del bar.</span></div>
+    </li>
+    <li>
+      <div><b>Vete a un bar y dispara 150 fotos a propósito mal</b>
+      <span class="det">Movidas, oscuras, con la mesa sin recoger, seis casi iguales del mismo plato.
+      Les pasas la criba y ya tienes la segunda demo con material real.</span></div>
+    </li>
+    <li>
+      <div><b>Por la mañana: lee sus respuestas y mira la chuleta</b>
+      <span class="det">Hay una tabla que dice qué demo enseñar según lo que haya contestado. Subraya
+      su frase textual: con esa abres la escucha.</span></div>
+    </li>
+  </ol>
+</section>
+
+<section>
+  <h2>Las dos cosas que no se te pueden olvidar</h2>
+  <div class="caja ojo">
+    <span class="et">Una</span>
+    <p><strong>No digas ninguna cifra de precio en voz alta.</strong> Ni de Canva, ni de nada. Mientras
+    investigaba, el proxy bloqueaba las páginas oficiales, así que <em>ningún</em> precio está
+    comprobado. Si sale el tema: «no te digo una cifra a boleo, lo miro y te lo paso hoy mismo» — y lo
+    apuntas delante de ella, que es la única promesa de la reunión que se cumple en horas.</p>
+  </div>
+  <div class="caja ojo">
+    <span class="et">Y dos</span>
+    <p><strong>Ni de refilón insinúes que ella es tu vía de entrada a sus clientes.</strong> Es cierto y
+    es la razón estratégica de la reunión, pero si lo huele hoy protege su cartera y se acabó. Si lo
+    saca ella —que es probable—: «eso lo decides tú y es tu negocio, yo no me meto. De momento vamos a
+    ver si esto te sirve a ti».</p>
+  </div>
+</section>
+
+<footer class="pie">Uso interno · precios sin verificar</footer>
+
+</div>

@@ -7,15 +7,23 @@ chuleta para la propia reunión, y la criba de fotos que se enseña como demo.
 
 | Carpeta | Qué es | Para quién |
 |---|---|---|
-| `formulario/` | La página que ella rellena. Publicada como artefacto. | Ella |
+| `guia/` | Qué es cada cosa y qué hacer con ella, explicado sin jerga. | Empieza por aquí |
+| `formulario/` | La página que ella rellena. Dos versiones: enlace publicado y archivo suelto. | Ella |
 | `playbook/` | Guion, frases literales, cómo grabar, qué demo enseñar. | Sólo Eduardo |
 | `criba/` | La criba mecánica de fotos. Es la segunda demo y el entregable del jueves. | Herramienta |
 | `investigacion/` | Los borradores en bruto y la crítica adversarial. | Referencia |
 
 ## Enlaces publicados
 
+- **Guía** (empieza por aquí): <https://claude.ai/code/artifact/e7d881cc-08e2-4df9-bc32-a804337f61cc>
 - **Formulario** (esto es lo que se le manda): <https://claude.ai/code/artifact/750d0d95-1359-4fd9-abed-ceba9d6bc280>
 - **Chuleta de la reunión** (uso interno): <https://claude.ai/code/artifact/8a014d20-a158-4a02-ba47-203107ff96be>
+
+El formulario tiene además una versión como **archivo suelto**,
+`formulario/formulario-suelto.html`, para mandarla adjunta si el enlace le da
+problemas: mismas preguntas, pero al terminar abre WhatsApp con las respuestas ya
+escritas en vez de enviarlas. Se regenera desde `index.html` con
+`python3 formulario/construir-suelto.py`, para que las dos no se separen nunca.
 
 > El formulario nace **privado**. Para que ella pueda abrirlo hay que compartirlo
 > desde el menú de compartir de la propia página. Y conviene abrirlo antes desde

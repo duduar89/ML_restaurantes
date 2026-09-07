@@ -1,0 +1,660 @@
+<title>Dónde se te va el tiempo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Karla:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap">
+
+<style>
+:root{
+  --paper:#F1F4F0;
+  --surface:#FFFFFF;
+  --surface-2:#E7EDE8;
+  --ink:#17211C;
+  --ink-2:#3F5349;
+  --ink-3:#77897E;
+  --line:#D2DBD4;
+  --line-strong:#B7C4BB;
+  --accent:#1F6B57;
+  --accent-ink:#FFFFFF;
+  --accent-soft:#DFEDE6;
+  --gold:#9A6B14;
+  --gold-soft:#F7EBD1;
+  --gold-line:#E3CB95;
+  --shadow:0 1px 2px rgba(23,33,28,.05), 0 8px 24px -16px rgba(23,33,28,.28);
+
+  --f-display:"Fraunces","Iowan Old Style",Georgia,serif;
+  --f-body:"Karla",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"DM Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0F1512;
+    --surface:#18211C;
+    --surface-2:#202B24;
+    --ink:#E6EDE8;
+    --ink-2:#AFC1B6;
+    --ink-3:#7F9488;
+    --line:#2B3931;
+    --line-strong:#3B4C42;
+    --accent:#63C0A2;
+    --accent-ink:#0F1512;
+    --accent-soft:#1B2F28;
+    --gold:#E9BB5E;
+    --gold-soft:#2A2314;
+    --gold-line:#4A3D1E;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0F1512;
+  --surface:#18211C;
+  --surface-2:#202B24;
+  --ink:#E6EDE8;
+  --ink-2:#AFC1B6;
+  --ink-3:#7F9488;
+  --line:#2B3931;
+  --line-strong:#3B4C42;
+  --accent:#63C0A2;
+  --accent-ink:#0F1512;
+  --accent-soft:#1B2F28;
+  --gold:#E9BB5E;
+  --gold-soft:#2A2314;
+  --gold-line:#4A3D1E;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.7);
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--f-body);
+  font-size:16.5px;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+  padding:0 0 96px;
+}
+h1,h2,h3{font-family:var(--f-display);font-weight:600;text-wrap:balance;margin:0;line-height:1.15}
+p{margin:0}
+button{font:inherit;color:inherit}
+
+/* ---------- progreso ---------- */
+.progreso{
+  position:sticky;top:0;z-index:20;
+  background:color-mix(in srgb, var(--paper) 88%, transparent);
+  backdrop-filter:saturate(160%) blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.progreso-barra{height:3px;background:var(--line)}
+.progreso-relleno{height:100%;width:0;background:var(--accent);transition:width .35s ease}
+.progreso-texto{
+  max-width:640px;margin:0 auto;padding:7px 20px;
+  display:flex;justify-content:space-between;align-items:baseline;gap:12px;
+  font-family:var(--f-mono);font-size:11.5px;letter-spacing:.03em;
+  color:var(--ink-3);font-variant-numeric:tabular-nums;
+}
+.progreso-texto b{color:var(--ink-2);font-weight:500}
+
+.envoltura{max-width:640px;margin:0 auto;padding:0 20px}
+
+/* ---------- portada ---------- */
+.portada{padding:44px 0 34px;border-bottom:1px solid var(--line)}
+.sello{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--f-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:20px;
+}
+.sello::before{content:"";width:22px;height:1px;background:var(--accent)}
+.portada h1{font-size:clamp(31px,8vw,44px);letter-spacing:-.02em;font-weight:600}
+.portada .subtitulo{
+  font-family:var(--f-display);font-size:clamp(17px,4.4vw,20px);
+  color:var(--ink-2);margin-top:12px;font-style:italic;font-weight:400;
+}
+.intro{margin-top:22px;color:var(--ink-2);max-width:56ch}
+.intro p + p{margin-top:11px}
+.meta{
+  margin-top:24px;display:flex;flex-wrap:wrap;gap:8px;
+}
+.meta span{
+  font-family:var(--f-mono);font-size:11.5px;color:var(--ink-2);
+  background:var(--surface);border:1px solid var(--line);
+  padding:6px 10px;border-radius:4px;
+}
+
+/* ---------- bloques ---------- */
+.bloque{padding:38px 0 8px;border-top:1px solid var(--line)}
+.bloque:first-of-type{border-top:none}
+.bloque-cab{display:flex;gap:14px;align-items:flex-start;margin-bottom:26px}
+.bloque-num{
+  font-family:var(--f-mono);font-size:12px;color:var(--ink-3);
+  padding-top:5px;font-variant-numeric:tabular-nums;flex:none;
+}
+.bloque h2{font-size:24px;letter-spacing:-.01em}
+.bloque-cab .ctx{margin-top:6px;color:var(--ink-3);font-size:14.5px;max-width:52ch}
+
+.p{margin-bottom:30px;scroll-margin-top:80px}
+.p-enunciado{font-weight:600;font-size:17px;letter-spacing:-.005em;display:block}
+.p-opcional{
+  font-family:var(--f-mono);font-size:10.5px;color:var(--ink-3);
+  letter-spacing:.05em;text-transform:uppercase;margin-left:8px;white-space:nowrap;
+}
+.p-ayuda{color:var(--ink-3);font-size:14px;margin-top:5px;max-width:52ch}
+.p-campos{margin-top:13px}
+
+/* opción única: filas rectangulares */
+.unica{display:flex;flex-direction:column;gap:7px}
+.unica label{
+  display:flex;align-items:center;gap:11px;
+  background:var(--surface);border:1px solid var(--line);border-radius:7px;
+  padding:12px 14px;cursor:pointer;min-height:46px;
+  transition:border-color .12s, background .12s;
+}
+.unica label:hover{border-color:var(--line-strong)}
+.unica .marca{
+  width:15px;height:15px;border:1.5px solid var(--line-strong);border-radius:50%;
+  flex:none;position:relative;transition:border-color .12s;
+}
+.unica input:checked ~ .marca{border-color:var(--accent);border-width:5px}
+.unica input:checked ~ .txt{font-weight:600}
+.unica label:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}
+
+/* opción múltiple: pastillas */
+.multiple{display:flex;flex-wrap:wrap;gap:7px}
+.multiple label{
+  display:inline-flex;align-items:center;gap:7px;
+  background:var(--surface);border:1px solid var(--line);border-radius:999px;
+  padding:9px 14px;cursor:pointer;min-height:42px;font-size:15px;
+  transition:border-color .12s, background .12s;
+}
+.multiple label:hover{border-color:var(--line-strong)}
+.multiple label:has(input:checked){
+  border-color:var(--accent);background:var(--accent-soft);font-weight:600;
+}
+.multiple .marca{
+  width:14px;height:14px;border:1.5px solid var(--line-strong);border-radius:3px;flex:none;
+  display:grid;place-items:center;
+}
+.multiple label:has(input:checked) .marca{background:var(--accent);border-color:var(--accent)}
+.multiple .marca::after{
+  content:"";width:7px;height:4px;border-left:1.7px solid var(--accent-ink);
+  border-bottom:1.7px solid var(--accent-ink);transform:rotate(-45deg) translateY(-1px);
+  opacity:0;
+}
+.multiple label:has(input:checked) .marca::after{opacity:1}
+
+input[type=radio],input[type=checkbox]{position:absolute;opacity:0;width:0;height:0}
+label:has(input:focus-visible){outline:2px solid var(--accent);outline-offset:2px}
+
+/* escala */
+.escala{display:flex;flex-direction:column;gap:8px}
+.escala-fila{display:flex;gap:6px}
+.escala-fila label{
+  flex:1;display:grid;place-items:center;min-height:50px;
+  background:var(--surface);border:1px solid var(--line);border-radius:7px;
+  font-family:var(--f-mono);font-size:15px;cursor:pointer;
+  transition:border-color .12s, background .12s;
+}
+.escala-fila label:has(input:checked){
+  background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:500;
+}
+.escala-topes{
+  display:flex;justify-content:space-between;
+  font-family:var(--f-mono);font-size:11px;color:var(--ink-3);letter-spacing:.02em;
+}
+
+/* ranking */
+.ranking{display:flex;flex-direction:column;gap:7px}
+.ranking button{
+  display:flex;align-items:center;gap:11px;text-align:left;
+  background:var(--surface);border:1px solid var(--line);border-radius:7px;
+  padding:12px 14px;cursor:pointer;min-height:46px;width:100%;
+  transition:border-color .12s, background .12s;
+}
+.ranking button:hover{border-color:var(--line-strong)}
+.ranking button[data-orden]{border-color:var(--gold-line);background:var(--gold-soft)}
+.ranking .orden{
+  width:24px;height:24px;flex:none;border-radius:5px;
+  border:1px dashed var(--line-strong);
+  display:grid;place-items:center;
+  font-family:var(--f-mono);font-size:12px;color:var(--ink-3);
+}
+.ranking button[data-orden] .orden{
+  background:var(--gold);border:1px solid var(--gold);color:var(--paper);border-style:solid;font-weight:500;
+}
+.ranking button[data-orden] .orden::after{content:attr(data-n)}
+
+/* texto */
+textarea,input[type=text]{
+  width:100%;font-family:var(--f-body);font-size:16px;color:var(--ink);
+  background:var(--surface);border:1px solid var(--line);border-radius:7px;
+  padding:12px 13px;line-height:1.5;
+}
+textarea{min-height:104px;resize:vertical}
+textarea:focus,input[type=text]:focus{outline:2px solid var(--accent);outline-offset:-1px;border-color:var(--accent)}
+textarea::placeholder,input::placeholder{color:var(--ink-3)}
+.contador{
+  font-family:var(--f-mono);font-size:11px;color:var(--ink-3);
+  text-align:right;margin-top:4px;font-variant-numeric:tabular-nums;
+}
+
+/* ---------- tarjeta de cálculo ---------- */
+.calculo{
+  border:1px solid var(--gold-line);background:var(--gold-soft);
+  border-radius:9px;padding:18px 18px 16px;margin:6px 0 30px;
+}
+.calculo .et{
+  font-family:var(--f-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:9px;
+}
+.calculo .cifra{
+  font-family:var(--f-display);font-size:38px;font-weight:600;line-height:1;
+  color:var(--ink);font-variant-numeric:tabular-nums;letter-spacing:-.02em;
+}
+.calculo .cifra small{font-size:16px;font-weight:400;color:var(--ink-2);margin-left:6px;font-family:var(--f-body)}
+.calculo .glosa{margin-top:9px;color:var(--ink-2);font-size:14.5px;max-width:48ch}
+.calculo .desglose{
+  margin-top:12px;padding-top:11px;border-top:1px solid var(--gold-line);
+  font-family:var(--f-mono);font-size:12px;color:var(--ink-2);
+  font-variant-numeric:tabular-nums;
+}
+
+/* ---------- envío ---------- */
+.envio{border-top:1px solid var(--line);margin-top:24px;padding-top:34px}
+.envio h2{font-size:24px}
+.envio .txt{margin-top:11px;color:var(--ink-2);max-width:54ch}
+.acciones{margin-top:22px;display:flex;flex-direction:column;gap:10px}
+.btn{
+  border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink);
+  border-radius:8px;padding:15px 20px;font-weight:700;font-size:16px;cursor:pointer;
+  min-height:52px;transition:opacity .12s;
+}
+.btn:hover{opacity:.9}
+.btn:disabled{opacity:.5;cursor:default}
+.btn.sec{background:transparent;color:var(--ink);border-color:var(--line-strong);font-weight:600}
+.btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.aviso{
+  margin-top:16px;font-size:13px;color:var(--ink-3);max-width:54ch;
+  padding-top:14px;border-top:1px solid var(--line);
+}
+.estado{
+  margin-top:14px;padding:13px 15px;border-radius:8px;font-size:14.5px;
+  border:1px solid var(--line);background:var(--surface);
+}
+.estado.ok{border-color:var(--accent);background:var(--accent-soft);color:var(--ink)}
+.estado.aviso-fallo{border-color:var(--gold-line);background:var(--gold-soft)}
+.faltan{
+  margin-top:14px;font-size:14px;color:var(--gold);font-weight:600;
+}
+.faltan a{color:inherit}
+pre.volcado{
+  margin-top:12px;background:var(--surface-2);border:1px solid var(--line);
+  border-radius:8px;padding:13px;font-family:var(--f-mono);font-size:12px;
+  white-space:pre-wrap;word-break:break-word;max-height:280px;overflow:auto;color:var(--ink-2);
+}
+
+.pie{
+  margin-top:40px;padding-top:20px;border-top:1px solid var(--line);
+  font-family:var(--f-mono);font-size:11px;letter-spacing:.04em;color:var(--ink-3);
+  display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{transition:none !important;animation:none !important}
+  html{scroll-behavior:auto}
+}
+@media (min-width:700px){
+  html{scroll-behavior:smooth}
+}
+</style>
+
+<div class="progreso">
+  <div class="progreso-barra"><div class="progreso-relleno" id="barra"></div></div>
+  <div class="progreso-texto">
+    <span id="pcontador">—</span>
+    <span id="ptiempo"></span>
+  </div>
+</div>
+
+<div class="envoltura">
+  <header class="portada">
+    <div class="sello" id="sello">Antes de vernos</div>
+    <h1 id="titulo">…</h1>
+    <p class="subtitulo" id="subtitulo"></p>
+    <div class="intro" id="intro"></div>
+    <div class="meta" id="meta"></div>
+  </header>
+
+  <main id="formulario"></main>
+
+  <section class="envio" id="envio">
+    <h2>Ya está</h2>
+    <p class="txt" id="cierre"></p>
+    <div class="faltan" id="faltan" hidden></div>
+    <div class="acciones">
+      <button class="btn" id="enviar">Enviar mis respuestas</button>
+      <button class="btn sec" id="copiar">Copiar respuestas para WhatsApp</button>
+    </div>
+    <div class="estado" id="estado" hidden></div>
+    <pre class="volcado" id="volcado" hidden></pre>
+    <p class="aviso" id="privacidad"></p>
+  </section>
+
+  <footer class="pie">
+    <span id="pie-izq"></span>
+    <span id="guardado">Se guarda solo en este móvil</span>
+  </footer>
+</div>
+
+<script>
+/* ================= CONTENIDO ================= */
+const FORM = {
+  titulo: "…",
+  subtitulo: "",
+  intro: [],
+  meta: [],
+  cierre: "",
+  privacidad: "",
+  bloques: []
+};
+/* ============ FIN CONTENIDO ============ */
+
+const $ = (s, r) => (r || document).querySelector(s);
+const CLAVE = "form-cm-v1";
+
+let respuestas = {};
+try { respuestas = JSON.parse(localStorage.getItem(CLAVE) || "{}"); } catch (e) { respuestas = {}; }
+
+function guardar() {
+  try { localStorage.setItem(CLAVE, JSON.stringify(respuestas)); } catch (e) {}
+  pintarProgreso();
+  pintarCalculos();
+}
+
+const todasLasPreguntas = () => FORM.bloques.flatMap(b => b.preguntas);
+
+function contestada(p) {
+  const v = respuestas[p.id];
+  if (v === undefined || v === null) return false;
+  if (Array.isArray(v)) return v.length > 0;
+  return String(v).trim().length > 0;
+}
+
+/* ---------- render ---------- */
+function esc(s) {
+  return String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+}
+
+function pintarCabecera() {
+  document.title = FORM.titulo;
+  $("#titulo").textContent = FORM.titulo;
+  $("#subtitulo").textContent = FORM.subtitulo;
+  $("#intro").innerHTML = FORM.intro.map(t => "<p>" + esc(t) + "</p>").join("");
+  $("#meta").innerHTML = FORM.meta.map(t => "<span>" + esc(t) + "</span>").join("");
+  $("#cierre").textContent = FORM.cierre;
+  $("#privacidad").textContent = FORM.privacidad;
+  $("#pie-izq").textContent = FORM.pie || "";
+}
+
+function pintarPregunta(p) {
+  const el = document.createElement("div");
+  el.className = "p";
+  el.id = "p-" + p.id;
+
+  const cab = document.createElement("div");
+  cab.innerHTML =
+    '<span class="p-enunciado">' + esc(p.enunciado) +
+    (p.obligatoria ? "" : '<span class="p-opcional">opcional</span>') + "</span>" +
+    (p.ayuda ? '<p class="p-ayuda">' + esc(p.ayuda) + "</p>" : "");
+  el.appendChild(cab);
+
+  const campos = document.createElement("div");
+  campos.className = "p-campos";
+  el.appendChild(campos);
+
+  if (p.tipo === "opcion_unica") {
+    campos.className += " unica";
+    (p.opciones || []).forEach((o, i) => {
+      const lab = document.createElement("label");
+      lab.innerHTML =
+        '<input type="radio" name="' + esc(p.id) + '" value="' + esc(o) + '"' +
+        (respuestas[p.id] === o ? " checked" : "") + '>' +
+        '<span class="marca"></span><span class="txt">' + esc(o) + "</span>";
+      lab.querySelector("input").addEventListener("change", () => { respuestas[p.id] = o; guardar(); });
+      campos.appendChild(lab);
+    });
+
+  } else if (p.tipo === "opcion_multiple") {
+    campos.className += " multiple";
+    const sel = () => (Array.isArray(respuestas[p.id]) ? respuestas[p.id] : []);
+    (p.opciones || []).forEach(o => {
+      const lab = document.createElement("label");
+      lab.innerHTML =
+        '<input type="checkbox" value="' + esc(o) + '"' + (sel().includes(o) ? " checked" : "") + '>' +
+        '<span class="marca"></span><span class="txt">' + esc(o) + "</span>";
+      lab.querySelector("input").addEventListener("change", e => {
+        let s = sel().slice();
+        if (e.target.checked) { if (!s.includes(o)) s.push(o); }
+        else { s = s.filter(x => x !== o); }
+        respuestas[p.id] = s;
+        guardar();
+      });
+      campos.appendChild(lab);
+    });
+
+  } else if (p.tipo === "escala") {
+    campos.className += " escala";
+    const fila = document.createElement("div");
+    fila.className = "escala-fila";
+    const max = p.max || 5;
+    for (let i = 1; i <= max; i++) {
+      const lab = document.createElement("label");
+      lab.innerHTML = '<input type="radio" name="' + esc(p.id) + '" value="' + i + '"' +
+        (String(respuestas[p.id]) === String(i) ? " checked" : "") + "><span>" + i + "</span>";
+      lab.querySelector("input").addEventListener("change", () => { respuestas[p.id] = i; guardar(); });
+      fila.appendChild(lab);
+    }
+    campos.appendChild(fila);
+    const topes = document.createElement("div");
+    topes.className = "escala-topes";
+    topes.innerHTML = "<span>" + esc(p.tope_min || "") + "</span><span>" + esc(p.tope_max || "") + "</span>";
+    campos.appendChild(topes);
+
+  } else if (p.tipo === "ranking") {
+    campos.className += " ranking";
+    const tope = p.max_elegidas || 3;
+    (p.opciones || []).forEach(o => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.innerHTML = '<span class="orden"></span><span class="txt">' + esc(o) + "</span>";
+      b.addEventListener("click", () => {
+        let s = Array.isArray(respuestas[p.id]) ? respuestas[p.id].slice() : [];
+        if (s.includes(o)) s = s.filter(x => x !== o);
+        else if (s.length < tope) s.push(o);
+        respuestas[p.id] = s;
+        guardar();
+        refrescarRanking(p);
+      });
+      campos.appendChild(b);
+    });
+
+  } else if (p.tipo === "texto_largo" || p.tipo === "texto_corto") {
+    const largo = p.tipo === "texto_largo";
+    const campo = document.createElement(largo ? "textarea" : "input");
+    if (!largo) campo.type = "text";
+    campo.placeholder = p.placeholder || "";
+    campo.value = respuestas[p.id] || "";
+    campo.addEventListener("input", () => { respuestas[p.id] = campo.value; guardar(); });
+    campos.appendChild(campo);
+  }
+
+  return el;
+}
+
+function refrescarRanking(p) {
+  const cont = $("#p-" + p.id + " .ranking");
+  if (!cont) return;
+  const s = Array.isArray(respuestas[p.id]) ? respuestas[p.id] : [];
+  Array.from(cont.children).forEach(b => {
+    const txt = b.querySelector(".txt").textContent;
+    const i = s.indexOf(txt);
+    const orden = b.querySelector(".orden");
+    if (i >= 0) { b.dataset.orden = "1"; orden.dataset.n = String(i + 1); }
+    else { delete b.dataset.orden; delete orden.dataset.n; }
+  });
+}
+
+function pintarFormulario() {
+  const cont = $("#formulario");
+  cont.innerHTML = "";
+  FORM.bloques.forEach((b, i) => {
+    const sec = document.createElement("section");
+    sec.className = "bloque";
+    const cab = document.createElement("div");
+    cab.className = "bloque-cab";
+    cab.innerHTML =
+      '<div class="bloque-num">' + String(i + 1).padStart(2, "0") + "</div>" +
+      "<div><h2>" + esc(b.nombre) + "</h2>" +
+      (b.contexto ? '<p class="ctx">' + esc(b.contexto) + "</p>" : "") + "</div>";
+    sec.appendChild(cab);
+    b.preguntas.forEach(p => {
+      sec.appendChild(pintarPregunta(p));
+      if (p.calculo_despues) {
+        const c = document.createElement("div");
+        c.className = "calculo";
+        c.id = "calc-" + p.calculo_despues;
+        c.hidden = true;
+        sec.appendChild(c);
+      }
+    });
+    cont.appendChild(sec);
+  });
+  FORM.bloques.flatMap(b => b.preguntas).filter(p => p.tipo === "ranking").forEach(refrescarRanking);
+}
+
+/* ---------- progreso ---------- */
+function pintarProgreso() {
+  const todas = todasLasPreguntas();
+  const hechas = todas.filter(contestada).length;
+  const pct = todas.length ? Math.round((hechas / todas.length) * 100) : 0;
+  $("#barra").style.width = pct + "%";
+  $("#pcontador").innerHTML = "<b>" + hechas + "</b> de " + todas.length;
+  const quedan = todas.length - hechas;
+  $("#ptiempo").textContent = quedan === 0 ? "listo ✓" : "~" + Math.max(1, Math.round(quedan * 0.55)) + " min";
+}
+
+/* ---------- cálculo en vivo ---------- */
+const NUM = t => { const m = String(t || "").match(/\d+/g); return m ? m.map(Number) : []; };
+function medio(t, tope) {
+  const n = NUM(t);
+  if (!n.length) return 0;
+  if (n.length >= 2) return (n[0] + n[1]) / 2;
+  return /m[áa]s|\+/i.test(String(t)) ? n[0] * 1.35 : n[0];
+}
+
+function pintarCalculos() {
+  (FORM.calculos || []).forEach(c => {
+    const caja = document.getElementById("calc-" + c.id);
+    if (!caja) return;
+    const r = c.calcular(respuestas, medio);
+    if (!r) { caja.hidden = true; return; }
+    caja.hidden = false;
+    caja.innerHTML =
+      '<div class="et">' + esc(c.etiqueta) + "</div>" +
+      '<div class="cifra">' + esc(r.cifra) + (r.unidad ? "<small>" + esc(r.unidad) + "</small>" : "") + "</div>" +
+      '<p class="glosa">' + esc(r.glosa) + "</p>" +
+      (r.desglose ? '<div class="desglose">' + esc(r.desglose) + "</div>" : "");
+  });
+}
+
+/* ---------- salida ---------- */
+function comoTexto() {
+  const L = [];
+  L.push(FORM.titulo);
+  L.push("");
+  FORM.bloques.forEach(b => {
+    const hay = b.preguntas.filter(contestada);
+    if (!hay.length) return;
+    L.push("— " + b.nombre.toUpperCase() + " —");
+    hay.forEach(p => {
+      let v = respuestas[p.id];
+      if (Array.isArray(v)) v = p.tipo === "ranking" ? v.map((x, i) => (i + 1) + ") " + x).join("  ") : v.join(", ");
+      if (p.tipo === "escala") v = v + "/" + (p.max || 5);
+      L.push("• " + p.enunciado);
+      L.push("  " + v);
+    });
+    L.push("");
+  });
+  const sin = todasLasPreguntas().filter(p => p.obligatoria && !contestada(p));
+  if (sin.length) L.push("(sin contestar: " + sin.length + ")");
+  return L.join("\n");
+}
+
+function obligatoriasPendientes() {
+  return todasLasPreguntas().filter(p => p.obligatoria && !contestada(p));
+}
+
+function mostrarEstado(html, clase) {
+  const e = $("#estado");
+  e.hidden = false;
+  e.className = "estado" + (clase ? " " + clase : "");
+  e.innerHTML = html;
+}
+
+function rutaCopia(motivo) {
+  const texto = comoTexto();
+  $("#volcado").hidden = false;
+  $("#volcado").textContent = texto;
+  navigator.clipboard && navigator.clipboard.writeText(texto).then(
+    () => mostrarEstado((motivo ? motivo + " " : "") + "<b>Respuestas copiadas.</b> Pégalas en el chat y me llegan igual — abajo las tienes por si acaso.", "aviso-fallo"),
+    () => mostrarEstado((motivo ? motivo + " " : "") + "Copia el texto de abajo y pégamelo por WhatsApp.", "aviso-fallo")
+  );
+  if (!navigator.clipboard) mostrarEstado((motivo ? motivo + " " : "") + "Copia el texto de abajo y pégamelo por WhatsApp.", "aviso-fallo");
+}
+
+async function enviar() {
+  const pendientes = obligatoriasPendientes();
+  if (pendientes.length) {
+    const f = $("#faltan");
+    f.hidden = false;
+    f.textContent = "Te faltan " + pendientes.length + " respuesta" + (pendientes.length > 1 ? "s" : "") + ". Puedes enviarlo igual, pero cuantas más, mejor te ayudo.";
+    document.getElementById("p-" + pendientes[0].id).scrollIntoView({ block: "center" });
+    if (!enviar._insistido) { enviar._insistido = true; return; }
+  }
+
+  const btn = $("#enviar");
+  btn.disabled = true;
+  btn.textContent = "Enviando…";
+
+  let db = null;
+  try { db = window.claude && window.claude.use ? await window.claude.use("db") : null; } catch (e) { db = null; }
+
+  if (!db) {
+    btn.disabled = false;
+    btn.textContent = "Enviar mis respuestas";
+    rutaCopia("No he podido enviarlo desde aquí, pero no pasa nada:");
+    return;
+  }
+
+  try {
+    const id = "r-" + (respuestas.nombre ? String(respuestas.nombre).toLowerCase().replace(/[^a-z0-9]+/g, "-").slice(0, 24) : "anon") + "-" + performance.now().toString(36).replace(".", "");
+    await db.doc("respuestas/" + id).set({
+      respuestas: respuestas,
+      texto: comoTexto(),
+      completadas: todasLasPreguntas().filter(contestada).length,
+      total: todasLasPreguntas().length
+    });
+    btn.textContent = "Enviado ✓";
+    mostrarEstado("<b>Recibido, gracias.</b> Me lo leo entero antes de vernos, así que mañana no te hago repetir nada de esto.", "ok");
+  } catch (e) {
+    btn.disabled = false;
+    btn.textContent = "Enviar mis respuestas";
+    rutaCopia("No he podido enviarlo desde aquí, pero no pasa nada:");
+  }
+}
+
+$("#enviar").addEventListener("click", enviar);
+$("#copiar").addEventListener("click", () => rutaCopia(""));
+
+pintarCabecera();
+pintarFormulario();
+pintarProgreso();
+pintarCalculos();
+</script>

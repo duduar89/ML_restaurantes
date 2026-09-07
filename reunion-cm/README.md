@@ -19,11 +19,23 @@ chuleta para la propia reunión, y la criba de fotos que se enseña como demo.
 - **Formulario** (esto es lo que se le manda): <https://claude.ai/code/artifact/750d0d95-1359-4fd9-abed-ceba9d6bc280>
 - **Chuleta de la reunión** (uso interno): <https://claude.ai/code/artifact/8a014d20-a158-4a02-ba47-203107ff96be>
 
-El formulario tiene además una versión como **archivo suelto**,
-`formulario/formulario-suelto.html`, para mandarla adjunta si el enlace le da
-problemas: mismas preguntas, pero al terminar abre WhatsApp con las respuestas ya
-escritas en vez de enviarlas. Se regenera desde `index.html` con
-`python3 formulario/construir-suelto.py`, para que las dos no se separen nunca.
+El formulario existe en tres formas, con las mismas veinte preguntas:
+
+| Forma | Archivo | Cuándo |
+|---|---|---|
+| Enlace publicado | `formulario/index.html` | Por defecto: las respuestas llegan ordenadas |
+| Para tu dominio | `formulario/web/index.html` | Cuando quieres que se vea tu marca. Ver `formulario/SUBIR.md` |
+| Adjunto | `formulario/formulario-suelto.html` | Comodín si el enlace le da problemas |
+
+Las dos últimas se generan a la vez desde `index.html`, así que no pueden
+descuadrarse:
+
+```bash
+python3 formulario/construir-suelto.py --telefono 34600112233
+```
+
+El teléfono es el tuyo: sin él, el botón abre el selector de contactos de WhatsApp
+en vez de tu chat.
 
 > El formulario nace **privado**. Para que ella pueda abrirlo hay que compartirlo
 > desde el menú de compartir de la propia página. Y conviene abrirlo antes desde

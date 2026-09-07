@@ -8,18 +8,28 @@ como archivo independiente, para mandarla por correo o por WhatsApp: ahí no hay
 dónde enviar, así que el botón copia las respuestas y ofrece abrir WhatsApp con el
 texto ya escrito.
 
-Se generan las dos desde el mismo sitio para que las preguntas no se separen nunca.
+Escribe dos copias idénticas, para que no puedan descuadrarse:
+
+    formulario-suelto.html   para mandar adjunta por WhatsApp o correo
+    web/index.html           para subir a tu dominio
 
     python3 construir-suelto.py
+    python3 construir-suelto.py --telefono 34600112233
 """
 
+import argparse
 import os
 import re
 import sys
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
 ORIGEN = os.path.join(AQUI, "index.html")
-DESTINO = os.path.join(AQUI, "formulario-suelto.html")
+# Se escriben las dos a la vez, siempre, para que no puedan descuadrarse:
+# una para mandar adjunta y otra lista para subir a un dominio.
+DESTINOS = [
+    os.path.join(AQUI, "formulario-suelto.html"),   # para mandar por WhatsApp o correo
+    os.path.join(AQUI, "web", "index.html"),        # para subir a tu dominio
+]
 
 # El servicio de artefactos envuelve la página y aplica un reset mínimo. En un
 # archivo suelto no hay nadie que lo haga, así que va aquí.
@@ -40,6 +50,19 @@ PIE = "\n</body>\n</html>\n"
 
 
 def main():
+    p = argparse.ArgumentParser(description="Genera la versión suelta del formulario.")
+    p.add_argument("--telefono", default="",
+                   help="Tu WhatsApp con prefijo y sin signos, p.ej. 34600112233. "
+                        "Si lo pones, el botón abre el chat contigo directamente; "
+                        "si no, abre el selector de contacto de WhatsApp.")
+    p.add_argument("-o", "--salida", default=None,
+                   help="Escribe sólo en esta ruta en vez de en las dos de siempre.")
+    args = p.parse_args()
+
+    telefono = "".join(c for c in args.telefono if c.isdigit())
+    if args.telefono and not telefono:
+        sys.exit(f"El teléfono '{args.telefono}' no tiene ningún dígito.")
+
     with open(ORIGEN, encoding="utf-8") as f:
         html = f.read()
 
@@ -63,9 +86,16 @@ def main():
   rutaCopia("");
 }
 
+// ── Tu WhatsApp, con prefijo de país y sin espacios ni signos: "34600112233".
+// Déjalo vacío y se abrirá el selector de contactos en vez del chat contigo.
+const TELEFONO = "__TELEFONO__";
+
 function porWhatsapp() {
   const texto = comoTexto();
-  window.open("https://api.whatsapp.com/send?text=" + encodeURIComponent(texto), "_blank");
+  const destino = TELEFONO
+    ? "https://wa.me/" + TELEFONO + "?text=" + encodeURIComponent(texto)
+    : "https://api.whatsapp.com/send?text=" + encodeURIComponent(texto);
+  window.open(destino, "_blank");
   $("#volcado").hidden = false;
   $("#volcado").textContent = texto;
   mostrarEstado("Se te ha abierto WhatsApp con las respuestas escritas. Si no se ha abierto o " +
@@ -88,8 +118,8 @@ function porWhatsapp() {
         ('btn.textContent = "Enviar mis respuestas";',
          'btn.textContent = "Mandármelas por WhatsApp";'),
     ]
-    for a, b in cambios:
-        cuerpo = cuerpo.replace(a, b)
+    for viejo, nuevo in cambios:
+        cuerpo = cuerpo.replace(viejo, nuevo)
 
     # El aviso de privacidad de la versión publicada habla de "enviar"; aquí no se
     # envía nada a ningún sitio y conviene decirlo, que además tranquiliza.
@@ -99,14 +129,21 @@ function porWhatsapp() {
         "mientras la rellenas, y sólo sale de ahí cuando tú le das al botón."
     )
 
+    cuerpo = cuerpo.replace("__TELEFONO__", telefono)
     salida = CABECERA + cabeza + "\n</head>\n<body>\n" + cuerpo + PIE
-    with open(DESTINO, "w", encoding="utf-8") as f:
-        f.write(salida)
 
     preguntas = len(re.findall(r'\bid:"', salida))
-    print(f"{DESTINO}\n{len(salida):,} bytes · {preguntas} preguntas")
     if preguntas != 20:
-        sys.exit(f"Esperaba 20 preguntas y hay {preguntas}. Revisa index.html.")
+        sys.exit(f"Esperaba 20 preguntas y he encontrado {preguntas}. Revisa index.html.")
+
+    for ruta in ([args.salida] if args.salida else DESTINOS):
+        os.makedirs(os.path.dirname(os.path.abspath(ruta)) or ".", exist_ok=True)
+        with open(ruta, "w", encoding="utf-8") as f:
+            f.write(salida)
+        print(ruta)
+
+    destino_wa = f"va directo a {telefono}" if telefono else "abre el selector de contactos de WhatsApp"
+    print(f"{len(salida):,} bytes · {preguntas} preguntas · el botón {destino_wa}")
 
 
 if __name__ == "__main__":

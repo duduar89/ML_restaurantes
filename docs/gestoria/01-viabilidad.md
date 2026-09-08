@@ -7,28 +7,35 @@
 > Orden de lectura: §0 qué está verificado y qué no —importa, porque el proxy de red bloqueó
 > parte de las fuentes—, §1 el hallazgo que cambia el dossier, §2 si se puede construir con
 > lo de CIFRA, §3 si se puede probar sin nada habilitado, §4 el nivel de seguridad, §5 el
-> catálogo completo ordenado con sus nombres, §6 con qué hay que conectarse, §7 el roadmap.
+> catálogo completo ordenado con sus nombres, §6 con qué hay que conectarse, §7 el roadmap,
+> §8 el mercado y el precio —que es lo que decide si esto es un negocio—, y §9 el registro de
+> qué se verificó y qué se cayó.
 
 ---
 
 ## 0. Cómo se ha hecho esto, y qué NO está verificado
 
-22 agentes de investigación, 537 llamadas de herramienta, sobre 14 frentes. Ocho de esos
-frentes lograron leer fuentes oficiales; **seis se quedaron sin acceso a la web a mitad de la
-sesión** (presupuesto de búsqueda agotado y el proxy devolviendo 403 a boe.es,
-agenciatributaria.es, seg-social.es, aepd.es y el resto). Están relanzados con presupuesto
-acotado.
+**30 agentes de investigación en dos pasadas, 772 llamadas de herramienta, sobre 14 frentes**,
+más doce afirmaciones críticas sometidas a un verificador adversarial cuyo encargo era
+**refutarlas**, no confirmarlas. Resultado de esa verificación: **3 confirmadas, 6 matizadas,
+3 refutadas**. Está en §9, y merece leerse: una de las refutaciones habría costado construir un
+robot de navegador que no hacía ninguna falta.
 
-Y hay una cosa más que hay que decir antes de nada: **ninguna cita literal de norma de este
+En la primera pasada, seis de los catorce frentes se quedaron sin acceso a la web a mitad de
+sesión —presupuesto de búsqueda agotado y el proxy devolviendo 403 a boe.es,
+agenciatributaria.es, seg-social.es y aepd.es—. Se relanzaron con presupuesto acotado y ya
+tienen fuentes.
+
+Y hay una cosa que hay que decir antes de nada: **casi ninguna cita literal de norma de este
 documento ha sido leída en su fuente primaria.** Los agentes trabajaron sobre extractos de
 buscador de páginas oficiales, no sobre los PDF. Los números de artículo, las cuantías de
-sanción y las redacciones exactas están marcados con su nivel de confianza, y hay una lista
-de documentos que **alguien tiene que abrir a mano** antes de escribir una línea de código o
-una propuesta comercial. Está en §6.4.
+sanción y las redacciones exactas llevan su nivel de confianza, y hay una lista de documentos
+que **alguien tiene que abrir a mano** antes de escribir una línea de código o una propuesta
+comercial: está en §6.4.
 
-Esto no invalida el análisis: las conclusiones estructurales son sólidas y coinciden entre
-agentes independientes. Pero un documento jurídico-técnico que se entrega a una gestoría no
-se sostiene con "lo dice un resumen de buscador".
+Esto no invalida el análisis —las conclusiones estructurales son sólidas y coinciden entre
+agentes independientes— pero un documento jurídico-técnico que se entrega a una gestoría no se
+sostiene con "lo dice un resumen de buscador".
 
 ---
 
@@ -139,9 +146,10 @@ arquitectura más caro del dossier:
 
 - **La firma y la custodia no pueden vivir en cPanel compartido.** Sistema de ficheros
   compartido, sin HSM, sin aislamiento, sin control de procesos, y sin JVM para AutoFirma.
-- **Los modelos que exigen navegador tampoco.** Si hace falta Playwright o Selenium (ver
-  §2.3), hacen falta binarios de Chromium, librerías del sistema y memoria sostenida.
-  Passenger sobre LucusHost no da ninguna de las tres.
+- **Java tampoco.** AutoFirma, SILTRA, el programa D2 del Colegio de Registradores y Legalia
+  son aplicaciones de escritorio. En Passenger sobre LucusHost no hay JVM ni procesos largos.
+  Y si en algún flujo acabara haciendo falta un navegador automatizado, tampoco: Chromium
+  necesita binarios, librerías del sistema y memoria sostenida que un compartido no da.
 - **Y hay una tercera pata que el dossier no ve:** meter asientos en a3 o leer los datos de
   a3NOM exige **código corriendo dentro de la LAN del despacho** (unidad de red mapeada,
   ficheros `.DAT` bloqueados por el programa, certificado en el almacén de Windows). Eso es un
@@ -169,6 +177,10 @@ de RED Online. No he encontrado ninguna documentación oficial de servicios web 
 o Cotización de la TGSS abiertos a autorizados RED. Generar un fichero AFI correcto desde Node
 es perfectamente viable; **el problema no es construirlo, es transmitirlo.**
 
+Y hay un detalle que remata la promesa de "en un clic, en tiempo real": **las remesas de
+afiliación se procesan en tres tandas al día** —07:00, 15:00 y 20:00—, así que el tiempo real
+programático no existe por ese canal. La otra vía, "Afiliación Online", es la web de RED.
+
 Además, el dossier menciona el **certificado SILCON**, que **dejó de emitirse en 2016** por no
 cumplir eIDAS. Si eso llega a la mesa de una gestoría laboral, se nota que quien lo escribió
 no conoce el terreno.
@@ -179,24 +191,39 @@ solicitud**; lo que se obtiene por RED es la **resolución del trámite**. Que a
 ([BOE-A-2025-8102](https://www.boe.es/diario_boe/txt.php?id=BOE-A-2025-8102)) — o sea que el
 "alta con comprobante inmediato" **sí es creíble**, solo que hay que contarlo bien.
 
-**b) "Presentar por lotes los modelos 303, 111, 190 y 130" — solo uno de los cuatro es seguro.**
-Hay dos mundos técnicos distintos y el dossier los mezcla:
+**b) "Presentar por lotes los modelos 303, 111, 190 y 130" — esto el dossier lo tiene bien,
+y por poco lo damos por malo.**
 
-- **Declaraciones informativas** (190, 347, 349, 180, 193…): **sí** tienen servicio web SOAP
-  1.1 document/literal sobre HTTPS con certificado de cliente, más **TGVI Online**, que valida
-  al instante y permite **presentación parcial de los registros correctos**. Eso último es oro
-  para una gestoría: presentar el 190 de 300 trabajadores aunque cuatro tengan mal el NIF, y
-  reprocesar solo esos cuatro.
-- **Autoliquidaciones** (303, 111, 130, 200): se presentan por **formulario web importando un
-  fichero** con el diseño de registro oficial (`NIF+ejercicio+periodo+.303`). Eso es un flujo
-  de navegador, no un endpoint.
+Este punto merece contarse como pasó, porque es el mejor argumento a favor de verificar en vez
+de fiarse. El primer análisis concluyó que las autoliquidaciones (303, 111, 130) **no** tienen
+servicio web y que había que automatizar un navegador. **El verificador adversarial lo refutó**,
+y menos mal: habría llevado a construir un robot de navegador innecesario, con su VPS, su
+fragilidad y su coste de mantenimiento.
 
-El puente entre los dos mundos es un documento concreto: **"Especificaciones de Servicios
-Comunes Declaraciones AEAT" v2.9, actualizado el 1-jul-2026**, que define *Presentación
-Directa*, *Validación e Impresión* y *Consulta de Declaraciones Presentadas* con su lista de
-modelos admitidos. **Ese PDF decide si el módulo 1.2 es un desarrollo limpio contra un
-servicio oficial o un ejercicio de automatización de navegador.** Es la primera acción del
-proyecto, y hasta leerlo **no se puede presupuestar el módulo**.
+Lo correcto es que **hay dos canales oficiales máquina a máquina, y entre los dos cubren todo
+lo que promete el dossier**:
+
+- **Presentación Directa.** El programa envía el fichero con el diseño de registro
+  directamente al servidor de la AEAT con certificado, firma, y recibe el justificante. **Sin
+  navegador.** La lista de modelos que soporta incluye autoliquidaciones: 111, 115, 117, 123,
+  130, 131, 200, 202, 210, 216, 222, **303**, 309, 322, 353, 390, entre otros — más el 036 y
+  el 100.
+- **TGVI Online**, para declaraciones informativas (190, 347, 349, 180, 193…): SOAP 1.1
+  document/literal sobre HTTPS con certificado de cliente, con validación inmediata y
+  **presentación parcial de los registros correctos**. Eso último es oro para una gestoría:
+  presentar el 190 de 300 trabajadores aunque cuatro tengan mal el NIF, y reprocesar solo esos
+  cuatro.
+
+Ambos están documentados en **"Especificaciones de Servicios Comunes Declaraciones AEAT" v2.9,
+actualizada el 1-jul-2026** por el Departamento de Informática Tributaria, que define
+*Presentación Directa*, *Validación e Impresión* y *Consulta de Declaraciones Presentadas*.
+Existe además documentación específica de presentación de autoliquidaciones por servicio web
+(`Autoliq-SW-v1-5.pdf`) y un WSDL publicado para el modelo 303.
+
+Sigue habiendo una tarea de día uno: **descargar el PDF v2.9 y comprobar la lista exacta de
+modelos**, porque la versión de julio de 2026 amplió la lista y puede haber una posterior. Pero
+la conclusión cambia de fondo: **el módulo 1.2 es un desarrollo limpio contra un servicio
+oficial, no un ejercicio de automatización de navegador.**
 
 **c) "Genera el asiento directamente para A3 / Sage" — el muro no es el formato, es el plan contable.**
 a3ASESOR no tiene API REST pública. La vía real de importar asientos es un fichero plano
@@ -239,7 +266,7 @@ Hay dos salidas buenas a esto, y las dos convierten un problema en producto:
 | 3.2 | Asistente legal RAG | **Sí, con recortes** | BOE resuelto; DGT frágil; jurisprudencia **cerrada** sin pagar |
 | 1.1 | Motor de notificaciones | **Sí, replanteado** | Vía LEMA + apoderamientos. Alta como Gran Destinatario por delante |
 | 2.2 | Conciliación bancaria | **Sí, por otra vía** | PSD2 exige agregador de pago. **La Norma 43 lo resuelve gratis** |
-| 1.2 | Presentación de modelos | **Parcial** | El 190 sí. El 303/111/130 dependen del PDF v2.9 |
+| 1.2 | Presentación de modelos | **Sí, alto** | Presentación Directa cubre 303, 111, 130 y más. Falta el sello y la colaboración social |
 | 1.3 | Altas en Seguridad Social | **No como está escrito** | No hay servicio web. SILTRA es Windows de escritorio |
 
 ---
@@ -298,10 +325,12 @@ funcionalidad —"auditoría previa a la presentación"— que se puede cobrar.
   y lo digo así: no encontrado, no "no existe" — no se pudo navegar `seg-social.es`
   directamente. La forma real de salir de dudas es **abrir un caso en CASIA preguntándolo**, y
   eso solo lo puede hacer la propia gestoría.
-- **SILTRA Prácticas sí existe, pero no es lo que parece.** Es un **simulador local**:
-  reproduce las pantallas y permite practicar sin enviar nada real, pero **no valida el ciclo
-  completo contra servidores de pruebas de la TGSS**. Sirve para comprobar que nuestros
-  ficheros son sintácticamente correctos y para formar a gente. No para validar la integración.
+- **SILTRA Prácticas sí existe, pero no es lo que parece, y además no es abierto.** Permite
+  enviar ficheros y leer respuestas sin que nada llegue de verdad a la Seguridad Social — pero
+  **exige autorización RED previa**. No es un sandbox al que se dé de alta un desarrollador:
+  es un modo de prácticas para quien ya está autorizado. Sirve para comprobar que nuestros
+  ficheros son sintácticamente correctos y para formar a gente; **no para validar el ciclo
+  completo contra un entorno de integración**, como sí ofrecen la AEAT y la DEHú.
 - **La autorización RED se pide con el modelo FR.101 y tiene un plazo de resolución de hasta
   tres meses, con silencio negativo.** Si la gestoría ya la tiene —lo normal en una gestoría
   laboral en activo— no es un problema. Si no la tiene, **es un bloqueo de meses**. Es la
@@ -343,14 +372,20 @@ lo que permite que el cron corra sin nadie delante y sin custodiar el certificad
   es, de facto, la mejor documentación pública que existe del formato.
 - **BOE**: API REST pública, sin autenticación ni clave, con la legislación consolidada
   completa (~12.200 normas). Se puede empezar hoy mismo con `curl`.
+- **BDNS** (Base de Datos Nacional de Subvenciones, IGAE): **API REST pública en JSON, sin
+  autenticación documentada**, con convocatorias desde 2014. Es la única fuente pública que se
+  puede consumir directamente desde el cPanel actual, sin certificado ni máquina Windows.
+- **Catastro**: servicios web libres y gratuitos (`OVCCallejero`, `OVCCoordenadas`) con WSDL
+  publicado, consultables sin certificado.
 
 ### 3.5. La respuesta corta
 
 **Sí, se puede desarrollar y probar casi todo el proyecto sin que la gestoría tenga nada
 habilitado, con dos excepciones y por 14 euros.**
 
-Las dos excepciones son la **Seguridad Social** (hace falta autorización RED real) y la
-**DEHú** (hace falta el alta como Gran Destinatario, que se puede iniciar desde el día uno).
+Las dos excepciones son la **Seguridad Social** —hace falta autorización RED real, incluso
+para el modo de prácticas— y la **DEHú**, donde el alta como Gran Destinatario incluye pasar
+por su entorno de pruebas y se puede iniciar desde el día uno.
 Todo lo demás —AEAT, Veri\*factu, SII, bancos, BOE, ficheros contables— se prueba con un
 certificado de representante de Brainstormers y cuentas de sandbox gratuitas.
 
@@ -638,7 +673,7 @@ camino.
 |---|---|---|---|---|
 | **11** | **El Censo** | Audita la cartera del despacho y dice **quién cumple Veri\*factu y quién no**. Genera una lista de trabajo facturable sin fabricar ningún software de facturación | **No** | Bajo |
 | **12** | **El Sello** | Microservicio de firma XAdES aislado. Es lo único que toca material criptográfico | **No** | Alto |
-| **13** | **La Ventanilla** | Presentación de modelos. **Empezar por el 190 y las informativas**, que sí tienen servicio web | Sí (1.2) | Alto |
+| **13** | **La Ventanilla** | Presentación de modelos por **Presentación Directa** y **TGVI Online**, sin navegador. Con confirmación humana antes de cada envío | Sí (1.2) | Medio-alto |
 | **14** | **La Consulta** | Asistente legal y fiscal. **Primero solo para los empleados del despacho**, nunca para el cliente final | Sí (3.2) | Medio |
 | **15** | **El Boletín** | Cada mañana, las novedades del BOE que afectan a este despacho, con su cita | **No** | Muy bajo |
 
@@ -678,7 +713,7 @@ posterior y **solo de Eduardo**, porque es él quien firmaría la declaración r
 |---|---|---|---|---|
 | **16** | **El Rescate** | Comprueba sistemáticamente las **bonificaciones de cotización no aplicadas** en los boletines. Produce devoluciones reales, en euros | **No** | Medio |
 | **17** | **El Tramo** | Optimizador de la cotización de autónomos por ingresos reales: mejor tramo, cuándo cambiarlo, anticipo de la regularización anual | **No** | Bajo |
-| **18** | **El Aviso** | Vigilancia automática de bajas médicas de toda la cartera vía **fichero FIE / servicio FIER** | **No** | Medio |
+| **18** | **El Aviso** | Vigilancia automática de bajas médicas de toda la cartera vía **fichero FIE / servicio FIER**. Desde el RD 1060/2022 el trabajador ya no entrega el parte: lo comunica el INSS | **No** | Medio |
 | **19** | **El Convenio** | Extrae con IA tablas salariales, pluses y jornada del texto del convenio, y avisa de las revisiones | **No** | Alto |
 | **20** | **El Alta** | Alta de trabajador en un clic | Sí (1.3) | **Alto y replanteado** |
 
@@ -700,10 +735,13 @@ gestoría exactamente lo que va a haber por debajo.
 | # | Nombre | Qué es | ¿Dossier? |
 |---|---|---|---|
 | **21** | **El Expediente** | Prevención de blanqueo para el propio despacho como sujeto obligado: titular real, cribado de listas, scoring, expediente a diez años | No |
-| **22** | **La Ayuda** | Buscador de subvenciones por perfil de cliente. Es dinero encontrado, y justifica subir la minuta | No |
+| **22** | **La Ayuda** | Radar de subvenciones por CNAE, provincia y tamaño sobre la **API pública de la BDNS** —sin autenticación, consumible desde el cPanel actual—. Es dinero encontrado, y justifica subir la minuta | No |
 | **23** | **El Simulador** | Módulos vs. estimación directa, autónomo vs. sociedad, reparto óptimo de sueldo y dividendo. Informes que el cliente percibe como asesoría, no como trámite | No |
 | **24** | **El Vigía** | Vigilancia del BORME sobre la cartera: nombramientos, ceses, cambios de objeto o domicilio | No |
 | **25** | **La Minuta** | Rentabilidad por cliente y por empleado del propio despacho, y detección de clientes en riesgo de fuga | No |
+| **26** | **El Crédito** | Aviso de crédito de formación FUNDAE sin consumir antes del cierre del año, y control del plazo de 2 días para comunicar cada grupo | No |
+| **27** | **El Titular** | Control de vencimientos societarios: declaración anual al **Registro Central de Titularidades Reales** (operativo desde el 19-sep-2023), cuentas anuales, libros | No |
+| **28** | **Las Cuentas** | Genera el XBRL y el fichero de importación del programa **D2** desde el balance, y redacta la memoria abreviada con IA. El depósito sigue siendo manual | No |
 
 ### Lo que NO hay que construir
 
@@ -724,6 +762,16 @@ Tan importante como la lista de arriba:
 - **Jurisprudencia gratis.** CENDOJ tiene CAPTCHA **como control de acceso deliberado** y sus
   condiciones prohíben la descarga masiva. Ahí no hay atajo técnico: o se paga una base
   comercial, o se acota el alcance por escrito y se dice.
+- **Un asistente legal RAG generalista.** Wolters Kluwer lanzó **a3innuva Nómina Expert AI** en
+  junio de 2026: el asistente vive dentro del software donde está el dato del despacho, y
+  competir de frente contra eso es competir en desventaja. La Consulta solo tiene sentido
+  **hacia dentro** —copiloto de los empleados sobre los expedientes del propio despacho— y
+  sobre el corpus que el sistema ya tenga: las notificaciones descargadas, los modelos
+  presentados, la contabilidad. Ahí sí hay algo que el vertical no puede hacer.
+- **Un registro de jornada vendido como obligación.** El real decreto que lo haría digital,
+  inmutable y accesible en remoto por la Inspección **seguía en tramitación en 2026, sin fecha
+  en el BOE**. Se puede construir el módulo, pero no se puede prometer que sea obligatorio a
+  fecha X. Es la misma trampa que en CIFRA con el control horario.
 
 ---
 
@@ -741,6 +789,12 @@ importancia.
 | **Alta como Gran Destinatario de DEHú** | SGAD (Transformación Digital) | Desconocido. Incluye pruebas | El Cartero |
 | **Sello electrónico cualificado** | FNMT, Camerfirma o Uanataca | Semanas | Toda la actuación desatendida |
 | **Convenio de colaboración social** | Colegio profesional + AEAT | Meses **si no lo tienen ya** | La Ventanilla |
+
+> Nota sobre la base legal, porque el verificador la matizó: el **art. 92 LGT** y la **Orden
+> HAC/1398/2003** (en su redacción tras la Orden HFP/534/2022 y la Orden HAC/86/2025) están
+> confirmados. La cita de los **arts. 79-81 del RD 1065/2007** que aparece en varios sitios
+> **no se ha podido confirmar**: hay que verificar el articulado exacto en el texto consolidado
+> del BOE antes de usarlo en documentación que se entregue a un cliente.
 
 **Las cuatro preguntas de la primera reunión**, y las cuatro son de sí o no:
 
@@ -774,10 +828,10 @@ importancia.
 | Sistema | Canal real | Autenticación | ¿Sandbox? |
 |---|---|---|---|
 | **AEAT informativas** (190, 347, 349) | SOAP 1.1 document/literal + **TGVI Online** | Certificado cliente en TLS | **Sí, gratis** |
-| **AEAT autoliquidaciones** (303, 111, 130) | Formulario web con importación de fichero | Certificado en navegador | Sí, gratis |
+| **AEAT autoliquidaciones** (303, 111, 130, 200…) | **Presentación Directa**: envío del fichero al servidor, sin navegador | Certificado, con firma | **Sí, gratis** |
 | **AEAT Veri\*factu / SII** | SOAP sobre **mTLS**, WSDL publicado | Certificado, **incluido sello** (`prewww10`) | **Sí, gratis** |
 | **DEHú** | SOAP con **WS-Security** (BinarySecurityToken) | Sello @firma tipo 4 u 8 | Sí, tras alta |
-| **TGSS afiliación** | **Fichero AFI vía SILTRA** (Windows) o RED Online | Certificado de persona física | Solo simulador local |
+| **TGSS afiliación** | **Fichero AFI vía SILTRA** (Windows) o RED Online. Remesas en 3 tandas diarias | Certificado de persona física | Solo prácticas, y con autorización RED |
 | **TGSS notificaciones** | **Servicio web** de consulta y firma | Certificado admitido | No consta |
 | **SEPE Contrat@ / Certific@2** | **XML con XSD público** | Autorización previa | Sí, si ya autorizado |
 | **Bancos** | **Fichero Norma 43** o API del agregador | Ninguna / la del agregador | Sí |
@@ -785,6 +839,8 @@ importancia.
 | **a3NOM v5** | Ficheros `.DAT` en unidad de red | Acceso a la LAN | No |
 | **BOE** | **API REST pública**, sin clave | Ninguna | No hace falta |
 | **TEAC (DYCTEA)** | Scraping, sin CAPTCHA | Ninguna | No hace falta |
+| **BDNS** (subvenciones) | **API REST pública en JSON** | Ninguna | No hace falta |
+| **Catastro** | Servicios web con WSDL publicado | Ninguna | No hace falta |
 
 Dos avisos técnicos que ahorran semanas:
 
@@ -942,3 +998,251 @@ El Rescate, El Tramo, El Aviso, El Convenio y, al final y con las cartas boca ar
 negocio nunca se inventan.* Si falta un dato fiscal o laboral, **se pregunta**. En CIFRA eso
 produjo un food cost del 6 % porque nadie había escrito qué cuesta una txuleta. Aquí produciría
 un modelo presentado mal.
+
+---
+
+## 8. El mercado, el precio y la competencia
+
+Esta sección no estaba en tus ocho preguntas, pero es la que decide si el proyecto es un
+negocio o un ejercicio técnico. Y trae el dato más incómodo de todo el análisis.
+
+### 8.1. "Te traigo IA" ya no vende
+
+**El 70,5 % de los despachos profesionales españoles usa IA a diario en 2026**, frente a
+alrededor del 42 % el año anterior (Barómetro de la Asesoría 2026 de Wolters Kluwer, quinta
+edición, junio de 2026). Y los cuatro verticales grandes ya la han metido dentro del producto:
+**Wolters Kluwer lanzó a3innuva Nómina Expert AI en junio de 2026** y **Zucchetti empuja Altai
+pAIroll** como "primer operador IA de nómina".
+
+La consecuencia es directa: **la objeción del gestor va a ser "ya tengo IA en a3"**. El discurso
+no puede ser la tecnología; tiene que ser tareas concretas de punta a punta y ahorro medible.
+
+Y hay un ángulo mejor que el ahorro. El mismo barómetro dice que **el 69 % de las asesorías
+aumentó su cartera en 2025** y el sector **factura más y gana menos**: más clientes y más
+normativa sin poder subir precios al mismo ritmo. **El despacho no compra IA por moda, compra
+margen.** El retorno hay que expresarlo en *clientes adicionales por asesor sin contratar a
+nadie*, no en documentos procesados.
+
+### 8.2. El dato que puede tumbar el modelo de negocio
+
+Según un comparador sectorial, en despachos de **1 a 3 empleados** cerca del **29 % gasta entre
+1 y 250 € AL AÑO** en software y otro **27 % entre 250 y 500 €/año**; en despachos de 4 a 19
+empleados el tramo dominante (49 %) es **250-500 €/año**.
+
+Si eso es cierto, **un producto de 200-500 €/mes por despacho supera el presupuesto anual
+completo de software de la mayor parte del mercado objetivo.** Y 200-500 €/mes es exactamente
+lo que anuncian los blogs de "copiloto IA para asesorías", junto con implantaciones de
+6.000-15.000 €.
+
+> **Este dato es el que más urge verificar de todo el documento**, y no se puede verificar
+> leyendo: se pregunta. Es una conversación de diez minutos con dos o tres gestorías. Fijar
+> precio sin eso es fijarlo a ciegas.
+
+Contexto que ayuda a calibrar: **el 77 % de las asesorías españolas tiene menos de diez
+empleados.** El cliente tipo es un despacho de tres a ocho personas **sin departamento de
+informática y sin capacidad de integrar nada**. Eso descarta un producto que exija proyecto de
+implantación y obliga a llave en mano.
+
+### 8.3. Qué se paga hoy, con cifras
+
+| Concepto | Precio | Fuente |
+|---|---|---|
+| Gestoría a un autónomo | **80-130 €/mes** | Portales sectoriales españoles |
+| Gestoría a una SL | **180-500 €/mes** | Ídem |
+| Software horizontal de pyme (Anfix, Quipu, Billin, Holded) | **6-30 €/mes** | Comparadores españoles |
+| Extracción de facturas, por documento (Klippa) | **desde 0,28 €/factura** | Klippa |
+| Ídem, horquilla real de mercado | **0,03 € (alto volumen) a 0,45 €** | Dext, BillBjorn, comparadores |
+| Rossum, plan de entrada | **18.000 $/año** | Rossum |
+| TaxDome, gestión de despacho | **800-1.200 $/usuario/año** | Comparadores |
+| Silverfin, **por expediente de cliente/año** | **~60-100 £** según volumen | Comparadores |
+
+Dos conclusiones de aquí:
+
+**No inventes la unidad "euro por asiento".** No existe como precio publicado en España. La
+unidad real de facturación del sector es la **cuota mensual por cliente**, y en digitalización
+se cuenta **por página**, no por factura.
+
+**El modelo replicable es el de Silverfin: cobrar por cliente-expediente gestionado.** Alinea el
+precio con lo que la gestoría cobra a *su* cliente, y esa es la única forma de que las cuentas
+salgan. Si la gestoría cobra 100 €/mes por un autónomo con ~40 documentos, el software no puede
+llevarse más de 10-20 € de esos 100. A 40 documentos, eso son **0,25-0,50 € por documento**:
+justo la horquilla alta del mercado, así que el producto tiene que hacer bastante más que
+extraer.
+
+**Y una buena noticia:** ninguno de los cuatro verticales grandes publica precio de lista. **En
+un mercado sin precios públicos, entrar con precio transparente y publicado es en sí mismo un
+diferenciador.**
+
+### 8.4. Dónde está ocupado y dónde no
+
+| Módulo del dossier | Competencia real | Veredicto |
+|---|---|---|
+| Extracción de facturas | **Dijit.app, Quantum Economics, Vertebra Gestión, Novantin** en España; Dext, Klippa, Rossum fuera | **El más saturado y el de menor margen.** La barrera de entrada no es la IA: son los conectores probados a a3, Sage, NCS y Contasol |
+| Notificaciones DEHú | **EdasNEO (ZeroComa), IvNeos (Ivnosys), MSNotifica, Portal NEOS, Aurea (Normadat), Findiur** — varios ya homologados como Gran Destinatario | Mercado con incumbentes técnicos. **Descargar la notificación no diferencia**; clasificar, extraer el plazo y crear la tarea, sí |
+| Altas en Seguridad Social | **Advisorsy** ya comercializa un robot para el Sistema RED | Competencia directa, y encima el marco cambió con la Resolución TGSS de 9-abr-2025 |
+| Asistente legal RAG | **a3innuva Nómina Expert AI** (WK, junio 2026) | **Llega tarde y en desventaja**: el incumbente tiene el asistente dentro del software donde vive el dato del despacho |
+| Conciliación bancaria | **a3asesor Bank** hace exactamente esto | Si la gestoría ya usa a3, se le está vendiendo lo que ya tiene |
+
+**El hueco defendible no está en ningún módulo suelto: está en el pegamento.** DEHú multicliente
+con clasificación y plazos, presentación de modelos con trazabilidad, y **la captura por
+WhatsApp del cliente final** — que es exactamente el activo que CIFRA ya tiene funcionando y
+que ninguno de los verticales tiene.
+
+Y hay una amenaza que conviene nombrar porque cambia el discurso de venta: **Declarando (desde
+14,99 €/mes) y TaxDown no son proveedores potenciales, son gestorías digitales que compiten
+contra el cliente de Eduardo por el cliente final.** Eso se puede usar: *automatízate o te come
+el que ya lo ha hecho*.
+
+### 8.5. Urgente y con fecha: WhatsApp cambia de precio el 1 de octubre de 2026
+
+Dentro de tres semanas. Y **afecta a CIFRA hoy, no solo a este proyecto**.
+
+Hasta el 30 de septiembre, los **mensajes de servicio** —el texto libre dentro de la ventana de
+24 h— son gratis. **A partir del 1 de octubre se cobran**, igual que las plantillas de utilidad
+enviadas dentro de esa ventana. Habrá **1.000 mensajes de servicio gratis al mes por número**, y
+a partir de ahí, tarifa de utilidad del país.
+
+Tarifas para España en 2026: **marketing 0,0509 €, utilidad 0,0166 €, servicio 0,0166 €**. Los
+mensajes entrantes del cliente **Meta no los cobra**.
+
+**Twilio sí cobra los entrantes**: 0,005 $ por mensaje, de entrada y de salida, encima de la
+tarifa de Meta. En un caso de uso dominado por la entrada de documentos —que es exactamente el
+de El Sobre— **ese recargo prácticamente duplica la factura**. Las cuentas para 100 clientes con
+20 documentos al mes: unos 17 € de Meta y unos 18 € de recargo Twilio. A ese volumen no compensa
+migrar a la Cloud API; **sí compensa abstraer el proveedor detrás de una interfaz**, para poder
+cambiar sin reescribir.
+
+> Y dos avisos de código, uno de ellos para CIFRA: **el modelo de precios pasó a ser por mensaje
+> el 1 de julio de 2025**, no por conversación de 24 h. Cualquier lógica que asuma "conversación
+> abierta = coste fijo con mensajes ilimitados dentro" lleva más de un año obsoleta. Conviene
+> mirar `services/whatsapp.js` con eso en la mano.
+>
+> El segundo: **el cupo de 1.000 mensajes gratis es por número de teléfono**. Eso da un
+> incentivo de arquitectura real a repartir el tráfico entre varios números — uno para captura
+> de documentos, otro para el asistente — que además simplifica el enrutado.
+
+### 8.6. WhatsApp y RGPD: la línea es clara y hay sanciones
+
+- **2.500 € + 2.500 €** a una asesoría por usar WhatsApp personal para tratar datos de clientes
+  (arts. 6.1 y 32 RGPD), calificado como negligencia grave.
+- **3.000 €** por difundir un parte de baja —con nombre y estado de salud— por WhatsApp.
+
+**Regla de diseño no negociable: los partes de baja, las nóminas y la documentación fiscal no
+salen por WhatsApp.** WhatsApp es el timbre, no el buzón. El patrón correcto es **aviso por
+WhatsApp con enlace caducable a un portal propio**, que además resuelve a la vez el RGPD, la
+evidencia de entrega y el coste por mensaje.
+
+Y esto no prohíbe WhatsApp: **prohíbe WhatsApp sin control.** Que es, de paso, el mejor
+argumento comercial del módulo — la gestoría que hoy usa el móvil personal del gestor **ya está
+en infracción**.
+
+### 8.7. Dos cosas más del canal que ahorran disgustos
+
+- **La ingesta IMAP con usuario y contraseña ya no funciona contra Microsoft 365 ni Gmail:**
+  ambos exigen OAuth 2.0. Mientras el buzón de ingesta viva en el cPanel con dominio propio,
+  el cron de CIFRA sigue funcionando; el día que un cliente quiera que se lea su buzón
+  corporativo, hay que implementar OAuth.
+- **Correo transaccional fuera del hosting compartido.** El volumen de una gestoría (unos 1.000
+  correos/mes) **cabe entero en el plan gratuito de Resend o de Brevo**. Amazon SES a 0,10 $ por
+  cada 1.000 es el suelo si crece.
+
+---
+
+## 9. Qué se verificó, qué se cayó y qué sigue sin confirmar
+
+Todo lo importante de este documento pasó por un verificador adversarial, con el encargo
+explícito de **intentar refutar** cada afirmación, no de confirmarla. De doce afirmaciones
+críticas: **3 confirmadas, 6 matizadas, 3 refutadas**.
+
+### Refutadas — tres cosas que habrían salido mal
+
+| Se creía | Es falso porque |
+|---|---|
+| Las autoliquidaciones no tienen servicio web y hay que automatizar un navegador | **Presentación Directa** cubre 303, 111, 130, 200 y treinta modelos más, sin navegador. Era la afirmación más peligrosa: habría llevado a construir un robot innecesario, con su VPS y su fragilidad |
+| El reglamento de la factura electrónica B2B sigue sin aprobarse | **Está aprobado**: RD 238/2026, BOE de 31-mar-2026, en vigor desde el 20-abr-2026. Lo que falta es la Orden Ministerial |
+| El API de la DEHú está reservado a administraciones públicas | **LEMA está abierto a personas jurídicas privadas** con volumen de notificaciones. Sin esto, todo el módulo 1.1 se reducía a scraping y quedaba muerto |
+
+### Confirmadas
+
+- **Existe** el documento "Especificaciones de Servicios Comunes Declaraciones AEAT" v2.9, con
+  las tres interfaces citadas.
+- **Veri\*factu**: 1-ene-2027 sociedades, 1-jul-2027 el resto, por el RDL 15/2025. Y el plazo del
+  **fabricante no se prorrogó**: venció el 29-jul-2025. **No aplica en País Vasco (TicketBAI) ni
+  en Navarra (NaTicket)**, que van por su cuenta.
+- **Los certificados de la FNMT son personales e intransferibles.** Matiz importante: la
+  consecuencia no es la nulidad del trámite, sino **la responsabilidad plena del titular**, la
+  posible revocación del certificado y la pérdida del control exclusivo que exige eIDAS.
+
+### Matizadas — lo que hay que decir con más cuidado
+
+- **Preproducción de la AEAT**: existe y es gratis, pero con certificado obligatorio,
+  **disponibilidad variable por ejercicio** (el 303 en 2025 y 2026, el 190 en 2022-2025) y
+  prohibición expresa de pruebas masivas.
+- **Colaboración social**: base legal confirmada en el art. 92 LGT y la Orden HAC/1398/2003
+  (con las modificaciones de la Orden HFP/534/2022 y la **Orden HAC/86/2025**). **La cita de los
+  arts. 79-81 del RD 1065/2007 no se ha podido confirmar.**
+- **Servicios web de afiliación de la TGSS**: **no consta ninguno público**. Lo que sí hay es la
+  especificación pública del **mensaje AFI** (versión enero 2024), transmitida por SILTRA o RED
+  Online, en **remesas de tres tandas diarias**.
+- **Apoderamiento frente a colaboración social**: correcto en el ámbito tributario, pero **no
+  cubre la Seguridad Social**, donde la vía es la autorización RED, no el REA.
+- **Productos de custodia**: **Nubasit no está confirmado**; **Ivnosys está integrada en
+  Signaturit** y su producto es **IvSign**, con firma remota sobre QSCD y documentación de API
+  pública. **Ninguno publica precios.**
+
+### Lo que sigue sin confirmar y hay que cerrar a mano
+
+1. Si los servicios web de la DEHú permiten consultar **en nombre de un poderdante**. Decide el
+   módulo entero.
+2. Si la autenticación de los servicios de presentación de la AEAT es **mTLS**. Decide si se
+   contrata custodia o se monta el sello propio.
+3. El **gasto real en software** de un despacho pequeño. Decide el precio.
+4. El **texto literal del aviso legal** de las sedes de la AEAT y de la Seguridad Social sobre
+   acceso automatizado. Nadie ha podido leerlo en esta investigación.
+5. La versión exacta de **a3 (o Sage, o ContaPlus)** del despacho. Decide el módulo contable.
+
+---
+
+## 10. Lo que solo puedes decidir tú
+
+Ocho decisiones. Ninguna es técnica.
+
+**1. ¿Este proyecto es de CIFRA o es otra empresa?** CIFRA está posicionada como *consultoría
+de costes para hostelería con herramientas propias, no un SaaS*, y eso está escrito como
+decisión cerrada. Esto es un SaaS vertical para otro sector. O se abre el posicionamiento, o
+nace con otro nombre y otra sociedad. **No es una cuestión de marca: cambia el contrato, el
+seguro de responsabilidad civil y a quién demandan si algo sale mal.**
+
+**2. ¿Fabricamos un SIF de Veri\*factu, o solo auditamos quién cumple?** El Censo produce
+trabajo facturable sin asumir riesgo. El Talonario obliga a firmar una **declaración
+responsable por versión**, con hasta 150.000 € por ejercicio y tipo de sistema, más 1.000 € por
+cada sistema comercializado sin ella. **La firma tuya, no de la gestoría.**
+
+**3. ¿Cuánto vale esto al mes?** Y antes: **¿es cierto que un despacho pequeño gasta 250-500 €
+al AÑO en software?** Si lo es, el producto tiene que costar decenas de euros al mes, no
+cientos, y eso cambia el alcance de todo lo de arriba. **Son dos llamadas de teléfono.**
+
+**4. ¿Quién es el cliente: la gestoría, o los clientes de la gestoría?** El modelo de reventa
+—la gestoría paga una cuota y revende El Sobre y el portal a sus clientes con su marca—
+convierte un coste en un ingreso para el despacho, que es la única forma de que una
+microempresa apruebe un gasto nuevo. Pero es otro producto y otro contrato.
+
+**5. ¿Se sale del hosting compartido solo para esto, o se lleva CIFRA también?** Si hay que
+levantar un VPS de todas formas, quizá tenga sentido consolidar. Hoy el cPanel compartido es la
+restricción que más decisiones de arquitectura está condicionando, y **la clave maestra de
+CIFRA en un `.env` compartido es un problema aunque este proyecto no se haga**.
+
+**6. ¿Se asume un servicio con plazo legal siendo una sola persona?** Un modelo presentado
+tarde tiene consecuencias económicas para el cliente final. Sin Eduardo no hay quien opere el
+sistema. Eso hay que resolverlo antes de firmar un SLA, no después.
+
+**7. ¿Se empieza por lo laboral o por lo fiscal?** Lo laboral (El Parte del Mes, El Rescate, El
+Tramo) es donde CIFRA ya tiene medio módulo construido y donde el dossier deja más dinero sobre
+la mesa. Lo fiscal (La Ventanilla, El Cartero) es lo que más impresiona y lo que más tarda en
+desbloquearse por trámites. **Se pueden solapar, pero el primer euro sale de uno de los dos.**
+
+**8. ¿Se acepta el proyecto entero o se acepta un trozo?** La respuesta honesta a tu pregunta
+de viabilidad es: **el dossier completo es viable, pero no en la forma en que está escrito y no
+sobre la infraestructura actual.** Reescrito alrededor del sello y los apoderamientos, y con la
+infraestructura fuera del compartido, sale. Tal cual está, hay tres módulos que prometen cosas
+que no existen y uno que propone una arquitectura que no se puede vender por escrito.

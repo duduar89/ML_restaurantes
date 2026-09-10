@@ -518,3 +518,9 @@ Estudio elaborado mediante investigación paralela verificada (31 agentes, 514 c
 Los precios de traspaso citados son **precios pedidos** de anuncios reales, no transacciones cerradas: no ha sido posible acceder a ninguna base de datos de operaciones cerradas. Trátense como marco de negociación, no como tasación.
 
 Este documento no sustituye al asesoramiento fiscal y jurídico individualizado. Los cálculos fiscales usan los tipos vigentes para 2026 y supuestos explícitos sobre el valor neto contable de los activos y el coste de adquisición de las participaciones que deben sustituirse por los datos reales.
+
+---
+
+**Versión web del estudio:** https://claude.ai/code/artifact/08fe33d3-3273-4785-9024-e1184fa5eca7
+
+El código fuente de esa página está en `estudios/traspaso-boadilla.html`.

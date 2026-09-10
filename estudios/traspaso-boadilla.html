@@ -1,0 +1,836 @@
+<title>Traspaso en Boadilla</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --ground:#F1F2F6; --surface:#FFFFFF; --surface-2:#F8F9FC; --surface-3:#EDEFF5;
+  --ink:#14161F; --ink-2:#4C5266; --ink-3:#7A8094;
+  --rule:#DDE0E9; --rule-strong:#C3C8D6;
+  --indigo:#3F4FC7; --indigo-soft:#E3E6FA;
+  --brass:#B5761A; --brass-ink:#8F5C11; --brass-soft:#F6EBD8;
+  --good:#2C6A4A; --warn:#A8620F; --crit:#9E2B2B;
+  --shadow:0 1px 2px rgba(20,22,31,.05), 0 8px 24px -16px rgba(20,22,31,.18);
+  --display:'Archivo','Helvetica Neue',Arial,sans-serif;
+  --body:'Source Serif 4',Georgia,'Times New Roman',serif;
+  --mono:'IBM Plex Mono','SFMono-Regular',Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#0E1017; --surface:#161923; --surface-2:#1C2029; --surface-3:#232734;
+    --ink:#E9EAF1; --ink-2:#A3A9BD; --ink-3:#7C8397;
+    --rule:#2A2F3D; --rule-strong:#3A4152;
+    --indigo:#6274E8; --indigo-soft:#20263F;
+    --brass:#BC862A; --brass-ink:#DCA84E; --brass-soft:#2A2317;
+    --good:#5AA37C; --warn:#D09242; --crit:#D2635F;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0E1017; --surface:#161923; --surface-2:#1C2029; --surface-3:#232734;
+  --ink:#E9EAF1; --ink-2:#A3A9BD; --ink-3:#7C8397;
+  --rule:#2A2F3D; --rule-strong:#3A4152;
+  --indigo:#6274E8; --indigo-soft:#20263F;
+  --brass:#BC862A; --brass-ink:#DCA84E; --brass-soft:#2A2317;
+  --good:#5AA37C; --warn:#D09242; --crit:#D2635F;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.7);
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){ --brass-ink:#DCA84E; } }
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:var(--body); font-size:17.5px; line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:940px; margin:0 auto; padding-inline:20px; padding-block:0}
+h1,h2,h3,h4{font-family:var(--display); text-wrap:balance; margin:0; letter-spacing:-.018em}
+p{margin:0}
+a{color:var(--indigo)}
+.prose{max-width:70ch}
+.eyebrow{
+  font-family:var(--mono); font-size:11px; font-weight:500; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--ink-3);
+}
+.num{font-family:var(--mono); font-variant-numeric:tabular-nums}
+
+/* ---------- masthead ---------- */
+header.mast{
+  border-bottom:1px solid var(--rule); background:var(--surface);
+}
+.mast-inner{display:flex; flex-direction:column; gap:26px; padding-block:38px 30px}
+.mast-top{display:flex; flex-wrap:wrap; gap:14px 24px; align-items:baseline; justify-content:space-between}
+h1{font-size:clamp(30px,5.4vw,46px); font-weight:800; line-height:1.06; max-width:16ch}
+h1 em{font-style:normal; color:var(--brass-ink)}
+.mast-sub{max-width:60ch; color:var(--ink-2); font-size:17px}
+
+.spec{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+  gap:1px; background:var(--rule); border:1px solid var(--rule); border-radius:3px; overflow:hidden;
+}
+.spec div{background:var(--surface); padding:11px 13px; display:flex; flex-direction:column; gap:3px}
+.spec dt{font-family:var(--mono); font-size:10.5px; letter-spacing:.11em; text-transform:uppercase; color:var(--ink-3)}
+.spec dd{margin:0; font-family:var(--display); font-weight:600; font-size:16px; font-variant-numeric:tabular-nums}
+
+/* ---------- headline verdict ---------- */
+.verdict{
+  margin-block:34px; background:var(--surface); border:1px solid var(--rule);
+  border-top:3px solid var(--brass); border-radius:3px; box-shadow:var(--shadow);
+  padding:28px 26px 24px;
+}
+.verdict-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:26px}
+.big{display:flex; flex-direction:column; gap:5px}
+.big .v{
+  font-family:var(--display); font-weight:800; font-variant-numeric:tabular-nums;
+  font-size:clamp(30px,5vw,40px); line-height:1; letter-spacing:-.03em;
+}
+.big .v.hero{color:var(--brass-ink)}
+.big .r{font-family:var(--mono); font-size:13px; color:var(--ink-2); font-variant-numeric:tabular-nums}
+.verdict-note{
+  margin-top:22px; padding-top:18px; border-top:1px solid var(--rule);
+  font-size:16.5px; color:var(--ink-2); max-width:76ch;
+}
+.verdict-note strong{color:var(--ink)}
+
+/* ---------- sections ---------- */
+section{padding-block:40px; border-top:1px solid var(--rule)}
+section > .prose + .prose, .stack{margin-top:16px}
+h2{font-size:clamp(22px,3.4vw,28px); font-weight:700; margin-bottom:6px}
+h3{font-size:19px; font-weight:700; margin-top:30px; margin-bottom:8px}
+h4{font-size:15px; font-weight:700; margin-top:22px; margin-bottom:6px; font-family:var(--display)}
+.sec-head{display:flex; flex-direction:column; gap:4px; margin-bottom:20px}
+.lede{font-size:18.5px; color:var(--ink-2); max-width:64ch}
+.stack{display:flex; flex-direction:column; gap:15px}
+
+/* ---------- football field chart ---------- */
+figure{margin:26px 0 0}
+figcaption{font-size:14.5px; color:var(--ink-3); margin-top:14px; max-width:70ch; font-family:var(--display)}
+.chart{
+  background:var(--surface); border:1px solid var(--rule); border-radius:3px;
+  padding:22px 20px 14px;
+}
+.ff{display:flex; flex-direction:column; gap:0}
+.ff-row{
+  position:relative; display:grid; grid-template-columns:180px 1fr; gap:14px; align-items:center;
+  padding-block:9px; border-bottom:1px solid var(--rule);
+}
+.ff-row:last-child{border-bottom:0}
+.ff-row.hi{background:var(--brass-soft); margin-inline:-20px; padding-inline:20px; border-bottom:0}
+.ff-lab{font-family:var(--display); font-size:13.5px; font-weight:600; line-height:1.25}
+.ff-lab span{display:block; font-family:var(--mono); font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); font-weight:400; margin-top:2px}
+.track{position:relative; height:26px}
+.band{position:absolute; top:50%; transform:translateY(-50%); height:11px; border-radius:5.5px; background:var(--indigo); opacity:.42}
+.ff-row.hi .band{background:var(--brass); opacity:.42; height:15px; border-radius:7.5px}
+.dot{
+  position:absolute; top:50%; width:11px; height:11px; border-radius:50%;
+  background:var(--indigo); transform:translate(-50%,-50%); border:2px solid var(--surface);
+}
+.ff-row.hi .dot{background:var(--brass); width:14px; height:14px; border-color:var(--brass-soft)}
+.dot-lab{
+  position:absolute; top:50%; transform:translate(-50%,-50%);
+  font-family:var(--mono); font-size:11.5px; font-weight:600; font-variant-numeric:tabular-nums;
+  color:var(--ink); white-space:nowrap; pointer-events:none;
+}
+.axis{position:relative; height:30px; margin-top:6px; margin-left:194px}
+.axis .t{position:absolute; top:0; font-family:var(--mono); font-size:11px; color:var(--ink-3); transform:translateX(-50%); font-variant-numeric:tabular-nums}
+.axis .g{position:absolute; top:-9999px}
+.gridline{position:absolute; top:0; bottom:0; width:1px; background:var(--rule)}
+.ff-grid{position:absolute; inset:0; pointer-events:none}
+.zone{
+  position:absolute; top:0; bottom:0; background:var(--brass); opacity:.09;
+  border-left:1px dashed var(--brass); border-right:1px dashed var(--brass);
+}
+.chart-scroll{overflow-x:auto}
+
+/* ---------- night timeline ---------- */
+.night{background:var(--surface); border:1px solid var(--rule); border-radius:3px; padding:22px 20px 16px}
+.nl-row{display:grid; grid-template-columns:150px 1fr; gap:14px; align-items:center; padding-block:10px}
+.nl-bar{position:relative; height:34px}
+.nl-fill{position:absolute; top:50%; transform:translateY(-50%); height:20px; border-radius:4px; display:flex; align-items:center; justify-content:flex-end; padding-right:9px}
+.nl-fill span{font-family:var(--mono); font-size:11.5px; font-weight:600; color:#fff; white-space:nowrap}
+.nl-gap{
+  position:absolute; top:50%; transform:translateY(-50%); height:20px;
+  border:1px dashed var(--brass); border-radius:4px; background:var(--brass-soft);
+  display:flex; align-items:center; justify-content:center;
+}
+.nl-gap span{font-family:var(--mono); font-size:11px; font-weight:600; color:var(--brass-ink); white-space:nowrap}
+.nl-axis{position:relative; height:46px; margin-left:164px; margin-top:4px}
+.nl-axis .t{position:absolute; font-family:var(--mono); font-size:11px; color:var(--ink-3); transform:translateX(-50%)}
+.nl-tick{position:absolute; top:20px; bottom:20px; width:1px; background:var(--rule-strong)}
+.nl-metro{position:absolute; top:18px; bottom:18px; width:1px; background:var(--crit); opacity:.6}
+.nl-metro-lab{position:absolute; top:0; font-family:var(--mono); font-size:10.5px; color:var(--crit); white-space:nowrap; transform:translateX(-50%)}
+
+/* ---------- tables ---------- */
+.tbl-scroll{overflow-x:auto; margin-top:18px; border:1px solid var(--rule); border-radius:3px; background:var(--surface)}
+table{border-collapse:collapse; width:100%; font-size:15px; font-family:var(--display)}
+th,td{text-align:left; padding:10px 14px; border-bottom:1px solid var(--rule); vertical-align:top}
+thead th{
+  font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--ink-3); font-weight:500; background:var(--surface-2); white-space:nowrap;
+}
+tbody tr:last-child td{border-bottom:0}
+td.n,th.n{text-align:right; font-family:var(--mono); font-variant-numeric:tabular-nums; white-space:nowrap; font-size:14px}
+tr.total td{background:var(--surface-3); font-weight:700}
+.chip{
+  display:inline-block; font-family:var(--mono); font-size:10.5px; letter-spacing:.06em;
+  padding:2px 7px; border-radius:3px; text-transform:uppercase; font-weight:500; white-space:nowrap;
+}
+.chip.ok{background:var(--indigo-soft); color:var(--indigo)}
+.chip.hi{background:var(--brass-soft); color:var(--brass-ink)}
+.chip.no{background:var(--surface-3); color:var(--ink-2)}
+
+/* ---------- callouts ---------- */
+.call{
+  margin-top:22px; padding:18px 20px; background:var(--surface);
+  border:1px solid var(--rule); border-left:3px solid var(--brass); border-radius:3px;
+}
+.call.alt{border-left-color:var(--indigo)}
+.call .eyebrow{margin-bottom:7px; color:var(--brass-ink)}
+.call.alt .eyebrow{color:var(--indigo)}
+.call p{font-size:16.5px; max-width:70ch}
+.call p + p{margin-top:10px}
+
+.qlist{counter-reset:q; display:flex; flex-direction:column; gap:13px; margin-top:20px; padding:0; list-style:none}
+.qlist li{
+  counter-increment:q; display:grid; grid-template-columns:26px 1fr; gap:13px;
+  font-size:16.5px; max-width:74ch;
+}
+.qlist li::before{
+  content:counter(q,decimal-leading-zero); font-family:var(--mono); font-size:12px;
+  color:var(--brass-ink); font-weight:600; padding-top:5px;
+}
+.qlist b{font-weight:600; font-family:var(--display)}
+
+.two{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:1px; background:var(--rule); border:1px solid var(--rule); border-radius:3px; margin-top:22px; overflow:hidden}
+.two > div{background:var(--surface); padding:18px 20px}
+.two h4{margin-top:0}
+.two ul{margin:8px 0 0; padding-left:18px; font-size:16px}
+.two li{margin-bottom:5px}
+
+footer{border-top:1px solid var(--rule); padding-block:30px 46px; color:var(--ink-3); font-size:14.5px}
+footer p{max-width:74ch}
+footer p + p{margin-top:10px}
+
+@media (max-width:620px){
+  body{font-size:17px}
+  .ff-row{grid-template-columns:1fr; gap:4px; padding-block:12px}
+  .axis{margin-left:0}
+  .ff-row{grid-template-columns:1fr}
+  .zone{display:none}
+  .nl-row{grid-template-columns:1fr; gap:4px}
+  .nl-axis{margin-left:0}
+  .nl-row{grid-template-columns:1fr}
+  .dot-lab{font-size:11px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important; transition:none!important}}
+</style>
+
+<header class="mast">
+  <div class="wrap mast-inner">
+    <div class="mast-top">
+      <div>
+        <p class="eyebrow">Estudio de valoración · septiembre 2026</p>
+        <h1 style="margin-top:10px">¿Por cuánto puedes traspasar <em>el bar</em>?</h1>
+      </div>
+    </div>
+    <p class="mast-sub">Bar especial (bar de copas) en el eje Siglo XXI de Boadilla del Monte. Licencia de 2004, aforo 160, 181 m², 220.000 € de facturación y 14 años de contrato por delante. Este documento fija un precio defendible, dice cómo subirlo y advierte de lo que puede tumbar la operación.</p>
+    <dl class="spec">
+      <div><dt>Facturación</dt><dd>220.000 €</dd></div>
+      <div><dt>Aforo</dt><dd>160 pax</dd></div>
+      <div><dt>Superficie</dt><dd>181 m²</dd></div>
+      <div><dt>Alquiler</dt><dd>1.500 €/mes</dd></div>
+      <div><dt>€/m² renta</dt><dd>8,29 €</dd></div>
+      <div><dt>Contrato</dt><dd>14 años</dd></div>
+      <div><dt>Licencia</dt><dd>2004</dd></div>
+      <div><dt>Cierre</dt><dd>3:30 h</dd></div>
+    </dl>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="verdict">
+    <p class="eyebrow" style="margin-bottom:18px">El número</p>
+    <div class="verdict-grid">
+      <div class="big">
+        <p class="eyebrow">Traspaso del negocio</p>
+        <p class="v hero">85.000 €</p>
+        <p class="r">rango 60.000 – 125.000</p>
+      </div>
+      <div class="big">
+        <p class="eyebrow">100 % de las participaciones</p>
+        <p class="v">70.500 €</p>
+        <p class="r">+ caja neta al cierre</p>
+      </div>
+      <div class="big">
+        <p class="eyebrow">Precio de anuncio</p>
+        <p class="v">110.000 €</p>
+        <p class="r">cierre esperado 80–95.000</p>
+      </div>
+      <div class="big">
+        <p class="eyebrow">Suelo de no venta</p>
+        <p class="v">55.000 €</p>
+        <p class="r">por debajo, no vendas</p>
+      </div>
+    </div>
+    <p class="verdict-note"><strong>Las dos fórmulas son equivalentes.</strong> Un traspaso de 85.000 € y una venta de participaciones de 70.500 € te dejan prácticamente el mismo dinero neto: ese 17 % de diferencia es exactamente el Impuesto sobre Sociedades que no pagas por la vía societaria. Y el precio sube a <strong>110.000 – 150.000 €</strong> si ejecutas antes el plan de seis acciones: cuesta entre 5.000 y 12.000 € y dos o tres trimestres de espera.</p>
+  </div>
+
+  <section style="border-top:0">
+    <div class="sec-head">
+      <p class="eyebrow">Convergencia</p>
+      <h2>Cinco métodos, tres jueces, un número</h2>
+      <p class="lede">Cada método se calculó de forma independiente y después se sometió a un panel de tres jueces con intereses opuestos: un comprador, un bróker que cobra a éxito y un auditor de la aritmética.</p>
+    </div>
+
+    <figure>
+      <div class="chart chart-scroll">
+        <div class="ff" id="ff"></div>
+        <div class="axis" id="ffaxis"></div>
+      </div>
+      <figcaption>Rangos de valor del traspaso, en euros. El punto marca el escenario base de cada método. La franja sombreada es el intervalo de cierre esperado (80.000 – 95.000 €).</figcaption>
+    </figure>
+
+    <div class="call">
+      <p class="eyebrow">Cómo leer este gráfico</p>
+      <p>Seis de las ocho estimaciones se solapan entre 55.000 y 105.000 €. La excepción es el <strong>coste de reposición</strong>, y no es un error: montar este local desde cero cuesta entre 250.000 y 400.000 € contando obra, insonorización, equipamiento, licencia y los meses de tramitación sin ingresar. Eso <em>no</em> es lo que vale tu negocio — es la razón por la que nadie te va a montar uno igual enfrente. Es un techo de negociación, no un precio.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <p class="eyebrow">La variable que lo decide todo</p>
+      <h2>Qué son realmente esos 40.000–65.000 €</h2>
+    </div>
+    <div class="prose stack">
+      <p>Aquí está la mitad de la incertidumbre del estudio, y se resuelve con un documento. En una SL familiar de hostelería, lo habitual es que el beneficio que declara el dueño sea <em>lo que el negocio le deja a él</em>, sin haber descontado el valor de su propio trabajo. Eso no es EBITDA: es SDE. Y valen muy distinto.</p>
+    </div>
+
+    <div class="tbl-scroll">
+      <table>
+        <thead><tr><th></th><th>Lectura A — lo más probable</th><th>Lectura B</th></tr></thead>
+        <tbody>
+          <tr><td>Qué son los 40–65 k€</td><td><b>SDE:</b> beneficio antes de retribuir tu trabajo</td><td><b>EBITDA real,</b> ya con un encargado pagado a mercado</td></tr>
+          <tr><td>Beneficio antes de tu sueldo</td><td class="n">40.000 – 65.000 €</td><td class="n">66.000 – 91.000 €</td></tr>
+          <tr><td>Margen implícito</td><td class="n">18 – 30 %</td><td class="n">30 – 41 %</td></tr>
+          <tr><td>¿Es creíble?</td><td>Sí, normal en un bar de copas</td><td>Sólo con cuentas en la mano</td></tr>
+          <tr class="total"><td>Precio de traspaso</td><td class="n">60.000 – 125.000 €</td><td class="n">130.000 – 190.000 €</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="call">
+      <p class="eyebrow">75.000 € dependen de esto</p>
+      <p>Ningún múltiplo, ningún comparable y ninguna negociación mueve tanto dinero como este único dato. <strong>¿Cobras nómina de la sociedad, de cuánto, y cuántas horas dedicas de verdad al local?</strong> Si no cobras nómina, la cifra es SDE y hay que restar el coste de un encargado de sala (25.000–32.000 € de coste empresa) para saber qué compra realmente un inversor.</p>
+      <p>Todo lo que sigue usa la Lectura A, que es la conservadora y la que te van a aplicar por defecto si no acreditas lo contrario.</p>
+    </div>
+
+    <h3>Normalización del beneficio</h3>
+    <div class="tbl-scroll">
+      <table>
+        <thead><tr><th>Concepto</th><th class="n">Conservador</th><th class="n">Base</th><th class="n">Alto</th></tr></thead>
+        <tbody>
+          <tr><td>SDE declarado (antes de tu retribución)</td><td class="n">48.000</td><td class="n">58.000</td><td class="n">68.000</td></tr>
+          <tr><td>− Capex recurrente (sonido, luces, frío, mobiliario)</td><td class="n">−4.500</td><td class="n">−4.500</td><td class="n">−4.500</td></tr>
+          <tr><td>− Subida del 20 % de renta (art. 32 LAU)</td><td class="n">−3.600</td><td class="n">−3.600</td><td class="n">0</td></tr>
+          <tr class="total"><td>Flujo para el comprador-operador</td><td class="n">39.900</td><td class="n">49.900</td><td class="n">63.500</td></tr>
+          <tr><td>× Múltiplo sobre SDE</td><td class="n">1,5×</td><td class="n">1,7×</td><td class="n">2,0×</td></tr>
+          <tr class="total"><td>Valor del traspaso</td><td class="n">60.000 €</td><td class="n">85.000 €</td><td class="n">127.000 €</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin-top:14px; font-size:15.5px; color:var(--ink-2); max-width:70ch">Contraste independiente por la vía del EBITDA transferible (SDE menos 26.000 € de encargado, múltiplo 3,4–4,0×): 56.000 / 84.000 / 127.000 €. Los dos caminos convergen sin haber sido forzados. Esa es la razón de que la base sea 85.000 € y no 60.000 ni 120.000.</p>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <p class="eyebrow">La competencia</p>
+      <h2>Dos horas que no puedes vender</h2>
+      <p class="lede">Tu licencia de bar especial cierra a las 3:30 h. Gávalon, en la misma avenida desde 2003, cierra a las 5:30 h los viernes y sábados. La diferencia no es de gestión: es de categoría de licencia.</p>
+    </div>
+
+    <figure>
+      <div class="night chart-scroll">
+        <div id="nl"></div>
+        <div class="nl-axis" id="nlaxis"></div>
+      </div>
+      <figcaption>Horarios de cierre según la Orden de 21/04/2022 de la Comunidad de Madrid (BOCM 29/04/2022), con la ampliación de 30 minutos de viernes, sábados y vísperas de festivo ya aplicada.</figcaption>
+    </figure>
+
+    <div class="tbl-scroll">
+      <table>
+        <thead><tr><th>Categoría del catálogo</th><th class="n">Horario base</th><th class="n">V, S y vísperas</th></tr></thead>
+        <tbody>
+          <tr><td>Bar especial <span class="chip hi">tu licencia</span></td><td class="n">12:00 – 3:00</td><td class="n">3:30</td></tr>
+          <tr><td>Café-espectáculo</td><td class="n">13:00 – 5:30</td><td class="n">6:00</td></tr>
+          <tr><td>Discoteca / sala de baile <span class="chip ok">Gávalon</span></td><td class="n">17:00 – 5:30</td><td class="n">6:00</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="prose stack" style="margin-top:22px">
+      <p>El horario va unido a la categoría del establecimiento en el Catálogo (Decreto 184/1998) y lo fija la Comunidad, no el Ayuntamiento. Los municipios pueden <em>reducir</em> el horario general, nunca ampliarlo con carácter permanente. No hay atajo administrativo: la única vía para ganar horas es cambiar la categoría de la licencia.</p>
+    </div>
+
+    <div class="call alt">
+      <p class="eyebrow">No descuentes dos veces lo mismo</p>
+      <p>Tus 220.000 € <strong>ya se han facturado cerrando a las 3:30 h</strong>, con Gávalon abierto hasta las 5:30 desde 2003 y con agosto vacío. El techo horario ya está dentro de la cifra. Cuando un comprador te lo descuente otra vez del múltiplo, te está cobrando dos veces la misma limitación, y tienes que decírselo.</p>
+      <p>Lo que sí es real: el público que sabe que va a terminar en Gávalon <em>empieza allí</em>, así que también te erosiona la franja previa. Por eso el múltiplo está en la mitad de la banda sectorial y no en la parte alta.</p>
+    </div>
+
+    <div class="call">
+      <p class="eyebrow">La palanca de mayor impacto de todo el estudio</p>
+      <p>Todo el mundo mira hacia la reconversión a <strong>discoteca</strong>, que es cara: pista de baile, aislamiento reforzado, proyecto completo, del orden de 45.000–90.000 €. Casi nadie mira la categoría de <strong>café-espectáculo, que cierra a la misma hora</strong> y cuyos requisitos son distintos: escenario y actuaciones en directo, no necesariamente pista de baile.</p>
+      <p>Una consulta urbanística previa al Ayuntamiento cuesta entre 0 y 500 € y tarda de uno a tres meses. Y atención: <strong>incluso una respuesta negativa vale dinero</strong>, porque cierra el debate y le quita al comprador la munición para descontar por incertidumbre.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <p class="eyebrow">Comparables reales</p>
+      <h2>Cuánto se pide de verdad</h2>
+      <p class="lede">Precios de anuncios reales. El cierre en traspasos de hostelería se produce habitualmente entre un 15 % y un 25 % por debajo de lo pedido.</p>
+    </div>
+
+    <h4>En Boadilla del Monte</h4>
+    <div class="tbl-scroll">
+      <table>
+        <thead><tr><th>Negocio</th><th class="n">Superficie</th><th class="n">Pedido</th><th class="n">Alquiler</th></tr></thead>
+        <tbody>
+          <tr><td>Bar cafetería + terraza cerrada</td><td class="n">50 + 20 m²</td><td class="n">65.000 €</td><td class="n">—</td></tr>
+          <tr><td>Negocio de hostelería</td><td class="n">—</td><td class="n">75.000 €</td><td class="n">—</td></tr>
+          <tr><td>Bar-restaurante (110 m² calle + 110 sótano), 12 mesas de terraza</td><td class="n">220 m²</td><td class="n">negociable</td><td class="n">1.770 € + IVA</td></tr>
+          <tr><td>Bar-restaurante Av. Siglo XXI, licencia definitiva</td><td class="n">254 m²</td><td class="n">—</td><td class="n">—</td></tr>
+          <tr><td>Bar-restaurante esquina Av. Infante Don Luis, aforo 50</td><td class="n">77 + 80 m²</td><td class="n">—</td><td class="n">—</td></tr>
+          <tr><td>Local reformado dos plantas, Av. Siglo XXI</td><td class="n">120 m²</td><td class="n">15.000 €</td><td class="n">—</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4>Bares de copas en Madrid</h4>
+    <div class="tbl-scroll">
+      <table>
+        <thead><tr><th>Negocio</th><th>Datos</th><th class="n">Pedido</th><th class="n">Alquiler</th></tr></thead>
+        <tbody>
+          <tr><td>Bar de copas, zona Ópera</td><td>—</td><td class="n">80.000 €</td><td class="n">2.000 €/mes</td></tr>
+          <tr><td>Bar de copas en funcionamiento, con extracción</td><td>—</td><td class="n">27.000 €</td><td class="n">1.700 €/mes</td></tr>
+          <tr><td>Bar reformado, dos plantas</td><td>aforo 99</td><td class="n">30.000 €</td><td class="n">2.000 €/mes</td></tr>
+          <tr><td>Bar de copas, Arganzuela, licencia de bar especial</td><td>aforo 48 · 23.000 €/mes de ingresos</td><td class="n">—</td><td class="n">—</td></tr>
+          <tr class="total"><td>Mediana del distrito Centro (25 bares)</td><td>—</td><td class="n">85.000 €</td><td class="n">—</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="call">
+      <p class="eyebrow">Qué dicen sobre tu local</p>
+      <p>El dato más útil es el primero: <strong>una cafetería de 70 m² en Boadilla pide 65.000 €.</strong> Tú tienes 181 m², aforo de 160, licencia de bar especial, 220.000 € de facturación y 14 años de contrato. Pedir menos de 65.000 € sería regalarlo.</p>
+      <p>En el otro extremo, la mediana de 85.000 € del distrito Centro de Madrid —con muchísima más rotación y transporte nocturno toda la noche— marca que <strong>esto no es un activo de 200.000 €</strong>. Tu posición justificada está en la parte alta de esa banda: más superficie y aforo que la media de los comparables, alquiler más barato que todos ellos y un contrato de 14 años que ninguno declara.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <p class="eyebrow">El contrato</p>
+      <h2>El alquiler: activo, pero menos de lo que crees</h2>
+    </div>
+    <div class="tbl-scroll">
+      <table>
+        <thead><tr><th>Local en alquiler en Boadilla</th><th class="n">Superficie</th><th class="n">Renta</th><th class="n">€/m²/mes</th></tr></thead>
+        <tbody>
+          <tr><td>Local a pie de calle</td><td class="n">250 m²</td><td class="n">2.950 €</td><td class="n">11,80</td></tr>
+          <tr><td>Local dos plantas + terraza privada</td><td class="n">210 m²</td><td class="n">4.000 €</td><td class="n">19,05</td></tr>
+          <tr><td>Av. Infante Don Luis (85 m² baja + 175 sótano)</td><td class="n">300 m²</td><td class="n">5.000 €</td><td class="n">16,67</td></tr>
+          <tr><td>Bar-restaurante (110 m² calle + 110 sótano)</td><td class="n">220 m²</td><td class="n">1.770 € + IVA</td><td class="n">8,05</td></tr>
+          <tr class="total"><td>Tu local</td><td class="n">181 m²</td><td class="n">1.500 €</td><td class="n">8,29</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="prose stack" style="margin-top:20px">
+      <p>La conclusión es más matizada de lo que te gustaría oír, y depende de un dato que no me has dado: <strong>si los 181 m² son todos a pie de calle o incluyen sótano.</strong></p>
+      <p>Si son todos a pie de calle, la renta de mercado estaría en 2.100–3.400 €/mes y estás pagando entre un 30 % y un 55 % menos: el contrato es un activo de primer orden. Si incluyen sótano, el comparable relevante es el bar-restaurante que paga 1.770 € + IVA por 110 m² de calle y 110 de sótano — y entonces <strong>estás pagando precio de mercado</strong> y el contrato vale bastante menos como argumento.</p>
+      <p>Ojo con un error habitual: sumar al precio el valor capitalizado del alquiler barato <em>además</em> de aplicar un múltiplo al beneficio. Es contarlo dos veces. El alquiler bajo ya está dentro de tu beneficio — por eso tu esfuerzo de alquiler es del 8,2 % de las ventas cuando el umbral de alarma del sector está en el 10–12 %. Justifica situarse en la parte alta del múltiplo, no un sumando aparte.</p>
+    </div>
+
+    <div class="call">
+      <p class="eyebrow">Artículo 32 LAU · la reunión que vale 13.000 €</p>
+      <p>La ley te deja ceder el contrato <strong>sin permiso del arrendador</strong>, pero le da derecho a subir la renta un <strong>20 %</strong> — de 1.500 a 1.800 €/mes, 3.600 € menos de beneficio al año para el comprador — y te obliga a notificárselo fehacientemente en un mes. Capitalizado en el precio, eso son entre 7.000 y 13.000 € menos en tu bolsillo.</p>
+      <p><strong>Es derecho dispositivo: se puede excluir por pacto.</strong> Ve al arrendador <em>antes</em> de anunciar nada y negocia una novación: autorización expresa de cesión, renuncia al 20 %, confirmación del plazo y autorización de subarriendo parcial, a cambio de ampliar plazo o de una prima única de 2.000–4.000 €. Un propietario con 14 años firmados a 1.500 € suele firmar.</p>
+    </div>
+
+    <h3>Las siete preguntas que responde tu contrato hoy mismo</h3>
+    <ol class="qlist">
+      <li><b>¿Prohíbe o condiciona la cesión?</b> Si la prohíbe, el traspaso no existe como opción y cambia toda la estrategia.</li>
+      <li><b>¿Excluye por pacto el 20 % del artículo 32?</b> Vale entre 7.000 y 13.000 € de precio.</li>
+      <li><b>¿Tiene cláusula de cambio de control?</b> Si la tiene, vender participaciones tampoco evita la subida.</li>
+      <li><b>¿Qué índice de actualización lleva?</b> Con IPC al 3 % durante 14 años, tus 18.000 € se convierten en 27.000 €/año al final. El comprador sí lo va a modelar.</li>
+      <li><b>¿Tiene cláusula de destino?</b> Si obliga a usarlo como bar de copas, pierdes a todos los compradores de restauración.</li>
+      <li><b>¿Tiene cláusula de desistimiento?</b> Sin ella, 14 años son 252.000 € de obligación, no un activo.</li>
+      <li><b>¿Está inscrito en el Registro de la Propiedad?</b> Si no y el arrendador vende el edificio, el contrato puede extinguirse y los 14 años valen cero.</li>
+    </ol>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <p class="eyebrow">Estructura</p>
+      <h2>Traspaso o venta de la sociedad</h2>
+      <p class="lede">Te habrán dicho que vender participaciones es mucho mejor fiscalmente. Es cierto que pagas un impuesto en vez de dos — pero también es cierto que el comprador paga menos por las participaciones. Con las dos cuentas completas, el resultado sorprende.</p>
+    </div>
+
+    <div class="tbl-scroll">
+      <table>
+        <thead><tr><th>Del valor del negocio al precio de las participaciones</th><th class="n">Base</th></tr></thead>
+        <tbody>
+          <tr><td>Valor del negocio (enterprise value)</td><td class="n">85.000 €</td></tr>
+          <tr><td><b>+</b> Se evita la subida del 20 % del art. 32 LAU (no hay cesión: sigue siendo la misma SL)</td><td class="n">+10.000 €</td></tr>
+          <tr><td><b>−</b> El comprador pierde la amortización del fondo de comercio (art. 12.2 LIS)</td><td class="n">−6.000 €</td></tr>
+          <tr><td><b>−</b> Contingencia histórica heredada, sin el escudo del art. 175.2 LGT ni el límite de 3 años del art. 44.3 ET</td><td class="n">−8.000 €</td></tr>
+          <tr><td><b>−</b> Circulante normalizado: hereda proveedores, IVA del trimestre, pagas extra y vacaciones devengadas</td><td class="n">−10.000 €</td></tr>
+          <tr class="total"><td>Precio de las participaciones <span class="chip hi">+ caja neta al cierre</span></td><td class="n">70.500 €</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>El cálculo que responde a tu pregunta</h3>
+    <div class="tbl-scroll">
+      <table>
+        <thead><tr><th>Vía A — Traspaso por 85.000 €</th><th class="n">€</th></tr></thead>
+        <tbody>
+          <tr><td>Beneficio de la SL (menos 15.000 € de valor neto contable supuesto)</td><td class="n">70.000</td></tr>
+          <tr><td>Impuesto sobre Sociedades microempresa 2026 (19 % hasta 50.000 + 21 %)</td><td class="n">−13.700</td></tr>
+          <tr><td>Operaciones Societarias por la disolución (1 %)</td><td class="n">−713</td></tr>
+          <tr class="total"><td>Queda a repartir antes de tu IRPF</td><td class="n">70.587</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tbl-scroll" style="margin-top:12px">
+      <table>
+        <thead><tr><th>Vía B — Participaciones por 70.500 €</th><th class="n">€</th></tr></thead>
+        <tbody>
+          <tr><td>No sujeta a IVA y exenta de ITP (art. 314 TRLMV: la sociedad no tiene inmuebles)</td><td class="n">0</td></tr>
+          <tr class="total"><td>Queda a repartir antes de tu IRPF</td><td class="n">70.500</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="call">
+      <p class="eyebrow">Conclusión</p>
+      <p><strong>No pelees por una fórmula u otra creyendo que ganas dinero.</strong> Deja que el comprador elija y usa el precio de indiferencia —85.000 de traspaso ≡ 70.500 de participaciones— como tu tabla de conversión en la mesa. Si alguien sólo acepta traspaso, cóbralo a 85.000 € y disuelve la sociedad después: sales limpio y ganas lo mismo.</p>
+      <p>Un matiz que sí puede cambiarlo: <strong>si compraste el negocio hace cinco años pagando, por ejemplo, 70.000 €</strong>, tu ganancia patrimonial al vender participaciones sería mínima y la vía societaria pasaría a ser claramente mejor. Es además el mejor comparable que existe en todo el expediente y no te lo ha preguntado nadie.</p>
+    </div>
+
+    <div class="two">
+      <div>
+        <h4>Traspaso</h4>
+        <ul>
+          <li><b>Muchos más compradores.</b></li>
+          <li>Tu responsabilidad queda limitada (certificado del art. 175.2 LGT; 3 años del art. 44.3 ET).</li>
+          <li>Se activa el art. 32 LAU: +20 % de renta.</li>
+          <li>Cambio de titularidad de licencia: en Boadilla es un trámite propio y reglado.</li>
+          <li>Basta documento privado.</li>
+          <li>Es la única vía si hay caja no declarada.</li>
+        </ul>
+      </div>
+      <div>
+        <h4>100 % de las participaciones</h4>
+        <ul>
+          <li><b>Muchos menos compradores:</b> pocos quieren heredar una SL de ocio nocturno.</li>
+          <li>Respondes con manifestaciones y garantías hasta la prescripción fiscal (4 años).</li>
+          <li>Retención en garantía del 10–15 % durante 18–24 meses.</li>
+          <li>No activa el art. 32 LAU, salvo cláusula de cambio de control.</li>
+          <li>La licencia continúa sin trámite.</li>
+          <li>Exige escritura pública (art. 106 LSC).</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <p class="eyebrow">Estrategia de precio</p>
+      <h2>Qué pasa según lo que pidas</h2>
+    </div>
+    <div class="tbl-scroll">
+      <table>
+        <thead><tr><th class="n">Anuncio</th><th class="n">Cierre</th><th class="n">Plazo</th><th>Probabilidad de cerrar en 12 meses</th></tr></thead>
+        <tbody>
+          <tr><td class="n">150.000 €+</td><td class="n">no cierra</td><td class="n">—</td><td>&lt; 10 %. Dos curiosos y ninguna oferta. A los seis meses el anuncio está quemado y toda bajada posterior se lee como desesperación</td></tr>
+          <tr><td class="n">130.000 €</td><td class="n">95–105.000</td><td class="n">8–14 meses</td><td>~35 %. Sólo si aparece el comprador estratégico. Es una apuesta, no un plan</td></tr>
+          <tr class="total"><td class="n">110.000 €</td><td class="n">85–95.000</td><td class="n">4–7 meses</td><td>~65 %. Recomendado</td></tr>
+          <tr><td class="n">95.000 €</td><td class="n">78–85.000</td><td class="n">2–4 meses</td><td>~80 %</td></tr>
+          <tr><td class="n">75.000 €</td><td class="n">68–73.000</td><td class="n">3–6 semanas</td><td>&gt; 90 %. Venta rápida real</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin-top:16px; font-size:16.5px; color:var(--ink-2); max-width:70ch"><strong style="color:var(--ink)">Regla de negociación:</strong> si en diez semanas no tienes dos ofertas escritas, haz <em>una sola</em> bajada visible a 95.000 €. Nunca goteo de 5.000 en 5.000: eso le enseña al mercado que hay más recorrido y paraliza justo a los compradores que ya estaban decididos.</p>
+
+    <h3>Los tres compradores posibles</h3>
+    <div class="tbl-scroll">
+      <table>
+        <thead><tr><th>Bolsa</th><th>Quién es</th><th class="n">Qué paga</th><th>Cuántos hay</th></tr></thead>
+        <tbody>
+          <tr><td><b>A</b></td><td>Autónomo local que va a estar en la barra</td><td class="n">hasta 70–80.000 €</td><td>Muchos, pero casi ninguno con 80.000 € en efectivo</td></tr>
+          <tr><td><b>B</b></td><td>Operador de restauración que quiere <b>la ubicación y la renta</b>, y a quien el horario le da igual</td><td class="n">por metros y contrato</td><td>Casi nadie los busca. <b>Son quienes ponen el suelo del precio</b></td></tr>
+          <tr><td><b>C</b></td><td>Operador de ocio nocturno que quiere una licencia de 160 de aforo en el corredor oeste y sabe que hoy no se la dan</td><td class="n">110–140.000 €</td><td>Entre 3 y 8 al año en toda la zona oeste. <b>Se encuentran por teléfono, no por portal</b></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="call alt">
+      <p class="eyebrow">Dos apuntes que cambian el mercado de tu local</p>
+      <p>El comprador de la Bolsa B sólo existe si tu local tiene <strong>salida de humos hasta cubierta</strong>. Si la tiene, dilo en el anuncio: amplía el mercado y sube el suelo entre 15.000 y 25.000 €. Si no la tiene, ese comprador no existe y conviene saberlo antes.</p>
+      <p>Y un candidato que casi nadie considera: <strong>el propio Gávalon</strong>. Elimina competencia, conoce el negocio y la clientela, está en la misma avenida y es de la Bolsa C. Merece una llamada discreta antes que cualquier anuncio.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <p class="eyebrow">Plan de valor</p>
+      <h2>Seis acciones que valen más que acertar el múltiplo</h2>
+      <p class="lede">Ordenadas por retorno sobre coste. Las seis primeras cuestan entre 5.000 y 12.000 € y se ejecutan en dos o tres trimestres.</p>
+    </div>
+    <div class="tbl-scroll">
+      <table>
+        <thead><tr><th>Acción</th><th>Coste y plazo</th><th class="n">Impacto</th></tr></thead>
+        <tbody>
+          <tr><td><b>Consulta urbanística previa</b> sobre reclasificación a café-espectáculo (cierre 5:30/6:00), antes que a discoteca</td><td>0–500 € · 1–3 meses</td><td class="n">+25.000 a +50.000 €<br><span style="color:var(--ink-3)">+5–10.000 aun si sale no</span></td></tr>
+          <tr><td><b>Novación con el arrendador:</b> cesión autorizada + renuncia al 20 % + plazo confirmado</td><td>2.000–4.000 € · 2–6 semanas</td><td class="n">+7.000 a +13.000 €</td></tr>
+          <tr><td><b>Dossier de venta:</b> tres ejercicios normalizados, modelo 390 y TPV por día, mes y franja horaria</td><td>1.500–3.000 € · 3–4 semanas</td><td class="n">+15.000 a +25.000 €</td></tr>
+          <tr><td><b>Subir la carta un 5–8 % ahora</b> y dejar que se refleje en dos o tres trimestres de cuentas</td><td>0 € · efecto en 6–9 meses</td><td class="n">+19.000 a +25.000 €</td></tr>
+          <tr><td><b>Certificado municipal</b> de licencia con aforo y horario, e inexistencia de expedientes sancionadores</td><td>~100 € · 1–4 semanas</td><td class="n">+10.000 a +20.000 €</td></tr>
+          <tr><td><b>Regularizar la acústica:</b> certificado de aislamiento y limitador-registrador calibrado</td><td>1.500–4.000 € · 4–8 semanas</td><td class="n">evita −15.000 a −40.000 €</td></tr>
+          <tr><td>Solicitar o ampliar la <b>terraza</b> y equiparla</td><td>tasa + 8.000–15.000 € · 2–4 meses</td><td class="n">+20.000 a +40.000 €</td></tr>
+          <tr><td><b>Formalizar un encargado</b> seis meses antes y documentar que el local funciona sin ti</td><td>12.000–15.000 €</td><td class="n">+10.000 a +20.000 €</td></tr>
+          <tr><td><b>Contractualizar el canal B2B:</b> eventos con la Ciudad Financiera del Santander (≈7.000 empleados) y Prado del Espino (≈2.500), a minutos. Demanda sin techo horario</td><td>0 € · 3 meses</td><td class="n">+8.000 a +15.000 €</td></tr>
+          <tr><td>Estructurar el traspaso como <b>unidad económica autónoma</b> (art. 7.1.º LIVA) para que no lleve IVA</td><td>0 € · decisión de diseño</td><td class="n">ahorra ~17.850 € al comprador</td></tr>
+          <tr><td><b>Facturar las existencias aparte,</b> a inventario, el día del cierre</td><td>0 €</td><td class="n">+5.000 a +12.000 €</td></tr>
+          <tr><td><b>Proceso competitivo:</b> dos o tres compradores en paralelo, Gávalon incluido</td><td>comisión</td><td class="n">+10 a +20 % del cierre</td></tr>
+          <tr><td><b>Ofrecer financiación</b> (50 % al cierre, resto a 24 meses con garantía). No hay banca para fondo de comercio nocturno</td><td>riesgo de impago</td><td class="n">+10 a +15 % nominal</td></tr>
+          <tr><td><b>Elegir el momento:</b> el mercado se activa en enero-marzo y en septiembre</td><td>0 €</td><td class="n">evita quemar el anuncio</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="call">
+      <p class="eyebrow">La decisión más rentable del expediente</p>
+      <p>Con las seis primeras acciones el precio base pasa de <strong>85.000 € a 110.000–150.000 €</strong>, por un coste total de 5.000–12.000 € y seis a nueve meses de plazo. Dicho de otra forma: <strong>lo más rentable que puedes hacer no es acertar con el precio, es retrasar la venta dos o tres trimestres para poder pedirlo.</strong></p>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <p class="eyebrow">Antes de poner precio</p>
+      <h2>Diez preguntas que no cuestan dinero</h2>
+      <p class="lede">Todas mueven más que discutir el múltiplo.</p>
+    </div>
+    <ol class="qlist">
+      <li><b>¿Por qué vendes, y en qué plazo necesitas haber vendido?</b> Determina el precio realizable más que cualquier cálculo de este informe.</li>
+      <li><b>¿Tienes el 100 % de las participaciones?</b> ¿Hay socios, restricciones estatutarias (art. 107 LSC), pactos parasociales o gananciales (art. 1377 CC)? Se ha valorado un activo cuya transmisibilidad no ha verificado nadie.</li>
+      <li><b>¿Cuánto pagaste en 2021 y por qué vía?</b> Es el mejor comparable del expediente y determina tu factura fiscal.</li>
+      <li><b>Los 220.000 € ¿son con o sin IVA?</b> Modelo 390 o suma de los cuatro 303. Hostelería tributa al 10 %, no al 21 %. Si son brutos, todo baja un 9 %.</li>
+      <li><b>¿Cobras nómina de la sociedad y de cuánto? ¿Cuántas horas dedicas al local?</b> Es la Lectura A o la B: 75.000 € de diferencia.</li>
+      <li><b>¿Cuál ha sido la facturación de los cinco últimos ejercicios?</b> «Fluctuante» puede ser plana o decreciente. Un −8 % anual sostenido cambia el múltiplo de 1,7× a 1,2×.</li>
+      <li><b>¿Cuántas personas trabajan en el local, con qué contrato y qué antigüedad?</b></li>
+      <li><b>¿Qué porcentaje de la caja se hace después de la 1:30 h y después de las 3:00 h?</b> El TPV lo da en cinco minutos y decide si el descuento por horario está justificado o sobra. Si la franja tardía pesa poco, la base sube hacia 100.000 €.</li>
+      <li><b>¿Los 181 m² son todos a pie de calle o incluyen sótano? ¿Hay salida de humos? ¿Hay terraza autorizada?</b> Deciden el valor del contrato y si existe el comprador de la Bolsa B.</li>
+      <li><b>¿Has cerrado alguna vez de hecho más tarde de las 3:30 h? ¿Hay expedientes sancionadores en los últimos cinco años?</b> Si la respuesta a la primera es sí, hay que rehacer el estudio: la facturación no sería replicable por un comprador cumplidor y habría contingencia viva.</li>
+    </ol>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <p class="eyebrow">Riesgos</p>
+      <h2>Lo que puede tumbar la operación</h2>
+    </div>
+    <div class="tbl-scroll">
+      <table>
+        <thead><tr><th>Riesgo</th><th>Impacto</th><th>Cómo se cierra</th></tr></thead>
+        <tbody>
+          <tr><td>El contrato <b>prohíbe la cesión</b></td><td>El traspaso deja de existir como opción</td><td>Leer el contrato hoy</td></tr>
+          <tr><td>El contrato tiene <b>cláusula de cambio de control</b></td><td>La venta de participaciones tampoco evita el 20 %</td><td>Leer el contrato hoy</td></tr>
+          <tr><td><b>Expedientes sancionadores</b> por ruido, horario o aforo</td><td>Descuento euro a euro y posible clausura de hasta seis meses</td><td>Certificado municipal, ~100 €</td></tr>
+          <tr><td><b>La realidad física no coincide con el proyecto de 2004</b></td><td>22 años de reformas sin legalizar convierten la licencia en papel mojado ante la primera inspección</td><td>Comparar plano de licencia con el local</td></tr>
+          <tr><td>Falta el <b>certificado acústico</b> o el limitador-registrador</td><td>15.000–40.000 € de adaptación más riesgo sancionador</td><td>Verificar y regularizar</td></tr>
+          <tr><td><b>Personal de control de acceso</b></td><td>Con aforo de 160 puede ser exigible (Decreto 163/2008, modificado por el 114/2024). Si lo es y no lo tienes, es un coste recurrente que erosiona el EBITDA declarado</td><td>Consulta al Ayuntamiento o a la Comunidad</td></tr>
+          <tr><td><b>Contratos con anticipo:</b> distribuidora, máquinas recreativas</td><td>El comprador hereda la obligación <b>sin el dinero</b>. Es de los primeros papeles que pedirá</td><td>Inventariar contratos vivos</td></tr>
+          <tr><td><b>Renting o leasing</b> de TPV, cámaras o frío</td><td>Vender como propio algo que no lo es revienta el cierre</td><td>Separar propio de arrendado</td></tr>
+          <tr><td><b>Subvenciones con permanencia</b> o ICO</td><td>El cambio de control puede activar el reintegro</td><td>Revisar condiciones</td></tr>
+          <tr><td>Deudas de <b>SGAE / AGEDI-AIE</b></td><td>Contingencia habitual en salas; prescribe a los cinco años</td><td>Certificado de estar al corriente</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <p class="eyebrow">La tercera vía</p>
+      <h2>Y si no vendes</h2>
+    </div>
+    <div class="prose stack">
+      <p>Si tu beneficio antes de retribución está en 48.000–68.000 € y te quedan 14 años de contrato barato, el valor actual de <em>no vender</em> ronda los 230.000–290.000 €, frente a un precio de venta de 85.000 €.</p>
+      <p>Esa diferencia no significa que el precio esté mal: significa que el mercado no paga los años lejanos de un bar de copas, porque el formato, la licencia y el contrato pueden desaparecer antes. Es correcto y es así en todo el sector. Pero obliga a plantear una tercera opción, sobre todo si lo que te mueve es el cansancio y no el dinero.</p>
+    </div>
+    <div class="call alt">
+      <p class="eyebrow">Ceder la explotación, no el activo</p>
+      <p><strong>Cede la explotación cobrando un canon mensual y conserva la licencia, el contrato y la sociedad.</strong> Un contrato de gestión bien redactado puede generar entre 12.000 y 24.000 €/año sin vender nada, y te deja la opción de vender más adelante con el negocio ya demostrado como rentable sin ti — que es precisamente lo que sube el múltiplo.</p>
+      <p>Ojo: el subarriendo parcial o total requiere notificación al arrendador y le faculta a elevar la renta (10 % parcial, 20 % total). Negócialo dentro de la misma novación.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <p class="eyebrow">Esta semana</p>
+      <h2>Seis pasos, dos semanas, menos de 500 €</h2>
+    </div>
+    <ol class="qlist">
+      <li><b>Lee el contrato de arrendamiento</b> con las siete preguntas delante. Es gratis y puede cambiar toda la estrategia.</li>
+      <li><b>Saca del TPV</b> el desglose de caja por mes y por franja horaria de los últimos 24 meses.</li>
+      <li><b>Mira la nómina</b> —o su ausencia— y cuenta las horas reales que dedicas al local.</li>
+      <li><b>Pide el modelo 390</b> del último ejercicio y comprueba si los 220.000 € llevan IVA.</li>
+      <li><b>Pide cita con el arrendador.</b> No para anunciar que vendes: para negociar la novación.</li>
+      <li><b>Presenta la consulta urbanística previa</b> sobre el café-espectáculo.</li>
+    </ol>
+    <p style="margin-top:20px; font-size:16.5px; max-width:70ch">Con eso pasas de una horquilla de 60.000 a 125.000 € a un número defendible. Y con el plan completo, a pedir entre 110.000 y 150.000 €.</p>
+  </section>
+
+  <footer>
+    <p class="eyebrow" style="margin-bottom:10px">Nota metodológica</p>
+    <p>Estudio elaborado mediante investigación paralela verificada (31 agentes, 514 consultas), cinco métodos de valoración independientes, un panel de tres jueces adversariales —comprador, bróker y auditor— y una ronda final de crítica de exhaustividad, seguida de verificación manual en fuente de los datos normativos, competitivos y de comparables.</p>
+    <p><b>Verificado en fuente:</b> la Orden de 21/04/2022 de horarios (BOCM 29/04/2022); la ubicación y el horario de Gávalon; el artículo 32 de la LAU; los tipos del Impuesto sobre Sociedades para microempresa en 2026 (Ley 7/2024); la no sujeción a IVA del art. 7.1.º LIVA; el procedimiento de cambio de titularidad de licencia en Boadilla; y los comparables de traspaso y alquiler citados.</p>
+    <p><b>No verificado, y tratado como supuesto explícito:</b> si los 220.000 € son con o sin IVA; si el beneficio declarado incluye la retribución de mercado del propietario; el contenido del contrato de arrendamiento; y la existencia de expedientes sancionadores o del certificado acústico.</p>
+    <p>Los precios de traspaso citados son <b>precios pedidos</b> de anuncios reales, no transacciones cerradas: no fue posible acceder a ninguna base de operaciones cerradas. Trátense como marco de negociación, no como tasación. Este documento no sustituye al asesoramiento fiscal y jurídico individualizado.</p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var MAX = 225000;
+  var LABW = 194; // label column + gap, keeps the shaded interval on the same scale as the tracks
+  var pct = function(v){ return (v / MAX * 100); };
+  var fmt = function(v){ return (v/1000).toFixed(0) + 'k'; };
+
+  var rows = [
+    {lab:'Múltiplo de EBITDA', sub:'corregido', lo:45000, base:71000, hi:105000},
+    {lab:'Comparables de mercado', sub:'método', lo:53000, base:85000, hi:104000},
+    {lab:'Payback y TIR', sub:'método', lo:55000, base:85000, hi:120000},
+    {lab:'Coste de reposición', sub:'techo, no precio', lo:85000, base:140000, hi:215000},
+    {lab:'Juez: el comprador', sub:'panel', lo:30000, base:55000, hi:85000},
+    {lab:'Juez: el bróker', sub:'panel', lo:60000, base:78000, hi:105000},
+    {lab:'Juez: el auditor', sub:'panel', lo:40000, base:60000, hi:90000},
+    {lab:'Síntesis', sub:'recomendado', lo:60000, base:85000, hi:125000, hi_row:true}
+  ];
+
+  var ff = document.getElementById('ff');
+  rows.forEach(function(r){
+    var row = document.createElement('div');
+    row.className = 'ff-row' + (r.hi_row ? ' hi' : '');
+    var lab = document.createElement('div');
+    lab.className = 'ff-lab';
+    lab.innerHTML = r.lab + '<span>' + r.sub + '</span>';
+    var track = document.createElement('div');
+    track.className = 'track';
+    track.setAttribute('title', r.lab + ': ' + r.lo.toLocaleString('es-ES') + ' – ' + r.hi.toLocaleString('es-ES') + ' € · base ' + r.base.toLocaleString('es-ES') + ' €');
+
+    if (!r.hi_row){
+      var zone = document.createElement('div');
+      zone.className = 'zone';
+      zone.style.left = 'calc(' + LABW + 'px + (100% - ' + LABW + 'px) * ' + (pct(80000)/100).toFixed(4) + ')';
+      zone.style.width = 'calc((100% - ' + LABW + 'px) * ' + ((pct(95000)-pct(80000))/100).toFixed(4) + ')';
+      row.appendChild(zone);
+    }
+
+    var band = document.createElement('div');
+    band.className = 'band';
+    band.style.left = pct(r.lo) + '%';
+    band.style.width = (pct(r.hi) - pct(r.lo)) + '%';
+    track.appendChild(band);
+
+    var dot = document.createElement('div');
+    dot.className = 'dot';
+    dot.style.left = pct(r.base) + '%';
+    track.appendChild(dot);
+
+    var dl = document.createElement('div');
+    dl.className = 'dot-lab';
+    dl.textContent = fmt(r.base);
+    if (pct(r.hi) + 6 > 96){
+      dl.style.left = (pct(r.lo) - 2.4) + '%';
+      dl.style.transform = 'translate(-100%,-50%)';
+    } else {
+      dl.style.left = (pct(r.hi) + 3.2) + '%';
+      dl.style.transform = 'translate(0,-50%)';
+    }
+    track.appendChild(dl);
+
+    row.appendChild(lab); row.appendChild(track);
+    ff.appendChild(row);
+  });
+
+  var ax = document.getElementById('ffaxis');
+  [0,50000,100000,150000,200000].forEach(function(v){
+    var t = document.createElement('div');
+    t.className = 't';
+    t.style.left = pct(v) + '%';
+    t.textContent = v === 0 ? '0' : (v/1000) + 'k';
+    ax.appendChild(t);
+  });
+
+  // ---- night timeline ----
+  var START = 20, END = 6.5, SPAN = (24 - START) + END; // 20:00 -> 06:30
+  var hpct = function(h){ var x = h >= START ? h - START : (24 - START) + h; return x / SPAN * 100; };
+
+  var nl = document.getElementById('nl');
+  var bars = [
+    {lab:'Tu licencia', sub:'bar especial', close:3.5, color:'var(--indigo)', txt:'cierra 3:30'},
+    {lab:'Gávalon', sub:'sala · desde 2003', close:5.5, color:'var(--brass)', txt:'cierra 5:30'}
+  ];
+  bars.forEach(function(b){
+    var row = document.createElement('div');
+    row.className = 'nl-row';
+    var lab = document.createElement('div');
+    lab.className = 'ff-lab';
+    lab.innerHTML = b.lab + '<span>' + b.sub + '</span>';
+    var bar = document.createElement('div');
+    bar.className = 'nl-bar';
+    var fill = document.createElement('div');
+    fill.className = 'nl-fill';
+    fill.style.left = '0%';
+    fill.style.width = hpct(b.close) + '%';
+    fill.style.background = b.color;
+    fill.innerHTML = '<span>' + b.txt + '</span>';
+    bar.appendChild(fill);
+    if (b.close === 3.5){
+      var gap = document.createElement('div');
+      gap.className = 'nl-gap';
+      gap.style.left = hpct(3.5) + '%';
+      gap.style.width = (hpct(5.5) - hpct(3.5)) + '%';
+      gap.innerHTML = '<span>2 h que no vendes</span>';
+      bar.appendChild(gap);
+    }
+    row.appendChild(lab); row.appendChild(bar);
+    nl.appendChild(row);
+  });
+
+  var nax = document.getElementById('nlaxis');
+  [20,22,0,2,4,6].forEach(function(h){
+    var tick = document.createElement('div');
+    tick.className = 'nl-tick';
+    tick.style.left = hpct(h) + '%';
+    nax.appendChild(tick);
+    var t = document.createElement('div');
+    t.className = 't';
+    t.style.left = hpct(h) + '%';
+    t.style.bottom = '0';
+    t.textContent = (h < 10 ? '0' + h : h) + ':00';
+    nax.appendChild(t);
+  });
+  var m = document.createElement('div');
+  m.className = 'nl-metro';
+  m.style.left = hpct(1.5) + '%';
+  nax.appendChild(m);
+  var ml = document.createElement('div');
+  ml.className = 'nl-metro-lab';
+  ml.style.left = hpct(1.5) + '%';
+  
+  ml.textContent = '1:30 cierra el ML3';
+  nax.appendChild(ml);
+})();
+</script>

@@ -11,6 +11,7 @@ import { formatAmount, formatMoney, parseAmount } from '@/lib/money'
 import { buildBackup, backupToFile, deliverBackup, restoreBackup, toCsv } from './backup'
 import { useInstall } from './useInstall'
 import { AutomationGuide } from './AutomationGuide'
+import { CaptureLogSection } from './CaptureLogSection'
 import { ImportSection } from './ImportSection'
 import './SettingsScreen.css'
 
@@ -203,6 +204,12 @@ export function SettingsScreen() {
 
         {/* --- Automatización de la tarjeta --- */}
         <AutomationGuide />
+
+        {/* Va justo detrás de la guía: es donde se comprueba si lo que acabas
+            de montar funciona de verdad. */}
+        <section className="settings-card">
+          <CaptureLogSection />
+        </section>
 
         {/* --- Instalación --- */}
         {!install.installed && (

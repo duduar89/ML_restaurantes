@@ -1,5 +1,5 @@
 import Dexie, { type EntityTable } from 'dexie'
-import type { Category, Expense, PaymentMethod, Settings, Space } from './types'
+import type { CaptureLog, Category, Expense, PaymentMethod, Settings, Space } from './types'
 
 /**
  * IndexedDB vía Dexie. La app es local-first: todo vive en el móvil y funciona
@@ -13,6 +13,7 @@ class AppDatabase extends Dexie {
   methods!: EntityTable<PaymentMethod, 'id'>
   categories!: EntityTable<Category, 'id'>
   settings!: EntityTable<Settings, 'id'>
+  captures!: EntityTable<CaptureLog, 'id'>
 
   constructor() {
     super('caudal-db')
@@ -24,6 +25,12 @@ class AppDatabase extends Dexie {
       methods: 'id, sortOrder, archived, isDefault, kind, deletedAt',
       categories: 'id, sortOrder, archived, deletedAt',
       settings: 'id',
+    })
+
+    // v2: registro de lo que llega por automatización. Sólo añade una tabla,
+    // así que Dexie la crea al abrir y no hay nada que migrar.
+    this.version(2).stores({
+      captures: 'id, receivedAt, outcome',
     })
   }
 }

@@ -131,7 +131,40 @@ export function rawTextParam(search: string): string | null {
   }
 }
 
+/**
+ * Por qué un aviso no ha llegado a ser un gasto.
+ *
+ * Separar "lo he descartado a propósito" de "no he sabido leerlo" no es una
+ * sutileza: lo primero es la app funcionando y lo segundo es la app fallando.
+ * Si se mezclan, un banco cuyos avisos no se saben leer parece un banco que
+ * sólo manda pagos rechazados, y nadie lo arregla nunca.
+ */
+export type CaptureReason = 'ok' | 'no-es-gasto' | 'sin-importe'
+
+export interface CaptureResult {
+  capture: Capture | null
+  reason: CaptureReason
+}
+
 export function parseCapture(params: URLSearchParams, rawSearch?: string): Capture | null {
+  return parseCaptureResult(params, rawSearch).capture
+}
+
+/** El texto del aviso tal y como llegó, para poder enseñarlo y depurarlo. */
+export function captureRawText(params: URLSearchParams, rawSearch?: string): string {
+  const texto =
+    (rawSearch ? rawTextParam(rawSearch) : null) ?? params.get('text') ?? params.get('texto')
+  if (texto) return texto
+
+  // Sin texto libre, lo que llegó son parámetros sueltos: se reconstruyen para
+  // que el registro enseñe algo legible en lugar de una línea en blanco.
+  const trozos = ['importe', 'amount', 'concepto', 'concept', 'comercio', 'metodo', 'apartado']
+    .map((clave) => (params.get(clave) ? `${clave}=${params.get(clave)}` : null))
+    .filter(Boolean)
+  return trozos.join(' · ')
+}
+
+export function parseCaptureResult(params: URLSearchParams, rawSearch?: string): CaptureResult {
   // Nombres en español y en inglés: los atajos y las macros se escriben en
   // cualquiera de los dos y no merece la pena obligar a uno.
   const rawAmount =
@@ -147,10 +180,10 @@ export function parseCapture(params: URLSearchParams, rawSearch?: string): Captu
 
   // Un pago rechazado se descarta entero: es preferible que el usuario lo eche
   // en falta y lo apunte a mano, a que aparezca un gasto que nunca existió.
-  if (NOT_AN_EXPENSE.test(haystack)) return null
+  if (NOT_AN_EXPENSE.test(haystack)) return { capture: null, reason: 'no-es-gasto' }
 
   const amountCents = parseAmount(rawAmount ?? '') ?? parseAmount(firstMatch(haystack, AMOUNT_PATTERNS) ?? '')
-  if (!amountCents || amountCents <= 0) return null
+  if (!amountCents || amountCents <= 0) return { capture: null, reason: 'sin-importe' }
 
   const concept =
     (rawConcept && !sharedText ? rawConcept : null) ??
@@ -173,16 +206,19 @@ export function parseCapture(params: URLSearchParams, rawSearch?: string): Captu
         : 'expense'
 
   return {
-    amountCents,
-    concept: concept.slice(0, 60),
-    day,
-    kind,
-    methodHint: params.get('metodo') ?? params.get('method') ?? null,
-    spaceHint: params.get('apartado') ?? params.get('space') ?? null,
-    source,
-    externalId: providedId
-      ? `${source}:${providedId}`
-      : dedupeKey({ source, amountCents, day, concept }),
-    auto: params.get('auto') === '1' || params.get('auto') === 'true',
+    capture: {
+      amountCents,
+      concept: concept.slice(0, 60),
+      day,
+      kind,
+      methodHint: params.get('metodo') ?? params.get('method') ?? null,
+      spaceHint: params.get('apartado') ?? params.get('space') ?? null,
+      source,
+      externalId: providedId
+        ? `${source}:${providedId}`
+        : dedupeKey({ source, amountCents, day, concept }),
+      auto: params.get('auto') === '1' || params.get('auto') === 'true',
+    },
+    reason: 'ok',
   }
 }

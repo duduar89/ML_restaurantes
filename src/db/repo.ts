@@ -3,6 +3,8 @@ import { uuidv7 } from '@/lib/id'
 import { toDayKey, type DayKey } from '@/lib/dates'
 import type { Cents } from '@/lib/money'
 import type {
+  CaptureLog,
+  CaptureOutcome,
   Category,
   Expense,
   ExpenseSource,
@@ -394,4 +396,59 @@ export async function importExpenses(
   }
 
   return { added, skipped }
+}
+
+
+/* ----------------------------------------- registro de avisos automáticos */
+
+/** Cuántos avisos se guardan. Es un diario para depurar, no un archivo. */
+const CAPTURE_LOG_LIMIT = 50
+
+export interface NewCaptureLog {
+  raw: string
+  outcome: CaptureOutcome
+  amountCents?: Cents | null
+  concept?: string | null
+  expenseId?: string | null
+}
+
+/**
+ * Deja constancia de cada aviso que entra por el enlace de las
+ * automatizaciones, haya acabado en gasto o no.
+ *
+ * Se recorta el texto a 300 caracteres: con eso sobra para reconocer el aviso
+ * y para arreglar el reconocimiento de un banco, y no convierte la base en un
+ * archivo de todo lo que pasa por las notificaciones del móvil.
+ */
+export async function logCapture(input: NewCaptureLog): Promise<void> {
+  const row: CaptureLog = {
+    id: uuidv7(),
+    receivedAt: now(),
+    raw: input.raw.slice(0, 300),
+    outcome: input.outcome,
+    amountCents: input.amountCents ?? null,
+    concept: input.concept ?? null,
+    expenseId: input.expenseId ?? null,
+  }
+  await db.captures.add(row)
+
+  // Se poda aquí y no en un mantenimiento aparte: es el único momento en que
+  // la tabla crece, y así nunca hay nada que recordar ejecutar.
+  const total = await db.captures.count()
+  if (total > CAPTURE_LOG_LIMIT) {
+    const sobran = await db.captures
+      .orderBy('receivedAt')
+      .limit(total - CAPTURE_LOG_LIMIT)
+      .primaryKeys()
+    await db.captures.bulkDelete(sobran)
+  }
+}
+
+/** Los últimos avisos, del más reciente al más antiguo. */
+export async function recentCaptures(limit = 20): Promise<CaptureLog[]> {
+  return db.captures.orderBy('receivedAt').reverse().limit(limit).toArray()
+}
+
+export async function clearCaptures(): Promise<void> {
+  await db.captures.clear()
 }

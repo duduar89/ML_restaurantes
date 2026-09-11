@@ -95,3 +95,39 @@ export interface Settings {
   /** Aviso de copia de seguridad: epoch de la última exportación. */
   lastBackupAt: number | null
 }
+
+/**
+ * Qué ha pasado con un aviso que llegó por automatización o por compartir.
+ *
+ * Existe porque la cadena "el banco avisa → la macro lo lee → Caudal lo
+ * apunta" es larga y falla en silencio: si el móvil está en el bolsillo, la
+ * pantalla que dice "no he podido leer el importe" no la ve nadie y el gasto
+ * simplemente no aparece. Sin este registro, la única forma de enterarse sería
+ * descuadrar el mes.
+ *
+ * Se guarda el texto que llegó, recortado, porque sin él no hay forma de
+ * arreglar el reconocimiento de un banco concreto. Vive sólo en el móvil y se
+ * puede borrar de un toque desde Ajustes.
+ */
+export interface CaptureLog {
+  id: string
+  receivedAt: number
+  /** El texto del aviso tal y como llegó. Recortado a 300 caracteres. */
+  raw: string
+  outcome: CaptureOutcome
+  amountCents: Cents | null
+  concept: string | null
+  /** El gasto que se creó, si se creó alguno. */
+  expenseId: string | null
+}
+
+/**
+ *  - saved:      apuntado.
+ *  - pending:    entendido, esperando a que la persona confirme (sin auto=1).
+ *  - duplicate:  ya estaba; no se duplicó.
+ *  - discarded:  entendido y descartado a propósito (pago rechazado,
+ *                programado...). NO es un fallo.
+ *  - unreadable: no se pudo sacar el importe. Esto sí es un fallo, y es el que
+ *                hay que poder ver.
+ */
+export type CaptureOutcome = 'saved' | 'pending' | 'duplicate' | 'discarded' | 'unreadable'

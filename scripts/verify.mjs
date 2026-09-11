@@ -238,6 +238,55 @@ async function run(browser, base) {
     await context.close()
   }
 
+  /* --- 2c. Registro de lo que llega ------------------------------------- */
+  console.log('\nRegistro de avisos en Ajustes')
+  {
+    // El modo de fallo de toda la cadena es mudo: la macro dispara, Caudal no
+    // entiende el aviso, y la pantalla que lo explica sale con el móvil en el
+    // bolsillo. Este registro es lo único que lo delata, así que tiene que
+    // anotar TAMBIÉN lo que no salió bien.
+    const { context, page, errors } = await newPage()
+    await page.goto(base, { waitUntil: 'networkidle' })
+
+    const ENTRADAS = [
+      ['auto=1&texto=Compra de 31,10 EUR en LIBRERIA', 'Apuntado'],
+      ['auto=1&texto=Compra de 31,10 EUR en LIBRERIA', 'Ya estaba'],
+      ['auto=1&texto=Compra RECHAZADA de 77,00 EUR en ZARA', 'Descartado a propósito'],
+      ['auto=1&texto=Tu saldo se ha actualizado', 'No se pudo leer'],
+      ['texto=Compra de 4,20 EUR en PANADERIA', 'Esperando confirmación'],
+    ]
+    for (const [query] of ENTRADAS) {
+      await page.goto(`${base}/add?${query}`, { waitUntil: 'networkidle' })
+      await page.waitForTimeout(600)
+    }
+
+    await page.goto(`${base}/ajustes`, { waitUntil: 'networkidle' })
+    await page.waitForTimeout(500)
+    const registro = await page.locator('.capturelog').innerText()
+
+    for (const [, etiqueta] of ENTRADAS) {
+      check(`anota «${etiqueta}»`, registro.includes(etiqueta))
+    }
+    check(
+      'guarda el texto literal para poder arreglarlo',
+      registro.includes('Tu saldo se ha actualizado')
+    )
+    check(
+      'avisa de cuántos no ha sabido leer',
+      /1 de los últimos \d+ no se han podido leer/.test(registro)
+    )
+
+    await page.getByRole('button', { name: 'Borrar el registro' }).click()
+    await page.waitForTimeout(400)
+    check(
+      'se puede borrar',
+      (await page.locator('.capturelog').innerText()).includes('Todavía no ha llegado ningún aviso')
+    )
+
+    check('sin errores en consola', errors.length === 0, errors[0])
+    await context.close()
+  }
+
   /* --- 3. Apartado nuevo ------------------------------------------------- */
   console.log('\nCrear un apartado')
   {

@@ -1,0 +1,106 @@
+.capturelog {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.capturelog-title {
+  margin: 0;
+  font-size: var(--text-lg);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.capturelog-empty,
+.capturelog-lead {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+}
+
+.capturelog-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.capturelog-row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+  padding: var(--sp-3);
+  border-radius: var(--r-md);
+  background: var(--surface-2);
+}
+
+.capturelog-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sp-2);
+}
+
+.capturelog-badge {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.capturelog-badge--ok {
+  color: var(--positive);
+}
+
+.capturelog-badge--info {
+  color: var(--text-muted);
+}
+
+.capturelog-badge--fallo {
+  color: var(--danger);
+}
+
+.capturelog-when {
+  flex-shrink: 0;
+  color: var(--text-faint);
+  font-size: var(--text-xs);
+}
+
+.capturelog-read {
+  margin: 0;
+  font-size: var(--text-base);
+  font-weight: 600;
+}
+
+.capturelog-concept {
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+/* El texto literal del aviso. Se respeta tal cual llegó —incluidos los saltos
+   de línea— porque es lo que hay que leer para arreglar un reconocimiento. */
+.capturelog-raw {
+  margin: 0;
+  overflow-wrap: anywhere;
+  color: var(--text-faint);
+  font-size: var(--text-xs);
+  line-height: 1.45;
+  white-space: pre-wrap;
+}
+
+.capturelog-clear {
+  align-self: flex-start;
+  padding: var(--sp-2) var(--sp-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: none;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  transition: transform var(--dur-press) var(--ease-out);
+}
+
+.capturelog-clear:active {
+  transform: scale(0.97);
+}

@@ -3,13 +3,18 @@ import { useLocation, useNavigate, useSearchParams } from 'react-router'
 import { LogoMark } from '@/brand/Logo'
 import { Chips } from '@/components/Chips'
 import { useAppData } from '@/app/store'
-import { addExpense, findByExternalId, findLikelyDuplicate } from '@/db/repo'
+import { addExpense, findByExternalId, findLikelyDuplicate, logCapture } from '@/db/repo'
 import { requestPersistence } from '@/lib/storage'
 import { haptic } from '@/hooks/useHaptics'
 import { formatMoney } from '@/lib/money'
 import { formatDayHeading } from '@/lib/dates'
 import { guessCategoryId } from '@/features/add/guessCategory'
-import { parseCapture, type Capture } from './parseCapture'
+import {
+  captureRawText,
+  parseCaptureResult,
+  type Capture,
+  type CaptureReason,
+} from './parseCapture'
 import type { Expense } from '@/db/types'
 import './DeepLinkCapture.css'
 
@@ -34,6 +39,7 @@ export function DeepLinkCapture() {
   const { methods, categories, spaces, entrySpace, methodById, spaceById } = useAppData()
 
   const [status, setStatus] = useState<Status>('reading')
+  const [reason, setReason] = useState<CaptureReason>('ok')
   const [capture, setCapture] = useState<Capture | null>(null)
   const [existing, setExisting] = useState<Expense | null>(null)
   const [methodId, setMethodId] = useState<string | null>(null)
@@ -45,8 +51,15 @@ export function DeepLinkCapture() {
     if (handled.current || methods.length === 0 || spaces.length === 0) return
     handled.current = true
 
-    const parsed = parseCapture(params, search)
+    const raw = captureRawText(params, search)
+    const { capture: parsed, reason } = parseCaptureResult(params, search)
     if (!parsed) {
+      // Queda registrado igual, y distinguiendo por qué. Un aviso descartado a
+      // propósito es la app funcionando; uno que no se ha sabido leer es la
+      // app fallando, y sin registro esa diferencia no la ve nadie: la
+      // pantalla que lo explica sale con el móvil en el bolsillo.
+      void logCapture({ raw, outcome: reason === 'no-es-gasto' ? 'discarded' : 'unreadable' })
+      setReason(reason)
       setStatus('invalid')
       return
     }
@@ -66,33 +79,50 @@ export function DeepLinkCapture() {
 
     void (async () => {
       const already = await findByExternalId(parsed.externalId)
-      if (already) {
-        setExisting(already)
-        setStatus('duplicate')
-        return
-      }
-
-      const similar = await findLikelyDuplicate(parsed)
+      const similar = already ?? (await findLikelyDuplicate(parsed))
       if (similar) {
+        void logCapture({
+          raw,
+          outcome: 'duplicate',
+          amountCents: parsed.amountCents,
+          concept: parsed.concept,
+          expenseId: similar.id,
+        })
         setExisting(similar)
         setStatus('duplicate')
         return
       }
 
       if (parsed.auto) {
-        await save(parsed, hintedMethod?.id ?? methods[0]?.id ?? null, hintedSpace?.id ?? entrySpace?.id ?? null)
+        await save(
+          parsed,
+          hintedMethod?.id ?? methods[0]?.id ?? null,
+          hintedSpace?.id ?? entrySpace?.id ?? null,
+          raw
+        )
         return
       }
 
+      void logCapture({
+        raw,
+        outcome: 'pending',
+        amountCents: parsed.amountCents,
+        concept: parsed.concept,
+      })
       setStatus('confirm')
     })()
     // Sólo debe correr una vez, al llegar con los parámetros de la URL.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [methods, spaces, params, search])
 
-  async function save(data: Capture, useMethodId: string | null, useSpaceId: string | null) {
+  async function save(
+    data: Capture,
+    useMethodId: string | null,
+    useSpaceId: string | null,
+    raw?: string
+  ) {
     if (!useMethodId || !useSpaceId) return
-    await addExpense({
+    const expense = await addExpense({
       amountCents: data.amountCents,
       concept: data.concept,
       kind: data.kind,
@@ -102,6 +132,13 @@ export function DeepLinkCapture() {
       day: data.day,
       source: data.source,
       externalId: data.externalId,
+    })
+    void logCapture({
+      raw: raw ?? captureRawText(params, search),
+      outcome: 'saved',
+      amountCents: data.amountCents,
+      concept: data.concept,
+      expenseId: expense ?? null,
     })
     void requestPersistence()
     haptic('success')
@@ -115,12 +152,26 @@ export function DeepLinkCapture() {
 
         {status === 'reading' && <p className="capture-title">Leyendo el movimiento…</p>}
 
-        {status === 'invalid' && (
+        {status === 'invalid' && reason === 'no-es-gasto' && (
+          <>
+            <p className="capture-title">Esto no es un gasto</p>
+            <p className="capture-text">
+              El aviso habla de un pago rechazado, cancelado o programado, así que no apunto
+              nada. Queda anotado en Ajustes por si te esperabas otra cosa.
+            </p>
+          </>
+        )}
+
+        {status === 'invalid' && reason !== 'no-es-gasto' && (
           <>
             <p className="capture-title">No he podido leer el importe</p>
             <p className="capture-text">
               El enlace tiene que traer al menos un importe. Por ejemplo:
               <code>/add?importe=12,50&amp;concepto=Mercadona</code>
+            </p>
+            <p className="capture-text">
+              El aviso ha quedado guardado en <strong>Ajustes › Últimos avisos</strong>, con su
+              texto, para que se pueda arreglar.
             </p>
           </>
         )}

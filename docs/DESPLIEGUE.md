@@ -109,6 +109,56 @@ libra de esa limpieza. Y aun así, guarda copia de vez en cuando desde Ajustes.
 
 ---
 
+## Que se suba solo (recomendado)
+
+Lo de arriba lo haces una vez para verlo funcionando. Después no tiene sentido
+repetirlo a mano: hay un flujo que compila y sube por FTPS en cada cambio, y ya
+viene en el repositorio (`.github/workflows/deploy-cpanel.yml`).
+
+**Configuración, una sola vez:**
+
+1. **Crea una cuenta FTP dedicada.** cPanel › *Archivos › Cuentas FTP* → nueva
+   cuenta, y en *Directorio* pon la carpeta del sitio (`public_html`).
+
+   No uses la cuenta principal de cPanel. Si algún día ese secreto se filtrase,
+   con una cuenta limitada quien lo tuviera solo podría tocar esa carpeta; con
+   la principal, tendría el hosting entero.
+
+2. **Guarda las credenciales en GitHub.** En el repositorio: *Settings › Secrets
+   and variables › Actions*.
+
+   En la pestaña **Secrets**:
+
+   | Nombre | Valor |
+   |---|---|
+   | `FTP_HOST` | `ftp.tudominio.com` (cPanel te lo dice al crear la cuenta) |
+   | `FTP_USER` | el usuario completo, normalmente `usuario@tudominio.com` |
+   | `FTP_PASSWORD` | la contraseña de esa cuenta |
+
+   En la pestaña **Variables**:
+
+   | Nombre | Valor |
+   |---|---|
+   | `CPANEL_DEPLOY` | `true` |
+
+   Esa última es el interruptor: sin ella el flujo se salta solo, para que no
+   falle en rojo si algún día dejas de usar cPanel.
+
+3. Ya está. A partir de aquí, cada cambio en `main` compila, pasa las pruebas y
+   sube. Si algo falla, **no sube nada**: las pruebas van antes.
+
+**Si el sitio cuelga de una subcarpeta**, añade dos variables más:
+`REMOTE_DIR` con `/public_html/gastos` y `BASE_PATH` con `/gastos/`.
+
+**Si la subida falla con un error de certificado**, tu hosting sirve FTPS con un
+certificado que no valida. Añade la variable `FTP_VERIFY_CERT` con valor `false`
+y volverá a funcionar. Ten en cuenta lo que eso significa: la conexión sigue
+cifrada, pero deja de comprobarse que el servidor al otro lado es quien dice
+ser. Antes de bajar esa guardia, prueba a poner en `FTP_HOST` el nombre real del
+servidor que aparece en cPanel, que suele tener certificado válido.
+
+---
+
 ## Publicar una versión nueva
 
 ```bash

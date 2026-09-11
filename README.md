@@ -181,9 +181,13 @@ opcional: activar el SSL antes de subir nada, porque sin HTTPS el navegador no
 registra el service worker y la app no se puede instalar ni funciona sin
 conexión. El `.htaccess` que hace falta ya viene dentro del paquete.
 
-**Con GitHub Pages** no hay que hacer nada: el flujo de `.github/workflows`
-publica solo en cada cambio de `main`. Cloudflare Pages y Netlify también
-conectan directamente con el repositorio.
+**Y para no volver a subirlo a mano**, hay un segundo flujo que compila y sube
+por FTPS a cPanel en cada cambio de `main`: se configuran tres secretos una vez
+y ya está. Los pasos están en la misma guía.
+
+**Con GitHub Pages** no hay ni que configurar eso: el flujo de
+`.github/workflows` publica solo. Cloudflare Pages y Netlify también conectan
+directamente con el repositorio.
 
 `BASE_PATH` sólo hace falta si la app cuelga de un subdirectorio
 (`BASE_PATH=/gastos/ npm run pack`).

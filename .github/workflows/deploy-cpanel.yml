@@ -1,0 +1,103 @@
+# Publica Caudal en un hosting con cPanel por FTPS, en cada cambio de main.
+#
+# Con esto no vuelves a tocar el Administrador de archivos: compila, sube y
+# listo. Hay que configurar tres secretos una sola vez (ver más abajo).
+#
+# Se usa lftp directamente y no una acción de terceros a propósito: una acción
+# de terceros recibiría tus credenciales de FTP, y aquí no hacen falta más
+# manos de las necesarias.
+#
+# ---------------------------------------------------------------------------
+# CONFIGURACIÓN (una sola vez)
+#
+# 1. En cPanel › Archivos › Cuentas FTP, crea una cuenta NUEVA y limítala al
+#    directorio del sitio (por ejemplo public_html). No uses la cuenta
+#    principal de cPanel: si el secreto se filtrase, quien lo tuviera sólo
+#    podría tocar esa carpeta y no el hosting entero.
+#
+# 2. En GitHub › Settings › Secrets and variables › Actions, añade:
+#      FTP_HOST      ftp.tudominio.com   (o el que indique cPanel)
+#      FTP_USER      el usuario completo, normalmente usuario@tudominio.com
+#      FTP_PASSWORD  la contraseña de esa cuenta
+#
+# 3. Si el sitio no cuelga de la raíz, añade también la variable (no secreto)
+#    REMOTE_DIR con la ruta, por ejemplo /public_html/gastos
+#    y la variable BASE_PATH con /gastos/
+# ---------------------------------------------------------------------------
+name: Desplegar en cPanel
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: cpanel
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    # Sin los secretos configurados el trabajo se salta en silencio, en vez de
+    # fallar en rojo en cada cambio de quien no use cPanel.
+    if: ${{ vars.CPANEL_DEPLOY == 'true' }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Comprobar tipos y pruebas
+        run: |
+          npm run typecheck
+          npm test
+
+      - name: Compilar
+        run: npm run build
+        env:
+          # Vacío salvo que el sitio cuelgue de una subcarpeta.
+          BASE_PATH: ${{ vars.BASE_PATH || '/' }}
+
+      - name: Comprobar que el .htaccess va dentro
+        run: |
+          # Sin él, Apache devuelve 404 en cualquier ruta interna — incluida
+          # /add, que es la que usan los atajos del móvil.
+          test -f dist/.htaccess || { echo "Falta dist/.htaccess"; exit 1; }
+
+      - name: Subir por FTPS
+        env:
+          HOST: ${{ secrets.FTP_HOST }}
+          USER: ${{ secrets.FTP_USER }}
+          PASSWORD: ${{ secrets.FTP_PASSWORD }}
+          REMOTE_DIR: ${{ vars.REMOTE_DIR || '/public_html' }}
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq lftp
+
+          # ftp:ssl-force exige TLS: sin él, lftp aceptaría FTP en claro y la
+          # contraseña viajaría legible por la red.
+          #
+          # --only-newer no vuelve a subir lo que no ha cambiado.
+          #
+          # NO se usa --delete: borraría cualquier otra cosa que tengas en esa
+          # carpeta. Los archivos antiguos de assets/ llevan hash y no estorban;
+          # si algún día quieres limpiarlos, bórralos desde cPanel.
+          lftp -c "
+            set ftp:ssl-force true;
+            set ftp:ssl-protect-data true;
+            set ssl:verify-certificate ${{ vars.FTP_VERIFY_CERT || 'true' }};
+            set net:max-retries 3;
+            set net:timeout 20;
+            open -u '$USER','$PASSWORD' '$HOST';
+            mirror --reverse --only-newer --parallel=4 --verbose ./dist '$REMOTE_DIR';
+          "
+
+      - name: Resumen
+        run: |
+          echo "Subido a ${{ vars.REMOTE_DIR || '/public_html' }}."
+          echo "Si es la primera vez, acuérdate de descomentar el bloque 5 del"
+          echo ".htaccess para forzar HTTPS (sólo después de activar AutoSSL)."

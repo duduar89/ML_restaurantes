@@ -120,3 +120,54 @@ describe('texto en crudo con caracteres que parten la URL', () => {
     expect(parseCapture(viaParams, search)?.concept).toContain('BAR&CO')
   })
 })
+
+describe('importes dentro del texto del aviso', () => {
+  const aviso = (text: string) => {
+    const search = `?texto=${encodeURIComponent(text)}`
+    return parseCapture(new URLSearchParams(search), search)
+  }
+
+  it('no se come los decimales del formato inglés', () => {
+    // El fallo más peligroso posible: el gasto se apunta, pero por menos
+    // dinero del real, y nada lo delata.
+    expect(aviso('Has gastado €2.50 en Filmin')?.amountCents).toBe(250)
+    expect(aviso('Pago de €9.99 en Spotify')?.amountCents).toBe(999)
+  })
+
+  it('sigue leyendo bien el formato español', () => {
+    expect(aviso('Has gastado 9,99 €')?.amountCents).toBe(999)
+    expect(aviso('Compra de 1.056,42 EUR en IKEA')?.amountCents).toBe(105642)
+    expect(aviso('Cargo de 23,45 € en MERCADONA')?.amountCents).toBe(2345)
+  })
+
+  it('no confunde el saldo con el importe', () => {
+    // Revolut manda el saldo en la segunda línea. Si se colara, el gasto
+    // apuntado sería el dinero que te queda en la cuenta.
+    const result = aviso('Has gastado 9,99 €\nSaldo de EUR: 1.056,42 €')
+    expect(result?.amountCents).toBe(999)
+  })
+})
+
+describe('avisos de dinero que entra', () => {
+  const aviso = (text: string) => {
+    const search = `?texto=${encodeURIComponent(text)}`
+    return parseCapture(new URLSearchParams(search), search)
+  }
+
+  it('"has recibido" es un ingreso, no un gasto', () => {
+    expect(aviso('Has recibido 72,95 € de Marta')?.kind).toBe('income')
+  })
+
+  it('"te ha enviado" es un ingreso', () => {
+    expect(aviso('Alex te ha enviado 38,70 €')?.kind).toBe('income')
+  })
+
+  it('"has enviado" sigue siendo un gasto', () => {
+    // Sale dinero: es un gasto aunque no sea una compra.
+    expect(aviso('Has enviado 2,50 € a Alex Ruiz')?.kind).toBe('expense')
+  })
+
+  it('un pago programado todavía no ha ocurrido', () => {
+    expect(aviso('Tu pago de €2.50 a Alex está programado')).toBeNull()
+  })
+})

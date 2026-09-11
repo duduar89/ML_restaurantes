@@ -27,13 +27,20 @@ export interface Capture {
 }
 
 /**
- * Importes dentro de un texto libre: "12,50 €", "€12.50", "EUR 12,50",
- * "12.50EUR". Se pide al menos un decimal o el símbolo para no confundir el
- * importe con un número de tarjeta o una hora.
+ * Importes dentro de un texto libre: "12,50 €", "€12.50", "EUR 12,50".
+ *
+ * El grupo de millares lleva `+` y no `*`, y esto NO es un detalle de estilo.
+ * Con `*`, la primera rama de la alternancia aceptaba "2" como válido dentro
+ * de "€2.50" —cero repeticiones del grupo y coma decimal opcional—, y una
+ * alternancia se queda con la primera rama que encaja: la que sí habría leído
+ * "2.50" entero no llegaba a probarse nunca. El resultado era un gasto de
+ * 2,00 € en lugar de 2,50 €, apuntado sin error y sin nada que lo delatase.
+ * Con `+`, esa rama exige millares de verdad y el formato inglés cae en la
+ * segunda, que lo lee completo.
  */
 const AMOUNT_PATTERNS = [
-  /(?:€|EUR)\s*(\d{1,3}(?:[.\s]\d{3})*(?:,\d{1,2})?|\d+(?:[.,]\d{1,2})?)/i,
-  /(\d{1,3}(?:[.\s]\d{3})*,\d{1,2}|\d+[.,]\d{1,2})\s*(?:€|EUR)/i,
+  /(?:€|EUR)\s*(\d{1,3}(?:[.\s]\d{3})+(?:,\d{1,2})?|\d+(?:[.,]\d{1,2})?)(?!\d)/i,
+  /(\d{1,3}(?:[.\s]\d{3})+(?:,\d{1,2})?|\d+[.,]\d{1,2})\s*(?:€|EUR)/i,
 ]
 
 /** Comercio en los avisos de los bancos españoles: "compra en MERCADONA". */
@@ -47,16 +54,26 @@ const MERCHANT_PATTERNS = [
  *
  * Un pago rechazado genera notificación igual que uno aceptado. Si se apuntara,
  * el gasto sería falso y sólo se descubriría al descuadrar el mes — el peor
- * tipo de error, porque es silencioso y tardío.
+ * tipo de error, porque es silencioso y tardío. Lo mismo con un pago
+ * PROGRAMADO, que aún no ha ocurrido.
+ *
+ * Se descarta de más a propósito: si algún aviso legítimo cae aquí, el usuario
+ * lo echa en falta y lo apunta a mano. Al revés no hay vuelta atrás, porque un
+ * gasto inventado no se nota.
  */
-const NOT_AN_EXPENSE = /\b(rechaz|denegad|no autorizad|cancelad|caducad|bloquead|intento de|sospechos|fraude)/i
+const NOT_AN_EXPENSE =
+  /\b(rechaz|denegad|no autorizad|cancelad|caducad|bloquead|intento de|sospechos|fraude|programad)/i
 
 /**
  * Avisos de dinero que ENTRA. El mismo formato de aviso sirve para una
  * devolución que para una compra, y apuntar una devolución como gasto lo
  * cuenta dos veces en contra.
+ *
+ * Ojo con la diferencia entre "te ha enviado" (entra) y "has enviado" (sale):
+ * son la misma frase con el pronombre cambiado y significan lo contrario.
  */
-const IS_INCOME = /\b(devoluci|abono|abonad|reembols|ingreso|ingresad|nómina|nomina|transferencia recibida)/i
+const IS_INCOME =
+  /\b(devoluci|abono|abonad|reembols|ingreso|ingresad|nómina|nomina|recibid[oa]|te\s+ha\s+enviado|te\s+han\s+enviado)/i
 
 function firstMatch(text: string, patterns: RegExp[]): string | null {
   for (const pattern of patterns) {

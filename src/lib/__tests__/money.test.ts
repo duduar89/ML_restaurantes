@@ -76,3 +76,20 @@ describe('applyKey', () => {
     expect(applyKey('1234567', '8')).toBe('1234567')
   })
 })
+
+describe('formato inglés en avisos bancarios', () => {
+  it('lee los decimales con punto sin perderlos', () => {
+    // Revolut y muchos comercios internacionales notifican "€2.50", no "2,50 €".
+    expect(parseAmount('2.50')).toBe(250)
+    expect(parseAmount('9.99')).toBe(999)
+  })
+
+  it('un punto de miles sin decimales no es un decimal', () => {
+    // "1.234 €" en un aviso español son mil doscientos treinta y cuatro euros,
+    // no uno con doscientos treinta y cuatro milésimas.
+    expect(parseAmount('1.234')).toBe(123400)
+    expect(parseAmount('12.345')).toBe(1234500)
+    // Pero "1.23" sí es un decimal: sólo son miles si el grupo trae 3 dígitos.
+    expect(parseAmount('1.23')).toBe(123)
+  })
+})

@@ -47,6 +47,9 @@ export function formatAmount(cents: Cents): string {
   return plain.format(cents / 100)
 }
 
+/** Puntos que agrupan millares en vez de separar decimales: 1.234, 12.345.678 */
+const GROUPED_THOUSANDS = /^-?\d{1,3}(?:\.\d{3})+$/
+
 /**
  * Parsea lo que el usuario teclea ("12,50", "12.50", "1.234,56") a céntimos.
  * Devuelve null si no es un importe válido.
@@ -64,6 +67,12 @@ export function parseAmount(input: string): Cents | null {
   } else if (lastComma > lastDot) {
     // Formato español: la coma es el decimal, los puntos son miles.
     normalized = raw.replace(/\./g, '').replace(',', '.')
+  } else if (GROUPED_THOUSANDS.test(raw)) {
+    // "1.234" sin decimales son mil doscientos treinta y cuatro, no uno coma
+    // doscientos treinta y cuatro. Lo que lo distingue es el tamaño del grupo:
+    // sólo son miles si tras CADA punto vienen exactamente tres dígitos, así
+    // que "1.23" sigue siendo un decimal.
+    normalized = raw.replace(/\./g, '')
   } else {
     // Formato anglosajón: el punto es el decimal, las comas son miles.
     normalized = raw.replace(/,/g, '')

@@ -113,9 +113,21 @@ export function rawTextParam(search: string): string | null {
   try {
     return decodeURIComponent(value)
   } catch {
-    // La automatización no lo codificó y hay un '%' suelto: mejor el texto tal
-    // cual que descartarlo entero.
-    return value
+    // Un '%' que no abre ningún escape —"EL CORTE INGLES 100%", un descuento
+    // del 50%— hace que decodeURIComponent rechace la cadena ENTERA, también
+    // los %20 que sí eran válidos. El importe quedaba entonces pegado a
+    // "%20EUR", no se reconocía, y el gasto se perdía sin decir nada.
+    //
+    // Se descodifica escape a escape, y el que no se pueda se queda como
+    // está. Van por tandas y no de uno en uno porque un acento son dos
+    // escapes seguidos (%C3%89 es É) y sueltos no significan nada.
+    return value.replace(/(?:%[0-9a-fA-F]{2})+/g, (run) => {
+      try {
+        return decodeURIComponent(run)
+      } catch {
+        return run
+      }
+    })
   }
 }
 

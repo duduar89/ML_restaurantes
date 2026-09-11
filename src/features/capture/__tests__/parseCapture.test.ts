@@ -98,6 +98,25 @@ describe('texto en crudo con caracteres que parten la URL', () => {
     expect(result?.concept).toContain('H&M')
   })
 
+  it('un % suelto no tira por tierra el resto del texto', () => {
+    // "EL CORTE INGLES 100%" acaba con un '%' que no abre ningún escape, y eso
+    // hace que decodeURIComponent rechace la cadena ENTERA — incluidos los %20
+    // que sí son válidos. El importe quedaba pegado a "%20EUR" y no se leía:
+    // el gasto se perdía entero.
+    const search = '?auto=1&texto=Compra%2045,00%20EUR%20en%20EL%20CORTE%20INGLES%20100%'
+    const result = parseCapture(new URLSearchParams(search), search)
+    expect(result?.amountCents).toBe(4500)
+  })
+
+  it('descodifica los acentos aunque el texto traiga un % suelto', () => {
+    // Un acento son dos escapes seguidos (%C3%A9); hay que traducirlos juntos
+    // o no sale la letra.
+    const search = '?auto=1&texto=Compra%2010,00%20EUR%20en%20CAF%C3%89%20100%'
+    const result = parseCapture(new URLSearchParams(search), search)
+    expect(result?.amountCents).toBe(1000)
+    expect(result?.concept).toContain('CAFÉ')
+  })
+
   it('acepta el texto sin codificar', () => {
     // Si la automatización no codifica, el texto llega con espacios tal cual.
     const search = '?texto=Compra de 12,50 EUR en MERCADONA'

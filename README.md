@@ -95,8 +95,10 @@ descarga el extracto en formato **Norma 43** desde la web de tu banco e
 impórtalo desde Ajustes: un par de toques al mes, con vista previa y sin
 duplicar.
 
-Los detalles, incluidas las opciones de open banking que requerirían un
-servidor, están en [`docs/ARQUITECTURA.md`](docs/ARQUITECTURA.md).
+**Cómo montarlo, paso a paso** —con MacroDroid en Android y con Atajos en
+iPhone— está en [`docs/AUTOMATIZAR.md`](docs/AUTOMATIZAR.md). Los detalles de la
+decisión, incluidas las opciones de open banking que requerirían un servidor,
+en [`docs/ARQUITECTURA.md`](docs/ARQUITECTURA.md).
 
 ## Cómo está hecho
 

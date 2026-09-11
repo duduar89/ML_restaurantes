@@ -213,6 +213,27 @@ async function run(browser, base) {
       )
     }
 
+    // Y ahora tal cual lo manda una macro: pegado al final SIN codificar. Un
+    // '%' suelto ("EL CORTE INGLES 100%") invalida la cadena entera para
+    // decodeURIComponent y antes se perdía el gasto sin decir nada.
+    for (const [texto, centimos] of [
+      ['Compra de 12,34 EUR en H&M GRAN VIA', 1234],
+      ['Compra 45,00 EUR en EL CORTE INGLES 100%', 4500],
+      ['Compra 9,90 EUR en CAFÉ AZUL 50% dto', 990],
+    ]) {
+      const antes = await readExpenses(page)
+      await page.goto(`${base}/add?auto=1&texto=${texto}`, { waitUntil: 'networkidle' })
+      await page.waitForTimeout(700)
+      const nuevo = (await readExpenses(page)).find(
+        (fila) => !antes.some((previa) => previa.id === fila.id)
+      )
+      check(
+        `sin codificar: «${texto}»`,
+        nuevo?.amountCents === centimos,
+        `fue ${nuevo ? (nuevo.amountCents / 100).toFixed(2) : 'nada apuntado'}`
+      )
+    }
+
     check('sin errores en consola', errors.length === 0, errors[0])
     await context.close()
   }

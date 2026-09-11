@@ -73,22 +73,7 @@ Si prefieres FTP (FileZilla y las credenciales de **Archivos › Cuentas FTP**),
 arrastra **el contenido** de `dist/` a `public_html/`. Asegúrate de que el
 cliente FTP muestre los archivos ocultos, o se dejará el `.htaccess`.
 
-## 4. Fuerza HTTPS
-
-Ahora que el certificado funciona, edita `public_html/.htaccess` (clic derecho →
-**Edit**) y **descomenta el bloque 5** quitando las almohadillas:
-
-```apache
-<IfModule mod_rewrite.c>
-  RewriteEngine On
-  RewriteCond %{HTTPS} !=on
-  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
-</IfModule>
-```
-
-Así quien entre por `http://` acaba en `https://` y la app funciona siempre.
-
-## 5. Compruébalo
+## 4. Compruébalo
 
 Abre `https://tudominio.com` **en el móvil** y repasa:
 

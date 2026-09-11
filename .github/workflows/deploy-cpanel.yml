@@ -105,6 +105,4 @@ jobs:
 
       - name: Resumen
         run: |
-          echo "Subido a ${{ vars.REMOTE_DIR || '/' }} en ${{ secrets.FTP_HOST }}."
-          echo "Si es la primera vez, acuérdate de descomentar el bloque 5 del"
-          echo ".htaccess para forzar HTTPS (sólo después de activar AutoSSL)."
+          echo "Subido a ${{ vars.REMOTE_DIR || '/' }}."

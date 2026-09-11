@@ -69,18 +69,22 @@
 
 
 # --- 5. HTTPS ---------------------------------------------------------------
-# DESCOMENTAR SÓLO DESPUÉS de activar el certificado SSL en cPanel
-# (Seguridad › SSL/TLS Status › Run AutoSSL). Si se activa antes, el sitio
-# entra en un bucle de redirección hacia una dirección que todavía no existe.
+# Quien entre por http:// acaba en https://.
 #
-# Hace falta de verdad: sin HTTPS el navegador no registra el service worker,
-# y sin service worker no hay modo sin conexión ni se puede instalar la app.
+# Va activo, no comentado, por dos razones. La primera es que el certificado ya
+# tiene que existir antes de publicar: sin HTTPS el navegador no registra el
+# service worker, así que desplegar sin SSL da una app a medias de todos modos.
+# La segunda es práctica: este archivo se sobrescribe en cada despliegue, así
+# que descomentarlo a mano en el servidor duraría hasta la siguiente subida.
 #
-# <IfModule mod_rewrite.c>
-#   RewriteEngine On
-#   RewriteCond %{HTTPS} !=on
-#   RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
-# </IfModule>
+# Si acabas aquí porque el sitio entra en bucle de redirección, es que el
+# certificado no está activo todavía: actívalo en cPanel › SSL/TLS Status en
+# lugar de quitar este bloque.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTPS} !=on
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
 
 
 # Que no se pueda listar el contenido de las carpetas.

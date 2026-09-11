@@ -26,13 +26,17 @@
     <meta name="apple-mobile-web-app-title" content="Caudal" />
     <meta name="mobile-web-app-capable" content="yes" />
 
-    <!-- Inter para el cuerpo y las cifras (trae `tnum` y cero barrado de
-         verdad); Space Grotesk sólo para la voz de display. -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Las fuentes se sirven desde el propio proyecto (public/fonts): así la
+         app funciona sin red desde el primer arranque y no manda la IP del
+         usuario a un tercero en cada apertura, que en una app de finanzas
+         personales importa. Se precarga sólo el subconjunto latino de Inter,
+         que es el que aparece en el primer pintado. -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400..800&display=swap"
-      rel="stylesheet"
+      rel="preload"
+      href="/fonts/inter-latin-400800.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
     />
 
     <!-- Pinta el fondo antes de que arranque React: sin esto se ve un

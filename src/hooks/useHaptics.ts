@@ -13,9 +13,18 @@ const PATTERNS: Record<Pattern, number | number[]> = {
 
 export function haptic(pattern: Pattern = 'tap'): void {
   if (typeof navigator === 'undefined' || !('vibrate' in navigator)) return
+
+  // Sin un toque previo del usuario el navegador bloquea la vibración y deja
+  // un error en la consola. Pasa de verdad: un gasto que entra por un enlace
+  // de automatización llega por navegación, no por un toque. Se comprueba
+  // antes en lugar de provocar el error y taparlo.
+  const activation = (navigator as Navigator & { userActivation?: { hasBeenActive: boolean } })
+    .userActivation
+  if (activation && !activation.hasBeenActive) return
+
   try {
     navigator.vibrate(PATTERNS[pattern])
   } catch {
-    /* Algunos navegadores lo exponen pero lo bloquean sin gesto del usuario. */
+    /* Algunos navegadores la exponen y la bloquean igualmente. */
   }
 }

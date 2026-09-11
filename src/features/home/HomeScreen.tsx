@@ -117,6 +117,9 @@ export function HomeScreen({
           )}
         </section>
 
+        {/* Con el mes a cero las tres casillas dirían 0,00 € tres veces: en el
+            primer arranque estorban más de lo que informan. */}
+        {stats.spent > 0 && (
         <section className="quickstats">
           <Stat label="Hoy" value={statValue(stats.todaySpent)} />
           <Stat label="Media/día" value={statValue(stats.average)} />
@@ -130,6 +133,7 @@ export function HomeScreen({
             <Stat label="Mayor gasto" value={statValue(stats.top)} />
           )}
         </section>
+        )}
 
         <div className="home-filters">
           <button

@@ -285,11 +285,12 @@ export function projectionIsMeaningful(month: MonthKey, expenses: Expense[] = []
 
   if (today <= to && daysBetween(from, today) < MIN_DAYS_FOR_PROJECTION) return false
 
+  // Sin gasto no hay nada que proyectar: "Previsto 0,00 €" no es un dato.
   const total = totalSpent(expenses)
-  if (total > 0) {
-    const top = biggest(expenses)
-    if (top && top.amountCents / total > MAX_SINGLE_EXPENSE_SHARE) return false
-  }
+  if (total === 0) return false
+
+  const top = biggest(expenses)
+  if (top && top.amountCents / total > MAX_SINGLE_EXPENSE_SHARE) return false
 
   return true
 }

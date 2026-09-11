@@ -106,23 +106,16 @@ export default defineConfig({
         // Por defecto Workbox sólo precachea css/js/html: sin png/svg/woff2 la
         // app dice "lista sin conexión" y luego aparece sin iconos ni fuentes.
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
+        // Las capturas sólo las lee el diálogo de instalación de Android, una
+        // vez y con red: precachearlas serían cientos de kB muertos en el
+        // almacenamiento de cada usuario.
+        globIgnores: ['**/screenshots/**'],
         navigateFallback: `${base}index.html`,
         cleanupOutdatedCaches: true,
         clientsClaim: false,
         skipWaiting: false,
-        runtimeCaching: [
-          {
-            // Las fuentes de Google: caché al vuelo para que la segunda visita
-            // y el modo avión rindan igual.
-            urlPattern: /^https:\/\/fonts\.(googleapis|gstatic)\.com\/.*/i,
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'google-fonts',
-              expiration: { maxEntries: 20, maxAgeSeconds: 60 * 60 * 24 * 365 },
-              cacheableResponse: { statuses: [0, 200] },
-            },
-          },
-        ],
+        // Sin runtimeCaching: la app no pide NADA a otro origen. Todo lo que
+        // necesita —código, estilos, iconos y fuentes— está precacheado.
       },
       devOptions: {
         enabled: false,

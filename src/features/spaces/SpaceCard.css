@@ -100,11 +100,11 @@
 }
 
 .spacecard-fill--warn {
-  background: linear-gradient(90deg, var(--warning), #ff9f43);
+  background: linear-gradient(90deg, var(--warning-deep), var(--warning));
 }
 
 .spacecard-fill--over {
-  background: linear-gradient(90deg, var(--danger), #ff8a5b);
+  background: linear-gradient(90deg, var(--danger-deep), var(--danger));
 }
 
 .spacecard-left {

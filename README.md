@@ -102,6 +102,19 @@ servidor, están en [`docs/ARQUITECTURA.md`](docs/ARQUITECTURA.md).
 React 19 · TypeScript 7 · Vite 8 · Dexie sobre IndexedDB · sin framework de
 estilos y sin librería de gráficas.
 
+**Tinta y barro.** El lienzo es negro cálido, no negro azulado: casi toda
+interfaz oscura de hoy tira al azul-violeta y ese parecido es lo que las hace
+indistinguibles. El color de acción es barro cocido y el acento verde agua —la
+vasija y el caudal que lleva dentro, que es justo lo que dibuja el logo—. El
+tema claro está compuesto aparte, no invertido: es el mismo mundo a la luz del
+día, con el barro oscurecido hasta que el texto blanco se lee encima.
+
+Con una marca cálida, el rojo de «te has pasado» se le pega. Por eso el peligro
+se empujó a un rojo frío y el aviso al oro: los tres quedan a 29° de tono unos
+de otros. Todos los valores están calculados, y `src/styles/__tests__` verifica
+en cada ejecución que los dos temas cumplen WCAG AA y que ningún componente
+escribe un color a mano.
+
 Las decisiones que más han condicionado el resultado:
 
 - **Teclado numérico propio.** iOS 26.2 inserta un punto en vez de una coma en
@@ -123,6 +136,11 @@ Las decisiones que más han condicionado el resultado:
   desde el primer arranque y no manda tu IP a un tercero.
 - **Copia de seguridad por el menú de compartir**, no por `<a download>`, que
   está roto dentro de las PWA instaladas en iOS.
+- **Tipografía elegida midiendo, no de oído.** Las columnas de dinero necesitan
+  cifras tabulares de verdad; se midieron dieciocho familias comparando el
+  ancho de `111111` contra `000000` en un navegador real. IBM Plex Sans las
+  trae ya monoespaciadas de fábrica, así que la alineación aguanta aunque
+  `tnum` no llegue a aplicarse. Bricolage Grotesque pone la voz de display.
 
 ### Estructura
 

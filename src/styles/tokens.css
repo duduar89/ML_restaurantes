@@ -14,57 +14,70 @@
  */
 
 :root {
-  /* --- Lienzo ----------------------------------------------------------- */
-  --bg-inset: #07060d;
-  --bg: #0a0912;
-  --surface-solid: #131221;
-  --bg-elevated: #16142b;
-  --surface-2: #1c1a2e;
-  --surface-3: #2a2740;
+  /* --- Lienzo ------------------------------------------------------------
+   * Negro CÁLIDO, no negro azulado. Es la decisión que más se nota: casi toda
+   * interfaz oscura de hoy tira al azul-violeta, y ese parecido es lo que hace
+   * que todas se confundan entre sí. Aquí el lienzo tiene barro debajo.
+   */
+  --bg-inset: #100d0b;
+  --bg: #16110e;
+  --surface-solid: #211a16;
+  --bg-elevated: #251d19;
+  --surface-2: #2e2520;
+  --surface-3: #40342c;
 
-  --border: rgba(244, 242, 255, 0.07);
-  --border-strong: #2a2740;
+  --border: rgba(245, 236, 228, 0.09);
+  --border-strong: #40342c;
 
   /* --- Texto ------------------------------------------------------------ */
-  --text: #f4f2ff;
-  --text-muted: #a9a4c7;
-  --text-faint: #8b86ae;
-  /* Tinta oscura sobre el color de marca: blanco no llega a AA. */
-  --text-on-brand: #0a0912;
+  --text: #f6eee6;
+  --text-muted: #c4b2a3;
+  --text-faint: #9c8a7b;
+  /* Tinta oscura sobre el barro: el texto claro no llega a AA encima. */
+  --text-on-brand: #16110e;
 
-  /* --- Marca ------------------------------------------------------------ */
-  --brand-500: #7b5cff;
-  --brand-400: #9b84ff;
-  --brand-300: #9b84ff;
-  --brand-600: #5b3ee0;
-  --brand-glow: rgba(123, 92, 255, 0.42);
-  --accent-500: #35e0f5;
-  --accent-400: #6ae9f8;
+  /* --- Marca ------------------------------------------------------------
+   * Barro cocido para la acción y verde agua para el acento: la vasija y el
+   * caudal que lleva dentro, que es exactamente lo que dibuja el logo.
+   */
+  --brand-500: #e0763f;
+  --brand-400: #ee9668;
+  --brand-300: #ee9668;
+  --brand-600: #c05c2b;
+  --brand-glow: rgba(224, 118, 63, 0.3);
+  --accent-500: #4fb3a4;
+  --accent-400: #6fc7b9;
 
-  --brand-gradient: linear-gradient(135deg, #35e0f5 0%, #7b5cff 100%);
+  /* Un solo color con dos luminosidades, no dos tonos distintos: el degradado
+     entre dos colores lejanos era parte de lo que se quería dejar atrás. */
+  --brand-gradient: linear-gradient(135deg, #ee9668 0%, #e0763f 100%);
   --brand-gradient-soft: linear-gradient(
     135deg,
-    rgba(53, 224, 245, 0.16) 0%,
-    rgba(123, 92, 255, 0.16) 100%
+    rgba(238, 150, 104, 0.14) 0%,
+    rgba(224, 118, 63, 0.14) 100%
   );
 
-  /* --- Semánticos ------------------------------------------------------- */
-  /* El violeta de marca vive en el arco azul-violeta a propósito: así nunca
-     se confunde con el verde de ingreso ni el rojo de gasto, que es la
-     colisión que arruina las interfaces financieras. */
-  --positive: #2fd98f;
-  --positive-soft: rgba(47, 217, 143, 0.14);
-  --warning: #ffb020;
-  --warning-soft: rgba(255, 176, 32, 0.14);
-  --danger: #ff5c7a;
-  --danger-soft: rgba(255, 92, 122, 0.14);
+  /* --- Semánticos -------------------------------------------------------
+   * Con una marca naranja, el rojo de "te has pasado" se le pega: ambos son
+   * cálidos y ambos gritan. Por eso el peligro se empuja a un rojo FRÍO y el
+   * aviso al oro; los tres quedan a 29° de tono unos de otros, que es la
+   * distancia a la que el ojo los separa de un vistazo.
+   */
+  --positive: #8fbf6a;
+  --positive-soft: rgba(143, 191, 106, 0.14);
+  --warning: #d9c04a;
+  --warning-soft: rgba(217, 192, 74, 0.14);
+  --warning-deep: #b89a2f;
+  --danger: #e15a6e;
+  --danger-soft: rgba(225, 90, 110, 0.14);
+  --danger-deep: #c04156;
 
   /* --- Elevación -------------------------------------------------------- */
   --shadow-sm: none;
   /* El brillo interior de 1px arriba es lo que realmente vende profundidad. */
-  --shadow-md: 0 8px 24px -8px rgba(0, 0, 0, 0.55), inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
-  --shadow-lg: 0 20px 48px -12px rgba(0, 0, 0, 0.7), inset 0 1px 0 0 rgba(255, 255, 255, 0.07);
-  --shadow-brand: 0 8px 32px -8px rgba(123, 92, 255, 0.45);
+  --shadow-md: 0 8px 24px -8px rgba(0, 0, 0, 0.55), inset 0 1px 0 0 rgba(255, 245, 235, 0.05);
+  --shadow-lg: 0 20px 48px -12px rgba(0, 0, 0, 0.7), inset 0 1px 0 0 rgba(255, 245, 235, 0.07);
+  --shadow-brand: 0 8px 32px -8px rgba(224, 118, 63, 0.4);
 
   /* --- Forma ------------------------------------------------------------ */
   --r-xs: 8px;
@@ -108,15 +121,10 @@
    * usuario está mirando, así que una animación con ease-in SE SIENTE más
    * lenta que la misma duración con ease-out.
    */
-  /* Entradas y salidas: arranca rápido, responde al instante. */
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
-  /* Movimiento en pantalla (algo que se desplaza sin entrar ni salir). */
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
-  /* La curva de los paneles deslizantes de iOS. */
   --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
 
-  /* Por debajo de 300 ms o la interfaz se siente pesada. La salida siempre es
-     más rápida que la entrada: al abrir se acompaña, al cerrar se aparta. */
   --dur-press: 120ms;
   --dur-fast: 140ms;
   --dur: 220ms;
@@ -132,51 +140,57 @@
 }
 
 /*
- * Tema claro. Los colores semánticos del tema oscuro NO valen sobre blanco
- * (el verde y el rojo claros caen por debajo de 4,5): aquí van sus versiones
- * oscurecidas, todas verificadas.
+ * Tema claro: el mismo mundo a la luz del día, no el oscuro invertido.
+ *
+ * El papel es cálido, del color del barro sin cocer, y el barro de acción se
+ * oscurece hasta que el texto claro se lee encima. Los semánticos NO valen
+ * como están en oscuro: el verde y el oro claros caen por debajo de 4,5 sobre
+ * papel, así que aquí van sus versiones profundas. Todos los valores están
+ * calculados, no ajustados a ojo.
  */
 :root[data-theme='light'] {
-  --bg-inset: #f2f0fb;
-  --bg: #faf9ff;
-  --surface-solid: #ffffff;
-  --bg-elevated: #ffffff;
-  --surface-2: #f2f0fb;
-  --surface-3: #e4e1f2;
+  --bg-inset: #efe5d9;
+  --bg: #f7f0e7;
+  --surface-solid: #fffcf6;
+  --bg-elevated: #fffcf6;
+  --surface-2: #efe5d9;
+  --surface-3: #e0d2c1;
 
-  --border: rgba(20, 18, 31, 0.08);
-  --border-strong: #e4e1f2;
+  --border: rgba(34, 26, 20, 0.11);
+  --border-strong: #e0d2c1;
 
-  --text: #14121f;
-  --text-muted: #54507a;
-  --text-faint: #7d78a0;
-  --text-on-brand: #ffffff;
+  --text: #221a14;
+  --text-muted: #625951;
+  --text-faint: #655a50;
+  --text-on-brand: #fffcf6;
 
-  --brand-500: #5b3ee0;
-  --brand-400: #5b3ee0;
-  --brand-300: #5b3ee0;
-  --brand-600: #4a2fc4;
-  --brand-glow: rgba(91, 62, 224, 0.28);
-  --accent-500: #06788c;
-  --accent-400: #06788c;
+  --brand-500: #b15d32;
+  --brand-400: #b15d32;
+  --brand-300: #8d4a28;
+  --brand-600: #8d4a28;
+  --brand-glow: rgba(177, 93, 50, 0.18);
+  --accent-500: #2c645c;
+  --accent-400: #2c645c;
 
-  --brand-gradient: linear-gradient(135deg, #06788c 0%, #5b3ee0 100%);
+  --brand-gradient: linear-gradient(135deg, #c26b3a 0%, #b15d32 100%);
   --brand-gradient-soft: linear-gradient(
     135deg,
-    rgba(6, 120, 140, 0.12) 0%,
-    rgba(91, 62, 224, 0.12) 100%
+    rgba(177, 93, 50, 0.1) 0%,
+    rgba(44, 100, 92, 0.1) 100%
   );
 
-  --positive: #0a7f4e;
-  --positive-soft: rgba(10, 127, 78, 0.12);
-  --warning: #8a5600;
-  --warning-soft: rgba(138, 86, 0, 0.12);
-  --danger: #c41f44;
-  --danger-soft: rgba(196, 31, 68, 0.12);
+  --positive: #4a6337;
+  --positive-soft: rgba(74, 99, 55, 0.12);
+  --warning: #685c24;
+  --warning-soft: rgba(104, 92, 36, 0.14);
+  --warning-deep: #4f460f;
+  --danger: #993d4b;
+  --danger-soft: rgba(153, 61, 75, 0.12);
+  --danger-deep: #7a2d39;
 
-  --shadow-md: 0 8px 24px -8px rgba(20, 18, 31, 0.12);
-  --shadow-lg: 0 20px 48px -12px rgba(20, 18, 31, 0.18);
-  --shadow-brand: 0 8px 32px -10px rgba(91, 62, 224, 0.4);
+  --shadow-md: 0 8px 24px -10px rgba(34, 26, 20, 0.16);
+  --shadow-lg: 0 20px 48px -14px rgba(34, 26, 20, 0.22);
+  --shadow-brand: 0 8px 24px -10px rgba(177, 93, 50, 0.35);
 
   color-scheme: light;
 }
@@ -184,25 +198,25 @@
 /*
  * Paleta de los apartados. Cada apartado escoge un índice y arrastra su color
  * a la tarjeta, a la cabecera y a sus gráficas: el color ES la identidad del
- * apartado, y por eso vive fuera de los componentes. Los ocho tonos están
- * elegidos para contrastar 4,5:1 o más sobre el lienzo oscuro.
+ * apartado, y por eso vive fuera de los componentes. Los ocho tonos rodean al
+ * barro sin repetirlo y todos contrastan 3:1 o más sobre el lienzo oscuro.
  */
 :root {
-  --space-0: #7b5cff;
-  --space-1: #35e0f5;
-  --space-2: #2fd98f;
-  --space-3: #ffb020;
-  --space-4: #ff8a5c;
-  --space-5: #ff5cc8;
-  --space-6: #b8e62f;
-  --space-7: #5c8cff;
+  --space-0: #e0763f;
+  --space-1: #4fb3a4;
+  --space-2: #8fbf6a;
+  --space-3: #d9c04a;
+  --space-4: #e15a6e;
+  --space-5: #a98fd0;
+  --space-6: #d99a5e;
+  --space-7: #6fa8cc;
 
-  --space-grad-0: linear-gradient(135deg, #9b84ff, #7b5cff);
-  --space-grad-1: linear-gradient(135deg, #6ae9f8, #35e0f5);
-  --space-grad-2: linear-gradient(135deg, #6ce8b4, #2fd98f);
-  --space-grad-3: linear-gradient(135deg, #ffc95e, #ffb020);
-  --space-grad-4: linear-gradient(135deg, #ffb08e, #ff8a5c);
-  --space-grad-5: linear-gradient(135deg, #ff8ed9, #ff5cc8);
-  --space-grad-6: linear-gradient(135deg, #d3ef79, #b8e62f);
-  --space-grad-7: linear-gradient(135deg, #8fb0ff, #5c8cff);
+  --space-grad-0: linear-gradient(135deg, #ee9668, #e0763f);
+  --space-grad-1: linear-gradient(135deg, #6fc7b9, #4fb3a4);
+  --space-grad-2: linear-gradient(135deg, #aad189, #8fbf6a);
+  --space-grad-3: linear-gradient(135deg, #e6d178, #d9c04a);
+  --space-grad-4: linear-gradient(135deg, #ea8496, #e15a6e);
+  --space-grad-5: linear-gradient(135deg, #c2addd, #a98fd0);
+  --space-grad-6: linear-gradient(135deg, #e8b98a, #d99a5e);
+  --space-grad-7: linear-gradient(135deg, #97c1dd, #6fa8cc);
 }

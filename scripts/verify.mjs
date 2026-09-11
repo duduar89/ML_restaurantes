@@ -189,7 +189,7 @@ async function run(browser, base) {
     check('se activa el atributo del tema', theme === 'light')
 
     const bg = await page.evaluate(() => getComputedStyle(document.body).backgroundColor)
-    check('el lienzo se aclara', bg === 'rgb(250, 249, 255)', bg)
+    check('el lienzo se aclara', bg === 'rgb(247, 240, 231)', bg)
 
     await page.goto(base, { waitUntil: 'networkidle' })
     await page.waitForTimeout(500)
@@ -224,7 +224,7 @@ async function checkPackaging() {
       manifest.screenshots?.every((shot) => shot.form_factor === 'narrow')
     )
     check('destino del menú de compartir', manifest.share_target?.action?.includes('compartir'))
-    check('color de tema igual al lienzo', manifest.theme_color === '#0a0912')
+    check('color de tema igual al lienzo', manifest.theme_color === '#16110e')
 
     for (const shot of manifest.screenshots ?? []) {
       check(`la captura ${shot.src} existe`, existsSync(join(DIST, shot.src)))

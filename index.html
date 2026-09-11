@@ -5,9 +5,9 @@
     <!-- viewport-fit=cover: sin él, env(safe-area-inset-*) devuelve 0 y la
          barra inferior se mete bajo el indicador de inicio del iPhone. -->
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <!-- El color del tema es el lienzo, no el violeta: una barra de estado
-         violeta pelearía con el fondo de la app. -->
-    <meta name="theme-color" content="#0a0912" />
+    <!-- El color del tema es el lienzo, no el de marca: una barra de estado
+         naranja pelearía con el fondo de la app. -->
+    <meta name="theme-color" content="#16110e" />
     <meta name="color-scheme" content="dark light" />
 
     <title>Caudal · Gastos</title>
@@ -44,7 +44,7 @@
     <style>
       html,
       body {
-        background: #0a0912;
+        background: #16110e;
       }
     </style>
     <script>
@@ -53,8 +53,8 @@
       try {
         if (localStorage.getItem('caudal-theme') === 'light') {
           document.documentElement.dataset.theme = 'light'
-          document.documentElement.style.background = '#faf9ff'
-          document.querySelector('meta[name="theme-color"]').content = '#faf9ff'
+          document.documentElement.style.background = '#f7f0e7'
+          document.querySelector('meta[name="theme-color"]').content = '#f7f0e7'
         }
       } catch (error) {
         /* Modo privado: se queda con el tema oscuro por defecto. */

@@ -17,10 +17,17 @@ export const BRAND = {
   tagline: 'Tu dinero, en movimiento',
   description:
     'Control de gastos personales. Apunta en segundos, separa por apartados y mira a dónde va tu dinero.',
-  /* El color del tema es el lienzo, no el violeta: una barra de estado
-     violeta pelea con el fondo de la app. */
-  themeColor: '#0a0912',
-  backgroundColor: '#0a0912',
-  gradientFrom: '#35e0f5',
-  gradientTo: '#7b5cff',
+  /* El color del tema es el lienzo, no el de marca: una barra de estado
+     naranja pelearía con el fondo de la app. */
+  themeColor: '#16110e',
+  backgroundColor: '#16110e',
+  /*
+   * El aro es barro cocido y el caudal de dentro es verde agua. No es un
+   * degradado decorativo entre dos tonos: son los dos materiales de los que
+   * habla el nombre, una vasija y el agua que lleva.
+   */
+  vessel: '#e0763f',
+  vesselLight: '#ee9668',
+  water: '#4fb3a4',
+  waterLight: '#6fc7b9',
 } as const

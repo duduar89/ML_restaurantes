@@ -2,14 +2,17 @@ import { useId } from 'react'
 import { BRAND } from './brand'
 
 /**
- * La marca de Caudal: una moneda (el aro) llena de caudal hasta un nivel.
+ * La marca de Caudal: una vasija de barro (el aro) con caudal dentro hasta un
+ * nivel.
  *
- * No es sólo un distintivo: el NIVEL es un dato. Pasándole `level` (0-1) el
- * logo muestra cuánto llevas gastado del presupuesto, así que la misma pieza
- * sirve de icono de la app y de indicador dentro de ella.
+ * Los dos colores no son decoración: el aro es barro cocido y el relleno es
+ * agua, que son los dos materiales de los que habla el nombre. Antes era un
+ * degradado de violeta a cian, que no significaba nada y era además el gesto
+ * más repetido de la época.
  *
- * Se dibuja en línea, con un aro y una ruta: nítido a cualquier tamaño, sin
- * una petición de red y con el color tomado de los tokens.
+ * Y el NIVEL es un dato. Pasándole `level` (0-1) el logo muestra cuánto llevas
+ * gastado del presupuesto, así que la misma pieza sirve de icono de la app y
+ * de indicador dentro de ella.
  */
 
 /**
@@ -56,9 +59,10 @@ function wavePath(y: number): string {
 
 export function LogoMark({
   size = 40,
-  /** 0-1. Cuánto caudal queda dentro de la moneda. */
+  /** 0-1. Cuánto caudal queda dentro de la vasija. */
   level = 0.61,
-  /** Color plano en vez del degradado: para favicon pequeño o marca monocroma. */
+  /** Un solo color heredado del contenedor: para el favicon pequeño y la
+      versión monocroma, donde dos tonos se emborronan. */
   flat = false,
 }: {
   size?: number
@@ -66,9 +70,9 @@ export function LogoMark({
   flat?: boolean
 }) {
   const uid = useId().replace(/:/g, '')
-  const gradientId = `caudal-g-${uid}`
   const clipId = `caudal-c-${uid}`
-  const paint = flat ? 'currentColor' : `url(#${gradientId})`
+  const vessel = flat ? 'currentColor' : BRAND.vessel
+  const water = flat ? 'currentColor' : BRAND.water
 
   return (
     <svg
@@ -80,12 +84,6 @@ export function LogoMark({
       aria-label={BRAND.name}
     >
       <defs>
-        {!flat && (
-          <linearGradient id={gradientId} x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stopColor={BRAND.gradientFrom} />
-            <stop offset="1" stopColor={BRAND.gradientTo} />
-          </linearGradient>
-        )}
         <clipPath id={clipId}>
           <circle cx="24" cy="24" r="17" />
         </clipPath>
@@ -94,9 +92,9 @@ export function LogoMark({
       {/* El caudal primero y el aro encima: así el trazo del aro queda
           limpio en los costados en vez de verse a través del relleno. */}
       <g clipPath={`url(#${clipId})`}>
-        <path d={wavePath(levelToY(level))} fill={paint} opacity="0.92" />
+        <path d={wavePath(levelToY(level))} fill={water} opacity={flat ? 0.35 : 1} />
       </g>
-      <circle cx="24" cy="24" r="17" fill="none" stroke={paint} strokeWidth="4" />
+      <circle cx="24" cy="24" r="17" fill="none" stroke={vessel} strokeWidth="4" />
     </svg>
   )
 }

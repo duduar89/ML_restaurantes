@@ -43,8 +43,8 @@ export default defineConfig({
         // window-controls-overlay es sólo de escritorio: aquí no pinta nada.
         display_override: ['standalone', 'minimal-ui'],
         orientation: 'portrait',
-        theme_color: '#0a0912',
-        background_color: '#0a0912',
+        theme_color: '#16110e',
+        background_color: '#16110e',
         categories: ['finance', 'productivity', 'utilities'],
         icons: [
           { src: 'icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },

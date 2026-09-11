@@ -173,6 +173,50 @@ async function run(browser, base) {
     await context.close()
   }
 
+  /* --- 2b. Lectura del importe en avisos reales -------------------------- */
+  console.log('\nImportes tal y como los escribe cada banco')
+  {
+    // Esta comprobación existe por un fallo que llegó a producción: "€2.50" se
+    // apuntaba como 2,00 €. No daba error, no avisaba de nada, y el importe
+    // equivocado quedaba guardado. Las pruebas unitarias ya lo cubren, pero
+    // esto lo mide sobre lo que de verdad se sube al servidor.
+    const CASOS = [
+      ['Pago de €2.50 en CAFE CENTRAL', 250, 'expense'],
+      ['Pago de €9.99 en SPOTIFY', 999, 'expense'],
+      ['Compra de 1.056,42 EUR en MEDIAMARKT', 105642, 'expense'],
+      ['Compra de 1.234 EUR en EL CORTE INGLES', 123400, 'expense'],
+      ['Has recibido 40,00 EUR de Ana', 4000, 'income'],
+      ['Ana te ha enviado 20,00 EUR', 2000, 'income'],
+      ['Devolucion de 15,00 EUR de ZARA', 1500, 'income'],
+      ['Pago programado de 55,00 EUR para el dia 5', null, null],
+    ]
+
+    const { context, page, errors } = await newPage()
+    await page.goto(base, { waitUntil: 'networkidle' })
+
+    for (const [texto, centimos, tipo] of CASOS) {
+      const antes = await readExpenses(page)
+      await page.goto(`${base}/add?auto=1&texto=${encodeURIComponent(texto)}`, {
+        waitUntil: 'networkidle',
+      })
+      await page.waitForTimeout(700)
+      const nuevo = (await readExpenses(page)).find(
+        (fila) => !antes.some((previa) => previa.id === fila.id)
+      )
+      const visto = nuevo ? nuevo.amountCents : null
+      const muestra = (c, k) =>
+        c === null ? 'nada apuntado' : `${(c / 100).toFixed(2)} € ${k === 'income' ? 'ingreso' : 'gasto'}`
+      check(
+        `«${texto}» → ${muestra(centimos, tipo)}`,
+        visto === centimos && (nuevo?.kind ?? null) === tipo,
+        `fue ${muestra(visto, nuevo?.kind ?? null)}`
+      )
+    }
+
+    check('sin errores en consola', errors.length === 0, errors[0])
+    await context.close()
+  }
+
   /* --- 3. Apartado nuevo ------------------------------------------------- */
   console.log('\nCrear un apartado')
   {

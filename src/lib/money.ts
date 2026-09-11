@@ -77,14 +77,6 @@ export function parseAmount(input: string): Cents | null {
   return Math.round(value * 100)
 }
 
-/** Reparto de un total en n partes sin perder céntimos por redondeo. */
-export function splitEvenly(total: Cents, parts: number): Cents[] {
-  if (parts <= 0) return []
-  const base = Math.floor(total / parts)
-  const remainder = total - base * parts
-  return Array.from({ length: parts }, (_, i) => base + (i < remainder ? 1 : 0))
-}
-
 export function sum(values: Cents[]): Cents {
   return values.reduce((acc, v) => acc + v, 0)
 }

@@ -215,6 +215,15 @@ async function main() {
     console.log(`  screenshots/${name}.png`)
   }
 
+  // Una segunda captura de Análisis, ya desplazada, para que se vean las
+  // gráficas de la mitad inferior.
+  await page.goto(base + '/analisis', { waitUntil: 'networkidle' })
+  await page.waitForTimeout(500)
+  await page.locator('.screen-body').evaluate((node) => node.scrollTo(0, 1250))
+  await page.waitForTimeout(500)
+  await page.screenshot({ path: join(OUT, 'analisis-2.png') })
+  console.log('  screenshots/analisis-2.png')
+
   // La hoja de alta, que es la pantalla más importante de la app.
   await page.goto(base, { waitUntil: 'networkidle' })
   await page.getByRole('button', { name: 'Añadir gasto' }).click()

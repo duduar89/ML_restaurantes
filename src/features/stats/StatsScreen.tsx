@@ -5,6 +5,7 @@ import { RankList } from '@/components/charts/RankList'
 import { Donut } from '@/components/charts/Donut'
 import { TrendLines } from '@/components/charts/TrendLines'
 import { CalendarHeat } from '@/components/charts/CalendarHeat'
+import { Sparkline } from '@/components/charts/Sparkline'
 import { MonthSwitcher } from '@/components/MonthSwitcher'
 import { ExpenseList } from '@/components/ExpenseList'
 import { useAppData } from '@/app/store'
@@ -35,6 +36,7 @@ import {
   type MonthKey,
 } from '@/lib/dates'
 import type { Expense } from '@/db/types'
+import type { Cents } from '@/lib/money'
 import './StatsScreen.css'
 
 /**
@@ -43,6 +45,22 @@ import './StatsScreen.css'
  * Una gráfica que no responde a una pregunta es decoración con coste.
  */
 const MONTHS_IN_HISTORY = 6
+
+/**
+ * Variación mes a mes en una columna estrecha.
+ *
+ * Partiendo de casi cero, el porcentaje se dispara y deja de informar: pasar
+ * de 2 € a 40 € es un +1900 % que sólo dice que antes no había nada. En ese
+ * caso se enseña "nuevo", y por encima de mil por ciento se corta para que la
+ * columna no se descuadre.
+ */
+function formatDelta(percent: number | null, previousCents: number): string {
+  if (percent === null) return 'nuevo'
+  if (previousCents < 500) return 'nuevo'
+  if (percent > 999) return '+999%'
+  if (percent < -999) return '−999%'
+  return `${percent > 0 ? '+' : ''}${percent.toFixed(0)}%`
+}
 
 export function StatsScreen({ onSelectExpense }: { onSelectExpense: (expense: Expense) => void }) {
   const { categoryById, methodById, spaceById, spaces } = useAppData()
@@ -94,6 +112,34 @@ export function StatsScreen({ onSelectExpense }: { onSelectExpense: (expense: Ex
       (key) => spaceById(key)?.name ?? 'Apartado'
     )
 
+    // Serie de seis meses por categoría: es lo que permite ver si una
+    // categoría se está desmadrando o si el mes malo fue una excepción.
+    const months6 = lastMonths(MONTHS_IN_HISTORY, month)
+    const perCategory = new Map<string, Map<MonthKey, Cents>>()
+    for (const expense of historyExpenses ?? []) {
+      if (expense.kind !== 'expense') continue
+      let byMonthKey = perCategory.get(expense.categoryId)
+      if (!byMonthKey) {
+        byMonthKey = new Map()
+        perCategory.set(expense.categoryId, byMonthKey)
+      }
+      const key = toMonthKey(expense.day)
+      byMonthKey.set(key, (byMonthKey.get(key) ?? 0) + expense.amountCents)
+    }
+
+    const trends = categories.slice(0, 4).map((item) => {
+      const byMonthKey = perCategory.get(item.key) ?? new Map<MonthKey, Cents>()
+      const series: Bucket[] = months6.map((key) => ({
+        key,
+        label: formatMonthAbbr(key),
+        cents: byMonthKey.get(key) ?? 0,
+        count: 0,
+      }))
+      const current = series.at(-1)?.cents ?? 0
+      const previous = series.at(-2)?.cents ?? 0
+      return { ...item, series, delta: percentChange(current, previous) }
+    })
+
     const daily = dailySeries(list, range.from, range.to)
     const previousDaily = dailySeries(previousExpenses ?? [], previousRange.from, previousRange.to)
     const isCurrent = month === currentMonthKey()
@@ -116,6 +162,7 @@ export function StatsScreen({ onSelectExpense }: { onSelectExpense: (expense: Ex
       methods,
       spacesRank,
       daily,
+      trends,
       averageLine: rollingAverage(daily, 7),
       aligned: alignedCumulative(daily, previousDaily, throughDay),
       top: biggest(list),
@@ -249,6 +296,40 @@ export function StatsScreen({ onSelectExpense }: { onSelectExpense: (expense: Ex
                 </header>
                 <ExpenseList expenses={focusedExpenses} onSelect={onSelectExpense} showSpace />
               </section>
+            )}
+
+            {data.trends.some((trend) => trend.series.some((point) => point.cents > 0)) && (
+              <ChartFrame
+                title="Cómo evoluciona cada cosa"
+                hint={`Tus ${data.trends.length} mayores categorías, últimos ${MONTHS_IN_HISTORY} meses`}
+                summary={`Evolución de las mayores categorías en los últimos ${MONTHS_IN_HISTORY} meses.`}
+                data={data.categories.slice(0, 4)}
+              >
+                <ul className="trends">
+                  {data.trends.map((trend) => (
+                    <li key={trend.key} className="trends-row">
+                      <span className="trends-name">
+                        {categoryById(trend.key)?.emoji} {trend.label}
+                      </span>
+                      <Sparkline
+                        data={trend.series}
+                        color={`var(--space-${categoryById(trend.key)?.colorIndex ?? 0})`}
+                      />
+                      <span
+                        className={`trends-delta ${
+                          trend.delta === null
+                            ? ''
+                            : trend.delta > 0
+                              ? 'trends-delta--up'
+                              : 'trends-delta--down'
+                        }`}
+                      >
+                        {formatDelta(trend.delta, trend.series.at(-2)?.cents ?? 0)}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </ChartFrame>
             )}
 
             {data.methods.length > 0 && (

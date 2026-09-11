@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { formatMoney, parseAmount, percentChange, splitEvenly, sum } from '../money'
+import { formatMoney, parseAmount, percentChange } from '../money'
 import { applyKey } from '../keypad'
 
 describe('parseAmount', () => {
@@ -36,15 +36,6 @@ describe('formatMoney', () => {
     expect(formatMoney(123450)).toMatch(/^1\.234,50/)
     expect(formatMoney(1234567)).toMatch(/^12\.345,67/)
     expect(formatMoney(0)).toMatch(/^0,00/)
-  })
-})
-
-describe('splitEvenly', () => {
-  it('reparte sin perder ni inventar céntimos', () => {
-    expect(splitEvenly(100, 3)).toEqual([34, 33, 33])
-    expect(sum(splitEvenly(100, 3))).toBe(100)
-    expect(sum(splitEvenly(1, 4))).toBe(1)
-    expect(splitEvenly(10, 0)).toEqual([])
   })
 })
 

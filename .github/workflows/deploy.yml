@@ -1,0 +1,75 @@
+# Publica Caudal en GitHub Pages en cada push a main.
+#
+# Para activarlo: Settings › Pages › Source: GitHub Actions, y añade la
+# variable PAGES_DEPLOY con valor true en Settings › Secrets and variables ›
+# Actions › Variables.
+#
+# GitHub Pages sirve el proyecto desde /<repo>/, así que BASE_PATH tiene que
+# llevar ese prefijo: de él dependen las rutas de los recursos, el alcance del
+# service worker y el navigateFallback. Sin él, la app instalada no encuentra
+# nada.
+name: Desplegar en GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Un despliegue a la vez; no se cancela el que ya está en marcha.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    # Igual que el flujo de cPanel: sin activar, se salta en silencio. Si no
+    # fuese así, todo el que no use Pages vería un aspa roja en cada cambio
+    # sólo porque `deploy-pages` falla cuando Pages no está habilitado.
+    if: ${{ vars.PAGES_DEPLOY == 'true' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Comprobar tipos y pruebas
+        run: |
+          npm run typecheck
+          npm test
+
+      - name: Compilar
+        run: npm run build
+        env:
+          BASE_PATH: /${{ github.event.repository.name }}/
+
+      - name: Preparar la salida
+        run: |
+          # Sin .nojekyll, Jekyll se come los archivos que empiezan por guion bajo.
+          touch dist/.nojekyll
+          # Pages devuelve 404.html para las rutas desconocidas; siendo una SPA,
+          # tiene que ser el propio index para que el router se haga cargo.
+          cp dist/index.html dist/404.html
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

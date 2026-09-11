@@ -1,0 +1,83 @@
+@import '@/styles/forms.css';
+
+.spacesheet {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  padding-bottom: var(--sp-2);
+}
+
+.emoji-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: var(--sp-2);
+}
+
+.emoji-cell {
+  aspect-ratio: 1;
+  border-radius: var(--r-sm);
+  background: var(--surface-2);
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+}
+
+.emoji-cell--active {
+  border-color: var(--brand-500);
+  background: var(--brand-gradient-soft);
+}
+
+.color-row {
+  display: flex;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+}
+
+.color-dot {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--r-full);
+  border: 2px solid transparent;
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+
+.color-dot--active {
+  border-color: var(--text);
+  transform: scale(1.12);
+}
+
+.kind-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--sp-2);
+}
+
+.kind-card {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--sp-3) var(--sp-2);
+  border-radius: var(--r-md);
+  background: var(--surface-2);
+  border: 1px solid transparent;
+  text-align: left;
+  min-width: 0;
+}
+
+.kind-card strong {
+  font-size: var(--text-sm);
+  font-weight: 700;
+}
+
+.kind-card span {
+  font-size: 0.625rem;
+  color: var(--text-faint);
+  line-height: 1.3;
+}
+
+.kind-card--active {
+  border-color: var(--brand-500);
+  background: var(--brand-gradient-soft);
+}

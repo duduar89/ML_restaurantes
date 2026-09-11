@@ -1,0 +1,180 @@
+@import './fonts.css';
+@import './tokens.css';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  /* 16px mínimo en los inputs: por debajo, iOS hace zoom al enfocar. */
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  /* La app es una pantalla completa: el scroll lo gestiona cada vista. */
+  overscroll-behavior-y: none;
+  overflow: hidden;
+}
+
+#root {
+  /* dvh, no vh: la barra de Safari en iOS cambia de alto al hacer scroll. */
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  isolation: isolate;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  outline: none;
+}
+
+button {
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+/*
+ * Cifras tabulares en TODO lo que sea dinero, sin excepciones. Sin `tnum` las
+ * columnas de importes no alinean y los números bailan al cambiar de valor.
+ * `zero` (cero barrado) evita confundir 0 con O en un extracto.
+ */
+.num {
+  font-variant-numeric: tabular-nums slashed-zero;
+  font-feature-settings: 'tnum' 1, 'zero' 1;
+  /* IBM Plex Sans ya trae las cifras monoespaciadas de fábrica, así que la
+     alineación se mantiene aunque `tnum` no llegue a aplicarse. */
+  font-variant-ligatures: none;
+  letter-spacing: -0.01em;
+}
+
+/* La voz de display: sólo en cifras y títulos grandes, nunca en texto seguido. */
+.display {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Zona de scroll estándar de una vista, con hueco para la barra inferior. */
+.scroll-area {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: calc(var(--tabbar-h) + var(--safe-b) + var(--sp-6));
+}
+
+:focus-visible {
+  outline: 2px solid var(--brand-400);
+  outline-offset: 2px;
+  border-radius: var(--r-xs);
+}
+
+/*
+ * Movimiento reducido no significa "sin animación": significa sin
+ * DESPLAZAMIENTO. Matar todas las transiciones a 0,01 ms se lleva por delante
+ * la confirmación de que un botón respondió, el aviso que aparece o el cambio
+ * de estado de una barra, y deja la interfaz dando saltos secos.
+ *
+ * Aquí se conserva lo que explica (opacidad, color, fondo) y se elimina lo que
+ * marea (traslaciones, escalas, deslizamientos).
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    /* Sólo se anulan las propiedades de movimiento. */
+    transition-property: opacity, background-color, border-color, color, fill, stroke !important;
+    transition-duration: 160ms !important;
+  }
+
+  /* Las hojas siguen apareciendo y desapareciendo, pero sin deslizarse. */
+  .sheet,
+  .sheet[open],
+  .toast,
+  .toast--in {
+    translate: none !important;
+  }
+
+  .sheet,
+  .toast {
+    opacity: 0;
+  }
+
+  .sheet[open],
+  .toast--in {
+    opacity: 1;
+  }
+
+  /* Las barras de las gráficas saltan a su valor en vez de crecer. */
+  .bars-fill,
+  .rank-fill,
+  .progress-fill,
+  .spacecard-fill {
+    transition: none !important;
+  }
+}
+
+/* --- Bloque de marca ------------------------------------------------------ */
+
+.lockup {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.lockup-name {
+  /* El nombre va en minúsculas y con el interletrado cerrado: es la voz de
+     display de la marca. */
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  text-transform: lowercase;
+  color: var(--text);
+}

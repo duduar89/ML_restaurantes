@@ -1,0 +1,114 @@
+.spacecard {
+  position: relative;
+  padding: var(--sp-4);
+  border-radius: var(--r-lg);
+  background: var(--surface-solid);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+/*
+ * Halo del color del apartado. Antes había además una franja vertical de 4 px
+ * en el borde izquierdo; se quitó porque ese recurso está tan repetido que se
+ * ha convertido en la firma visual de las interfaces generadas, y aquí no
+ * añadía nada: el icono y el halo ya identifican el apartado.
+ */
+.spacecard::after {
+  content: '';
+  position: absolute;
+  top: -70%;
+  left: -10%;
+  width: 60%;
+  aspect-ratio: 1;
+  background: var(--card-grad);
+  opacity: 0.14;
+  filter: blur(28px);
+  pointer-events: none;
+}
+
+.spacecard-top {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+.spacecard-emoji {
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  border-radius: var(--r-sm);
+  background: var(--card-grad);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+}
+
+.spacecard-id {
+  min-width: 0;
+}
+
+.spacecard-name {
+  font-size: var(--text-base);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.spacecard-meta {
+  font-size: var(--text-xs);
+  color: var(--text-faint);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.spacecard-total {
+  position: relative;
+  font-size: var(--text-xl);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.spacecard-budget {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.spacecard-track {
+  position: relative;
+  height: 6px;
+  border-radius: var(--r-full);
+  background: var(--surface-2);
+  overflow: hidden;
+}
+
+.spacecard-fill {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--r-full);
+  background: var(--card-grad);
+  transition: translate var(--dur-slow) var(--ease-out);
+}
+
+.spacecard-fill--warn {
+  background: linear-gradient(90deg, var(--warning-deep), var(--warning));
+}
+
+.spacecard-fill--over {
+  background: linear-gradient(90deg, var(--danger-deep), var(--danger));
+}
+
+.spacecard-left {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  font-weight: 600;
+}

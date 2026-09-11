@@ -1,0 +1,85 @@
+/*
+ * Campos de formulario compartidos por todas las hojas. Vive aparte de los
+ * componentes porque la regla del tamaño mínimo (17px para que iOS no haga
+ * zoom) tiene que valer para todos los inputs sin excepción.
+ */
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-3);
+}
+
+.field-label {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.field-input {
+  height: 48px;
+  padding: 0 var(--sp-4);
+  border-radius: var(--r-md);
+  background: var(--surface-2);
+  border: 1px solid transparent;
+  font-size: 17px;
+  font-weight: 500;
+  width: 100%;
+  transition: border-color var(--dur-fast);
+}
+
+.field-input:focus {
+  border-color: var(--brand-500);
+}
+
+.field-input::placeholder {
+  color: var(--text-faint);
+}
+
+/* Safari pinta los campos de fecha con su propio relleno y alineado. */
+.field-input[type='date'] {
+  -webkit-appearance: none;
+  appearance: none;
+  min-height: 48px;
+  line-height: 48px;
+}
+
+.sheet-cta {
+  /* min-height y no height: una etiqueta que se parta en dos líneas debe
+     ensanchar el botón, no desbordarlo. */
+  min-height: 54px;
+  padding: var(--sp-3) var(--sp-4);
+  border-radius: var(--r-md);
+  background: var(--brand-gradient);
+  color: var(--text-on-brand);
+  font-size: var(--text-base);
+  font-weight: 700;
+  box-shadow: var(--shadow-brand);
+  transition: transform var(--dur-fast) var(--ease-out), opacity var(--dur-fast);
+}
+
+.sheet-cta:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.sheet-cta:disabled {
+  opacity: 0.35;
+  box-shadow: none;
+}
+
+.sheet-danger {
+  min-height: 48px;
+  padding: var(--sp-3) var(--sp-4);
+  border-radius: var(--r-md);
+  background: var(--danger-soft);
+  color: var(--danger);
+  font-size: var(--text-sm);
+  font-weight: 700;
+}

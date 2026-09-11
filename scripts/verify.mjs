@@ -1,0 +1,277 @@
+/**
+ * Verificación de extremo a extremo sobre la app COMPILADA.
+ *
+ * Las pruebas unitarias cubren el núcleo, pero no dicen si el gasto llega de
+ * verdad a IndexedDB al pulsar el teclado, si el enlace de las automatizaciones
+ * aterriza donde debe o si el tema claro es legible. Eso sólo lo dice un
+ * navegador de verdad contra el paquete de producción.
+ *
+ * Uso: npm run build && node scripts/verify.mjs
+ */
+import { chromium, devices } from 'playwright'
+import { existsSync } from 'node:fs'
+import { createServer } from 'node:http'
+import { readFile, mkdir } from 'node:fs/promises'
+import { extname, join, resolve, dirname } from 'node:path'
+import { fileURLToPath } from 'node:url'
+
+const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+const DIST = join(ROOT, 'dist')
+const SHOTS = join(ROOT, 'public', 'screenshots')
+const PORT = 4180
+
+const MIME = {
+  '.html': 'text/html',
+  '.js': 'text/javascript',
+  '.css': 'text/css',
+  '.json': 'application/json',
+  '.webmanifest': 'application/manifest+json',
+  '.png': 'image/png',
+  '.svg': 'image/svg+xml',
+}
+
+function serve() {
+  const server = createServer(async (req, res) => {
+    const url = new URL(req.url, `http://localhost:${PORT}`)
+    const file = join(DIST, url.pathname === '/' ? 'index.html' : url.pathname)
+    try {
+      const body = await readFile(file)
+      res.writeHead(200, { 'content-type': MIME[extname(file)] ?? 'application/octet-stream' })
+      res.end(body)
+    } catch {
+      const body = await readFile(join(DIST, 'index.html'))
+      res.writeHead(200, { 'content-type': 'text/html' })
+      res.end(body)
+    }
+  })
+  return new Promise((ok) => server.listen(PORT, () => ok(server)))
+}
+
+let failures = 0
+function check(label, condition, detail = '') {
+  console.log(`${condition ? '  ✓' : '  ✗'} ${label}${detail && !condition ? ` — ${detail}` : ''}`)
+  if (!condition) failures += 1
+}
+
+/** Lee los gastos vivos directamente de IndexedDB. */
+const readExpenses = (page) =>
+  page.evaluate(
+    () =>
+      new Promise((ok) => {
+        const request = indexedDB.open('caudal-db')
+        request.onsuccess = () => {
+          const get = request.result.transaction('expenses').objectStore('expenses').getAll()
+          get.onsuccess = () => ok(get.result.filter((row) => row.deletedAt === 0))
+        }
+      })
+  )
+
+async function run(browser, base) {
+  const newPage = async () => {
+    const context = await browser.newContext({
+      ...devices['Pixel 5'],
+      viewport: { width: 360, height: 720 },
+      deviceScaleFactor: 3,
+      locale: 'es-ES',
+      timezoneId: 'Europe/Madrid',
+    })
+    const page = await context.newPage()
+    const errors = []
+    page.on('pageerror', (error) => errors.push(error.message))
+    page.on('console', (message) => {
+      if (message.type() !== 'error') return
+      // Los fallos de red de recursos externos no son de la app: en este
+      // entorno el navegador no sale a internet. La app, de hecho, ya no pide
+      // nada a otro origen; este filtro sólo evita falsos negativos si algún
+      // día se añade algo.
+      if (/Failed to load resource/.test(message.text())) return
+      errors.push(message.text())
+    })
+    return { context, page, errors }
+  }
+
+  /* --- 1. Alta de un gasto con el teclado propio ------------------------- */
+  console.log('\nAlta de un gasto desde el teclado')
+  {
+    const { context, page, errors } = await newPage()
+    await page.goto(base, { waitUntil: 'networkidle' })
+    await page.getByRole('button', { name: 'Añadir gasto' }).click()
+    await page.waitForTimeout(400)
+
+    for (const key of ['4', ',', '2', '0']) {
+      await page.getByRole('button', { name: key === ',' ? 'Coma decimal' : key, exact: true }).click()
+    }
+    await page.getByPlaceholder('¿En qué?').fill('Café de prueba')
+    await page.waitForTimeout(250)
+    await page.getByRole('button', { name: 'Guardar', exact: true }).click()
+    await page.waitForTimeout(600)
+
+    const rows = await readExpenses(page)
+    const saved = rows.find((row) => row.concept === 'Café de prueba')
+    check('el gasto llega a IndexedDB', Boolean(saved))
+    check('el importe se guarda en céntimos', saved?.amountCents === 420, `fue ${saved?.amountCents}`)
+    check('la fecha se pone sola', /^\d{4}-\d{2}-\d{2}$/.test(saved?.day ?? ''))
+    check('la categoría se adivina del concepto', Boolean(saved?.categoryId))
+    check('se marca como apuntado a mano', saved?.source === 'manual')
+
+    const visible = await page.getByText('Café de prueba').first().isVisible()
+    check('aparece en la lista al instante', visible)
+    check('sin errores en consola', errors.length === 0, errors[0])
+    await context.close()
+  }
+
+  /* --- 2. El enlace de las automatizaciones ------------------------------ */
+  console.log('\nEnlace profundo de las automatizaciones')
+  {
+    const { context, page, errors } = await newPage()
+    await page.goto(base, { waitUntil: 'networkidle' })
+    await page.goto(`${base}/add?importe=23,45&concepto=Mercadona&auto=1`, {
+      waitUntil: 'networkidle',
+    })
+    await page.waitForTimeout(900)
+
+    const rows = await readExpenses(page)
+    const imported = rows.find((row) => row.concept === 'Mercadona')
+    check('guarda solo con auto=1', Boolean(imported))
+    check('lee la coma decimal', imported?.amountCents === 2345, `fue ${imported?.amountCents}`)
+    check('se marca como automatización', imported?.source === 'automation')
+    check('guarda la huella para no duplicar', Boolean(imported?.externalId))
+    check('confirma en pantalla', await page.getByText('Apuntado').isVisible())
+
+    // Segundo intento con los mismos datos: no debe duplicar.
+    await page.goto(`${base}/add?importe=23,45&concepto=Mercadona&auto=1`, {
+      waitUntil: 'networkidle',
+    })
+    await page.waitForTimeout(900)
+    const after = await readExpenses(page)
+    check(
+      'no duplica el mismo movimiento',
+      after.filter((row) => row.concept === 'Mercadona').length === 1
+    )
+    check('avisa de que ya estaba', await page.getByText('Esto ya lo tienes apuntado').isVisible())
+    check('sin errores en consola', errors.length === 0, errors[0])
+    await context.close()
+  }
+
+  /* --- 3. Apartado nuevo ------------------------------------------------- */
+  console.log('\nCrear un apartado')
+  {
+    const { context, page, errors } = await newPage()
+    await page.goto(`${base}/apartados`, { waitUntil: 'networkidle' })
+    await page.getByRole('button', { name: '+ Nuevo' }).click()
+    await page.waitForTimeout(400)
+    await page.getByPlaceholder('Viaje a Japón').fill('Reforma baño')
+    await page.getByPlaceholder('0,00').fill('3500')
+    await page.getByRole('button', { name: 'Crear apartado' }).click()
+    await page.waitForTimeout(600)
+
+    check(
+      'el apartado aparece en la lista',
+      await page.locator('.spacecard-name', { hasText: 'Reforma baño' }).isVisible()
+    )
+    check(
+      'con su presupuesto',
+      await page.locator('.spacecard', { hasText: 'Reforma baño' }).getByText(/Quedan/).isVisible()
+    )
+    check('sin errores en consola', errors.length === 0, errors[0])
+    await context.close()
+  }
+
+  /* --- 4. Tema claro ----------------------------------------------------- */
+  console.log('\nTema claro')
+  {
+    const { context, page, errors } = await newPage()
+    await page.goto(`${base}/ajustes`, { waitUntil: 'networkidle' })
+    await page.getByRole('button', { name: 'Claro' }).click()
+    await page.waitForTimeout(500)
+
+    const theme = await page.evaluate(() => document.documentElement.dataset.theme)
+    check('se activa el atributo del tema', theme === 'light')
+
+    const bg = await page.evaluate(() => getComputedStyle(document.body).backgroundColor)
+    check('el lienzo se aclara', bg === 'rgb(247, 240, 231)', bg)
+
+    await page.goto(base, { waitUntil: 'networkidle' })
+    await page.waitForTimeout(500)
+    await page.screenshot({ path: join(SHOTS, 'tema-claro.png') })
+    console.log('    (captura en screenshots/tema-claro.png)')
+
+    // El tema tiene que sobrevivir a una recarga sin fogonazo del otro tema.
+    await page.reload({ waitUntil: 'domcontentloaded' })
+    const persisted = await page.evaluate(() => document.documentElement.dataset.theme)
+    check('el tema sobrevive a la recarga', persisted === 'light')
+    check('sin errores en consola', errors.length === 0, errors[0])
+    await context.close()
+  }
+
+  await checkPackaging()
+}
+
+/** Revisa el paquete generado: manifiesto, iconos y service worker. */
+async function checkPackaging() {
+  console.log('\nEmpaquetado como PWA')
+  {
+    const manifest = JSON.parse(await readFile(join(DIST, 'manifest.webmanifest'), 'utf8'))
+    check('tiene id estable', typeof manifest.id === 'string')
+    check('short_name cabe en el icono', (manifest.short_name?.length ?? 99) <= 12)
+    check(
+      'icono maskable en entrada propia',
+      manifest.icons?.some((icon) => icon.purpose === 'maskable') &&
+        manifest.icons?.some((icon) => icon.purpose === 'any')
+    )
+    check(
+      'capturas narrow para el diálogo de instalación',
+      manifest.screenshots?.every((shot) => shot.form_factor === 'narrow')
+    )
+    check('destino del menú de compartir', manifest.share_target?.action?.includes('compartir'))
+    check('color de tema igual al lienzo', manifest.theme_color === '#16110e')
+
+    for (const shot of manifest.screenshots ?? []) {
+      check(`la captura ${shot.src} existe`, existsSync(join(DIST, shot.src)))
+    }
+    for (const icon of manifest.icons ?? []) {
+      check(`el icono ${icon.src} existe`, existsSync(join(DIST, icon.src)))
+    }
+
+    const sw = await readFile(join(DIST, 'sw.js'), 'utf8')
+    // En modo 'prompt' skipWaiting sólo puede correr dentro del manejador del
+    // mensaje SKIP_WAITING, que dispara el botón "Actualizar". Si estuviese
+    // suelto, la app se recargaría sola y se perdería el importe a medio
+    // teclear.
+    check(
+      'la actualización la decide el usuario, no el service worker',
+      /SKIP_WAITING/.test(sw) && !/^\s*self\.skipWaiting\(\)/m.test(sw)
+    )
+    const precache = sw.match(/revision:/g)?.length ?? 0
+    check('precachea la app entera', precache >= 10, `${precache} entradas`)
+    check(
+      'precachea también iconos y fuentes',
+      /icon-512\.png/.test(sw) && /plex-sans-latin-400700\.woff2/.test(sw)
+    )
+  }
+
+}
+
+async function main() {
+  await mkdir(SHOTS, { recursive: true })
+  const server = await serve()
+  const preinstalled = '/opt/pw-browsers/chromium-1194/chrome-linux/chrome'
+  const browser = await chromium.launch(
+    existsSync(preinstalled) ? { executablePath: preinstalled } : {}
+  )
+
+  try {
+    await run(browser, `http://localhost:${PORT}`)
+  } catch (error) {
+    console.error('\nLa verificación se ha roto:', error.message)
+    failures += 1
+  } finally {
+    await browser.close()
+    server.close()
+  }
+
+  console.log(failures === 0 ? '\nTodo correcto.' : `\n${failures} comprobaciones fallidas.`)
+  process.exitCode = failures === 0 ? 0 : 1
+}
+
+void main()

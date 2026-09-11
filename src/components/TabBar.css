@@ -1,0 +1,56 @@
+.tabbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 50;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  align-items: center;
+  height: calc(var(--tabbar-h) + var(--safe-b));
+  /* Siempre calc(base + env()): hay versiones de iOS donde env() devuelve 0
+     en modo standalone y la barra se pegaría al indicador de inicio. */
+  padding-bottom: var(--safe-b);
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  border-top: 1px solid var(--border);
+}
+
+.tabbar-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  /* 44px es el área táctil mínima cómoda. */
+  min-height: 44px;
+  color: var(--text-faint);
+  font-size: 0.625rem;
+  font-weight: 600;
+  transition: color var(--dur-fast);
+}
+
+.tabbar-tab--active {
+  color: var(--brand-300);
+}
+
+.tabbar-fab {
+  justify-self: center;
+  width: 58px;
+  height: 58px;
+  border-radius: var(--r-full);
+  background: var(--brand-gradient);
+  color: var(--text-on-brand);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-brand);
+  /* Sobresale de la barra: lo hace inconfundible y acerca el objetivo al pulgar. */
+  transform: translateY(-14px);
+  transition: transform var(--dur-press) var(--ease-out);
+}
+
+.tabbar-fab:active {
+  transform: translateY(-14px) scale(0.94);
+}

@@ -1,0 +1,87 @@
+
+# Configuración de Apache para servir Caudal desde un hosting con cPanel.
+#
+# Vite copia este archivo a dist/ al compilar, así que sube dist/ entero y ya
+# está: no hay que crear nada a mano en el servidor.
+#
+# Las cuatro cosas que arregla, y por qué cada una es obligatoria:
+#
+#  1. Rutas internas. Caudal es una sola página; /apartados y /add no son
+#     carpetas del servidor. Sin la primera regla, Apache devuelve 404 al
+#     abrir un enlace directo — y el enlace /add es justo el que usan los
+#     atajos del móvil para volcar los gastos de la tarjeta.
+#  2. Tipos MIME. Apache no conoce .webmanifest de serie y lo entrega como
+#     texto plano; entonces el navegador no reconoce la app como instalable y
+#     desaparece la opción de añadirla a la pantalla de inicio.
+#  3. Caché. Si el navegador se queda con una copia vieja de sw.js, la app no
+#     se entera nunca de que hay versión nueva.
+#  4. Compresión. El JavaScript baja de unos 435 kB a unos 139 kB.
+
+
+# --- 1. Rutas internas ------------------------------------------------------
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Si existe el archivo o la carpeta, se sirve tal cual.
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # Lo demás va al index y el enrutado lo hace la app. Sin RewriteBase a
+  # propósito: así funciona igual en la raíz que en una subcarpeta.
+  RewriteRule ^ index.html [L]
+</IfModule>
+
+
+# --- 2. Tipos MIME ----------------------------------------------------------
+<IfModule mod_mime.c>
+  AddType application/manifest+json .webmanifest
+  AddType font/woff2               .woff2
+  AddType image/svg+xml            .svg
+</IfModule>
+
+
+# --- 3. Caché ---------------------------------------------------------------
+<IfModule mod_headers.c>
+  # Los archivos de assets/ llevan un hash en el nombre: si cambia el
+  # contenido, cambia el nombre. Se pueden guardar para siempre.
+  <FilesMatch "\.(js|css|woff2|png|svg|ico)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+
+  # Estos tres NO llevan hash y mandan sobre todo lo demás, así que van
+  # después para que su regla gane a la anterior.
+  <FilesMatch "^(sw\.js|index\.html|manifest\.webmanifest|404\.html)$">
+    Header set Cache-Control "no-cache, must-revalidate, max-age=0"
+  </FilesMatch>
+</IfModule>
+
+
+# --- 4. Compresión ----------------------------------------------------------
+<IfModule mod_deflate.c>
+  # woff2 y png quedan fuera: ya vienen comprimidos y volver a comprimirlos
+  # sólo gasta CPU.
+  AddOutputFilterByType DEFLATE text/html text/css text/plain
+  AddOutputFilterByType DEFLATE application/javascript text/javascript
+  AddOutputFilterByType DEFLATE application/json application/manifest+json
+  AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+
+# --- 5. HTTPS ---------------------------------------------------------------
+# DESCOMENTAR SÓLO DESPUÉS de activar el certificado SSL en cPanel
+# (Seguridad › SSL/TLS Status › Run AutoSSL). Si se activa antes, el sitio
+# entra en un bucle de redirección hacia una dirección que todavía no existe.
+#
+# Hace falta de verdad: sin HTTPS el navegador no registra el service worker,
+# y sin service worker no hay modo sin conexión ni se puede instalar la app.
+#
+# <IfModule mod_rewrite.c>
+#   RewriteEngine On
+#   RewriteCond %{HTTPS} !=on
+#   RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+# </IfModule>
+
+
+# Que no se pueda listar el contenido de las carpetas.
+Options -Indexes

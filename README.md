@@ -59,6 +59,7 @@ npm run dev        # http://localhost:5173
 | `npm run build` | Comprueba tipos y compila a `dist/` |
 | `npm test` | Pruebas del núcleo (dinero, fechas, analítica, Norma 43, captura) |
 | `npm run verify` | Verificación de extremo a extremo sobre la app compilada |
+| `npm run pack` | Compila y empaqueta `caudal.tar.gz` para subir al hosting |
 | `npm run icons` | Regenera los iconos desde el SVG de la marca |
 | `npm run fonts` | Vuelve a descargar las fuentes a `public/fonts` |
 
@@ -168,13 +169,21 @@ Ajustes.
 
 ## Publicar
 
-El proyecto es estático: cualquier alojamiento sirve.
+El proyecto es estático: no necesita base de datos ni Node en el servidor.
 
 ```bash
-npm run build          # genera dist/
+npm run pack     # compila y deja caudal.tar.gz listo para subir
 ```
 
-Hay un flujo de GitHub Actions que publica en GitHub Pages en cada push a
-`main`. Para otro alojamiento (Cloudflare, Netlify, Vercel) basta con subir
-`dist/` sin tocar nada; `BASE_PATH` sólo hace falta cuando la app cuelga de un
-subdirectorio.
+**Con cPanel o cualquier hosting clásico**, los pasos están en
+[`docs/DESPLIEGUE.md`](docs/DESPLIEGUE.md), incluido el requisito que no es
+opcional: activar el SSL antes de subir nada, porque sin HTTPS el navegador no
+registra el service worker y la app no se puede instalar ni funciona sin
+conexión. El `.htaccess` que hace falta ya viene dentro del paquete.
+
+**Con GitHub Pages** no hay que hacer nada: el flujo de `.github/workflows`
+publica solo en cada cambio de `main`. Cloudflare Pages y Netlify también
+conectan directamente con el repositorio.
+
+`BASE_PATH` sólo hace falta si la app cuelga de un subdirectorio
+(`BASE_PATH=/gastos/ npm run pack`).

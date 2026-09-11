@@ -156,3 +156,13 @@
   font-weight: 700;
   box-shadow: var(--shadow-brand);
 }
+
+/* Se dice en la primera pantalla porque quien llega por un enlace compartido
+   no tiene forma de saberlo, y cambia lo que espera de la app. */
+.empty-privacy {
+  font-size: var(--text-xs);
+  line-height: 1.6;
+  color: var(--text-faint);
+  max-width: 34ch;
+  margin-top: var(--sp-4);
+}

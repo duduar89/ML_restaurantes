@@ -1,0 +1,34 @@
+.installhint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-3);
+  margin-top: var(--sp-6);
+  padding: var(--sp-4);
+  border-radius: var(--r-md);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+}
+
+.installhint-text {
+  font-size: var(--text-xs);
+  line-height: 1.6;
+  color: var(--text-muted);
+  text-align: center;
+  max-width: 36ch;
+}
+
+.installhint-text strong {
+  color: var(--text);
+}
+
+.installhint-cta {
+  min-height: 42px;
+  padding: var(--sp-2) var(--sp-5);
+  border-radius: var(--r-full);
+  background: var(--brand-gradient);
+  color: var(--text-on-brand);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  box-shadow: var(--shadow-brand);
+}

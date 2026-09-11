@@ -60,3 +60,63 @@ describe('parseCapture', () => {
     expect(capture('importe=10&fecha=noesunafecha')?.day).toMatch(/^\d{4}-\d{2}-\d{2}$/)
   })
 })
+
+describe('avisos que NO son un gasto', () => {
+  const aviso = (text: string) =>
+    parseCapture(new URLSearchParams(`text=${encodeURIComponent(text)}`))
+
+  it('descarta un pago rechazado', () => {
+    // Un rechazo genera notificación igual que una compra. Si se apuntara, el
+    // gasto sería falso y sólo se vería al descuadrar el mes.
+    expect(aviso('Compra RECHAZADA de 23,45 EUR en MERCADONA')).toBeNull()
+    expect(aviso('Operación denegada por 12,00 € en ZARA')).toBeNull()
+    expect(aviso('Intento de compra de 40,00 EUR no autorizado')).toBeNull()
+  })
+
+  it('marca una devolución como ingreso, no como gasto', () => {
+    const result = aviso('Devolución de 23,45 EUR de MERCADONA en tu tarjeta')
+    expect(result?.kind).toBe('income')
+    expect(result?.amountCents).toBe(2345)
+  })
+
+  it('marca un abono como ingreso', () => {
+    expect(aviso('Abono de 1.200,00 EUR: NOMINA')?.kind).toBe('income')
+  })
+
+  it('una compra normal sigue siendo gasto', () => {
+    expect(aviso('Compra de 23,45 EUR en MERCADONA')?.kind).toBe('expense')
+  })
+})
+
+describe('texto en crudo con caracteres que parten la URL', () => {
+  it('no pierde el comercio cuando el aviso lleva un &', () => {
+    // "compra en H&M" partiría la cadena de consulta en dos: URLSearchParams
+    // se quedaría con "Compra de 30,00 EUR en H" y perdería el resto.
+    const search = '?auto=1&texto=Compra%20de%2030,00%20EUR%20en%20H&M%20GRAN%20VIA'
+    const result = parseCapture(new URLSearchParams(search), search)
+    expect(result?.amountCents).toBe(3000)
+    expect(result?.concept).toContain('H&M')
+  })
+
+  it('acepta el texto sin codificar', () => {
+    // Si la automatización no codifica, el texto llega con espacios tal cual.
+    const search = '?texto=Compra de 12,50 EUR en MERCADONA'
+    const result = parseCapture(new URLSearchParams(search), search)
+    expect(result?.amountCents).toBe(1250)
+    expect(result?.concept).toContain('MERCADONA')
+  })
+
+  it('sobrevive a un % suelto sin reventar', () => {
+    // decodeURIComponent lanza con un '%' que no forma una secuencia válida.
+    const search = '?texto=Compra de 5,00 EUR en 100% NATURAL'
+    const result = parseCapture(new URLSearchParams(search), search)
+    expect(result?.amountCents).toBe(500)
+  })
+
+  it('el crudo tiene prioridad sobre el valor recortado', () => {
+    const search = '?texto=Pago de 8,00 EUR en BAR&CO'
+    const viaParams = new URLSearchParams(search)
+    expect(viaParams.get('texto')).toBe('Pago de 8,00 EUR en BAR')
+    expect(parseCapture(viaParams, search)?.concept).toContain('BAR&CO')
+  })
+})

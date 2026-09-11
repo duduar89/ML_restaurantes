@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { useNavigate, useSearchParams } from 'react-router'
+import { useLocation, useNavigate, useSearchParams } from 'react-router'
 import { LogoMark } from '@/brand/Logo'
 import { Chips } from '@/components/Chips'
 import { useAppData } from '@/app/store'
@@ -27,6 +27,9 @@ type Status = 'reading' | 'confirm' | 'saved' | 'duplicate' | 'invalid'
 
 export function DeepLinkCapture() {
   const [params] = useSearchParams()
+  // La cadena en crudo, además de los parámetros ya troceados: es la única
+  // forma de recuperar entero un aviso que lleve un '&' dentro.
+  const { search } = useLocation()
   const navigate = useNavigate()
   const { methods, categories, spaces, entrySpace, methodById, spaceById } = useAppData()
 
@@ -42,7 +45,7 @@ export function DeepLinkCapture() {
     if (handled.current || methods.length === 0 || spaces.length === 0) return
     handled.current = true
 
-    const parsed = parseCapture(params)
+    const parsed = parseCapture(params, search)
     if (!parsed) {
       setStatus('invalid')
       return
@@ -85,13 +88,14 @@ export function DeepLinkCapture() {
     })()
     // Sólo debe correr una vez, al llegar con los parámetros de la URL.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [methods, spaces, params])
+  }, [methods, spaces, params, search])
 
   async function save(data: Capture, useMethodId: string | null, useSpaceId: string | null) {
     if (!useMethodId || !useSpaceId) return
     await addExpense({
       amountCents: data.amountCents,
       concept: data.concept,
+      kind: data.kind,
       methodId: useMethodId,
       categoryId: guessCategoryId(data.concept, categories) ?? categories[0]?.id ?? '',
       spaceId: useSpaceId,
@@ -140,7 +144,9 @@ export function DeepLinkCapture() {
 
         {status === 'confirm' && capture && (
           <>
-            <p className="capture-label">Nuevo movimiento</p>
+            <p className="capture-label">
+              {capture.kind === 'income' ? 'Nuevo ingreso' : 'Nuevo gasto'}
+            </p>
             <p className="capture-amount num">{formatMoney(capture.amountCents)}</p>
             <p className="capture-concept">
               {capture.concept} · {formatDayHeading(capture.day)}
@@ -182,7 +188,9 @@ export function DeepLinkCapture() {
 
         {status === 'saved' && capture && (
           <>
-            <p className="capture-title">Apuntado</p>
+            <p className="capture-title">
+              {capture.kind === 'income' ? 'Ingreso apuntado' : 'Apuntado'}
+            </p>
             <p className="capture-amount num">{formatMoney(capture.amountCents)}</p>
             <p className="capture-concept">
               {capture.concept} · {methodById(methodId ?? '')?.name} ·{' '}

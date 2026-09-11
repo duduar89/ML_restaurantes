@@ -16,6 +16,33 @@
       content="Control de gastos personales. Apunta en segundos, separa por apartados y mira a dónde va tu dinero."
     />
 
+    <!-- og:start -->
+    <!-- Previsualización al compartir el enlace. La dirección absoluta la
+         inyecta vite.config.ts desde SITE_URL: sin ella estas etiquetas se
+         retiran enteras, porque una imagen que no carga se ve peor que no
+         tener tarjeta. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Caudal" />
+    <meta property="og:locale" content="es_ES" />
+    <meta property="og:title" content="Caudal · Control de gastos" />
+    <meta
+      property="og:description"
+      content="Apunta un gasto en segundos y mira a dónde va tu dinero. Sin cuentas, sin servidor y sin conexión: todo se queda en tu móvil."
+    />
+    <meta property="og:url" content="%SITE_URL%/" />
+    <meta property="og:image" content="%SITE_URL%/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Caudal — tu dinero, en movimiento" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Caudal · Control de gastos" />
+    <meta
+      name="twitter:description"
+      content="Apunta un gasto en segundos y mira a dónde va tu dinero. Todo se queda en tu móvil."
+    />
+    <meta name="twitter:image" content="%SITE_URL%/og.png" />
+    <!-- og:end -->
+
     <!-- iOS: sigue sin haber beforeinstallprompt, y apple-touch-icon tiene que
          ser un PNG opaco de 180x180 o iOS lo compone sobre negro. -->
     <link rel="icon" href="favicon.svg" type="image/svg+xml" />

@@ -149,6 +149,26 @@ async function run(browser, base) {
       after.filter((row) => row.concept === 'Mercadona').length === 1
     )
     check('avisa de que ya estaba', await page.getByText('Esto ya lo tienes apuntado').isVisible())
+
+    // Un aviso con '&' dentro: URLSearchParams lo cortaría por la mitad.
+    await page.goto(
+      `${base}/add?auto=1&texto=Compra%20de%2030,00%20EUR%20en%20H&M%20GRAN%20VIA`,
+      { waitUntil: 'networkidle' }
+    )
+    await page.waitForTimeout(900)
+    const conAmpersand = (await readExpenses(page)).find((row) => row.amountCents === 3000)
+    check('no pierde el comercio cuando el aviso lleva un &', Boolean(conAmpersand))
+    check('conserva el nombre entero', conAmpersand?.concept?.includes('H&M'), conAmpersand?.concept)
+
+    // Un pago rechazado no puede crear un gasto.
+    const antes = (await readExpenses(page)).length
+    await page.goto(
+      `${base}/add?auto=1&texto=Compra%20RECHAZADA%20de%2099,00%20EUR%20en%20ZARA`,
+      { waitUntil: 'networkidle' }
+    )
+    await page.waitForTimeout(900)
+    check('un pago rechazado no crea ningún gasto', (await readExpenses(page)).length === antes)
+
     check('sin errores en consola', errors.length === 0, errors[0])
     await context.close()
   }

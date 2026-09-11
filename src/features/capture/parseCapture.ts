@@ -15,6 +15,8 @@ export interface Capture {
   amountCents: Cents
   concept: string
   day: DayKey
+  /** Una devolución entra como ingreso, no como gasto en negativo. */
+  kind: 'expense' | 'income'
   methodHint: string | null
   spaceHint: string | null
   source: 'automation' | 'share'
@@ -40,6 +42,22 @@ const MERCHANT_PATTERNS = [
   /\ben\s+([A-ZÁÉÍÓÚÑ][^.,;\n]{2,40})/,
 ]
 
+/**
+ * Avisos que NO son un gasto y que no deben crear nada.
+ *
+ * Un pago rechazado genera notificación igual que uno aceptado. Si se apuntara,
+ * el gasto sería falso y sólo se descubriría al descuadrar el mes — el peor
+ * tipo de error, porque es silencioso y tardío.
+ */
+const NOT_AN_EXPENSE = /\b(rechaz|denegad|no autorizad|cancelad|caducad|bloquead|intento de|sospechos|fraude)/i
+
+/**
+ * Avisos de dinero que ENTRA. El mismo formato de aviso sirve para una
+ * devolución que para una compra, y apuntar una devolución como gasto lo
+ * cuenta dos veces en contra.
+ */
+const IS_INCOME = /\b(devoluci|abono|abonad|reembols|ingreso|ingresad|nómina|nomina|transferencia recibida)/i
+
 function firstMatch(text: string, patterns: RegExp[]): string | null {
   for (const pattern of patterns) {
     const match = text.match(pattern)
@@ -62,7 +80,29 @@ export function dedupeKey(parts: {
   return `${parts.source}:${parts.day}:${parts.amountCents}:${normalized}`
 }
 
-export function parseCapture(params: URLSearchParams): Capture | null {
+/**
+ * Recupera el texto del aviso directamente de la cadena de consulta en crudo.
+ *
+ * `URLSearchParams` corta el valor en el primer `&`, y los avisos bancarios los
+ * llevan: "compra en H&M" partiría la cadena y se perdería el comercio. Como la
+ * automatización manda el texto SIEMPRE en último lugar, aquí se coge todo
+ * desde `texto=` hasta el final, venga codificado o no.
+ */
+export function rawTextParam(search: string): string | null {
+  const match = search.match(/[?&](?:texto|text)=(.*)$/s)
+  if (!match) return null
+
+  const value = match[1].replace(/\+/g, ' ')
+  try {
+    return decodeURIComponent(value)
+  } catch {
+    // La automatización no lo codificó y hay un '%' suelto: mejor el texto tal
+    // cual que descartarlo entero.
+    return value
+  }
+}
+
+export function parseCapture(params: URLSearchParams, rawSearch?: string): Capture | null {
   // Nombres en español y en inglés: los atajos y las macros se escriben en
   // cualquiera de los dos y no merece la pena obligar a uno.
   const rawAmount =
@@ -70,9 +110,15 @@ export function parseCapture(params: URLSearchParams): Capture | null {
   const rawConcept =
     params.get('concepto') ?? params.get('concept') ?? params.get('comercio') ??
     params.get('merchant') ?? params.get('title') ?? null
-  const sharedText = params.get('text') ?? params.get('texto') ?? null
+  // El crudo manda: es el único que sobrevive a un '&' dentro del aviso.
+  const sharedText =
+    (rawSearch ? rawTextParam(rawSearch) : null) ?? params.get('text') ?? params.get('texto') ?? null
 
   const haystack = [sharedText, rawConcept, params.get('url')].filter(Boolean).join(' ')
+
+  // Un pago rechazado se descarta entero: es preferible que el usuario lo eche
+  // en falta y lo apunte a mano, a que aparezca un gasto que nunca existió.
+  if (NOT_AN_EXPENSE.test(haystack)) return null
 
   const amountCents = parseAmount(rawAmount ?? '') ?? parseAmount(firstMatch(haystack, AMOUNT_PATTERNS) ?? '')
   if (!amountCents || amountCents <= 0) return null
@@ -89,10 +135,19 @@ export function parseCapture(params: URLSearchParams): Capture | null {
   const source: Capture['source'] = sharedText ? 'share' : 'automation'
   const providedId = params.get('id') ?? params.get('ref')
 
+  const kindParam = params.get('tipo') ?? params.get('kind')
+  const kind: Capture['kind'] =
+    kindParam === 'ingreso' || kindParam === 'income'
+      ? 'income'
+      : IS_INCOME.test(haystack)
+        ? 'income'
+        : 'expense'
+
   return {
     amountCents,
     concept: concept.slice(0, 60),
     day,
+    kind,
     methodHint: params.get('metodo') ?? params.get('method') ?? null,
     spaceHint: params.get('apartado') ?? params.get('space') ?? null,
     source,

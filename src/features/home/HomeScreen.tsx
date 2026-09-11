@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { LogoLockup } from '@/brand/Logo'
 import { ExpenseList } from '@/components/ExpenseList'
+import { InstallHint } from '@/components/InstallHint'
 import { ProgressBar } from '@/components/charts/ProgressBar'
 import { MonthSwitcher } from '@/components/MonthSwitcher'
 import { Trend } from '@/components/Icons'
@@ -173,6 +174,10 @@ export function HomeScreen({
             <button type="button" className="empty-cta" onClick={onAdd}>
               Apuntar un gasto
             </button>
+            <p className="empty-privacy">
+              Todo se queda en este móvil: no hay cuenta ni servidor, y nadie más ve tus gastos.
+            </p>
+            <InstallHint />
           </div>
         ) : (
           <ExpenseList expenses={expenses} onSelect={onSelectExpense} showSpace={filterSpaceId === null} />

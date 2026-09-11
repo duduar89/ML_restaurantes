@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite'
+import { defineConfig, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 import { fileURLToPath, URL } from 'node:url'
@@ -10,6 +10,36 @@ import { fileURLToPath, URL } from 'node:url'
  */
 const base = process.env.BASE_PATH ?? '/'
 
+/**
+ * Dirección pública del sitio, para las etiquetas de previsualización.
+ *
+ * WhatsApp, Telegram y compañía NO resuelven rutas relativas en `og:image`: o
+ * la URL es absoluta o el enlace se comparte sin imagen. Como la dirección
+ * depende de dónde se publique, se inyecta al compilar.
+ */
+const siteUrl = (process.env.SITE_URL ?? '').replace(/\/$/, '')
+
+function openGraph(): Plugin {
+  return {
+    name: 'caudal-open-graph',
+    transformIndexHtml: {
+      order: 'pre',
+      handler(html) {
+        if (siteUrl) return html.replace(/%SITE_URL%/g, siteUrl)
+
+        // Sin SITE_URL se retiran las etiquetas enteras. Dejarlas con una ruta
+        // relativa daría una previsualización rota, que se ve peor que no
+        // tener previsualización.
+        console.warn(
+          '[caudal] SITE_URL no definida: se omiten las etiquetas de previsualización.\n' +
+            '         Para incluirlas: SITE_URL=https://tu-dominio npm run build'
+        )
+        return html.replace(/[ \t]*<!-- og:start -->[\s\S]*?<!-- og:end -->\n?/g, '')
+      },
+    },
+  }
+}
+
 export default defineConfig({
   base,
   resolve: {
@@ -20,6 +50,7 @@ export default defineConfig({
   },
   plugins: [
     react(),
+    openGraph(),
     VitePWA({
       // 'prompt', nunca 'autoUpdate': con autoUpdate el service worker recarga
       // la pestaña al desplegar y se pierde el importe a medio teclear. Además

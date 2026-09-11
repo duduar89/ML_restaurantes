@@ -222,10 +222,16 @@ No se subió la carpeta `fonts/`. Vuelve a extraer el paquete completo.
 
 ## ¿Y si no quieres usar cPanel?
 
-El repositorio trae un flujo de GitHub Actions que publica solo en GitHub Pages
-en cada cambio de la rama `main`: gratis, con HTTPS incluido y sin subir nada a
-mano. Está en `.github/workflows/deploy.yml`, sólo hay que activar Pages en la
-configuración del repositorio (**Settings › Pages › Source: GitHub Actions**).
+El repositorio trae un flujo que publica solo en GitHub Pages: gratis, con
+HTTPS incluido y sin subir nada a mano ni configurar credenciales. Es la vía
+más rápida para verlo funcionando hoy mismo, y son dos pasos:
+
+1. **Settings › Pages › Source: GitHub Actions**
+2. **Settings › Secrets and variables › Actions › Variables** → añade
+   `PAGES_DEPLOY` con valor `true`
+
+Quedará en `https://duduar89.github.io/ML_restaurantes/`. El `BASE_PATH` lo pone
+el propio flujo, no tienes que tocar nada.
 
 Cloudflare Pages y Netlify funcionan igual de bien y también conectan con el
 repositorio: se compila solo en cada cambio. Con cPanel tienes control total y

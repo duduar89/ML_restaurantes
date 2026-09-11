@@ -20,9 +20,12 @@
 #      FTP_USER      el usuario completo, normalmente usuario@tudominio.com
 #      FTP_PASSWORD  la contraseña de esa cuenta
 #
-# 3. Si el sitio no cuelga de la raíz, añade también la variable (no secreto)
-#    REMOTE_DIR con la ruta, por ejemplo /public_html/gastos
-#    y la variable BASE_PATH con /gastos/
+# 3. Con un SUBDOMINIO no hay que tocar nada más: la app vive en la raíz de su
+#    propio host, así que BASE_PATH se queda en "/" y REMOTE_DIR también.
+#
+#    Sólo si lo pones en una SUBCARPETA de un dominio existente hacen falta las
+#    variables REMOTE_DIR (por ejemplo /public_html/gastos) y BASE_PATH
+#    (/gastos/).
 # ---------------------------------------------------------------------------
 name: Desplegar en cPanel
 
@@ -74,7 +77,11 @@ jobs:
           HOST: ${{ secrets.FTP_HOST }}
           USER: ${{ secrets.FTP_USER }}
           PASSWORD: ${{ secrets.FTP_PASSWORD }}
-          REMOTE_DIR: ${{ vars.REMOTE_DIR || '/public_html' }}
+          # Por defecto la raíz: una cuenta FTP de cPanel limitada a una
+          # carpeta queda enjaulada en ella, así que al conectarse "/" YA es
+          # esa carpeta. Si se usa la cuenta principal de cPanel (no
+          # recomendado), hay que poner aquí la ruta completa.
+          REMOTE_DIR: ${{ vars.REMOTE_DIR || '/' }}
         run: |
           sudo apt-get update -qq && sudo apt-get install -y -qq lftp
 
@@ -98,6 +105,6 @@ jobs:
 
       - name: Resumen
         run: |
-          echo "Subido a ${{ vars.REMOTE_DIR || '/public_html' }}."
+          echo "Subido a ${{ vars.REMOTE_DIR || '/' }} en ${{ secrets.FTP_HOST }}."
           echo "Si es la primera vez, acuérdate de descomentar el bloque 5 del"
           echo ".htaccess para forzar HTTPS (sólo después de activar AutoSSL)."

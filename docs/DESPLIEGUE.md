@@ -147,8 +147,13 @@ viene en el repositorio (`.github/workflows/deploy-cpanel.yml`).
 3. Ya está. A partir de aquí, cada cambio en `main` compila, pasa las pruebas y
    sube. Si algo falla, **no sube nada**: las pruebas van antes.
 
-**Si el sitio cuelga de una subcarpeta**, añade dos variables más:
-`REMOTE_DIR` con `/public_html/gastos` y `BASE_PATH` con `/gastos/`.
+**Con un subdominio no hay que configurar nada más.** La cuenta FTP queda
+enjaulada en su carpeta, así que al conectarse `/` ya es el sitio, y como la app
+vive en la raíz de su propio host, `BASE_PATH` se queda en `/`.
+
+**Sólo si lo pones en una subcarpeta** de un dominio que ya existe hacen falta
+dos variables más: `REMOTE_DIR` con `/public_html/gastos` y `BASE_PATH` con
+`/gastos/`.
 
 **Si la subida falla con un error de certificado**, tu hosting sirve FTPS con un
 certificado que no valida. Añade la variable `FTP_VERIFY_CERT` con valor `false`

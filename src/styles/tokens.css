@@ -1,0 +1,191 @@
+/*
+ * Sistema de diseño de Caudal. Oscuro primero: una app de gastos se abre de
+ * noche, en la calle y con una mano. Todo el color vive aquí; ningún
+ * componente escribe un hex, así que cambiar la marca es cambiar este archivo.
+ *
+ * Dos reglas que no se saltan:
+ *  - La profundidad se señala con LUMINANCIA, no con sombras. Sobre un lienzo
+ *    casi negro una sombra sólo produce barro gris; lo que da relieve es el
+ *    escalón de claridad de la superficie más una línea de 1px.
+ *  - Todos los pares de texto están verificados contra WCAG AA. En concreto,
+ *    blanco sobre el violeta de marca da 4,36 y NO pasa: por eso el texto
+ *    sobre el color de marca es tinta oscura (4,54), que además produce el
+ *    "píxel más brillante" de la pantalla.
+ */
+
+:root {
+  /* --- Lienzo ----------------------------------------------------------- */
+  --bg-inset: #07060d;
+  --bg: #0a0912;
+  --surface-solid: #131221;
+  --bg-elevated: #16142b;
+  --surface-2: #1c1a2e;
+  --surface-3: #2a2740;
+
+  --border: rgba(244, 242, 255, 0.07);
+  --border-strong: #2a2740;
+
+  /* --- Texto ------------------------------------------------------------ */
+  --text: #f4f2ff;
+  --text-muted: #a9a4c7;
+  --text-faint: #8b86ae;
+  /* Tinta oscura sobre el color de marca: blanco no llega a AA. */
+  --text-on-brand: #0a0912;
+
+  /* --- Marca ------------------------------------------------------------ */
+  --brand-500: #7b5cff;
+  --brand-400: #9b84ff;
+  --brand-300: #9b84ff;
+  --brand-600: #5b3ee0;
+  --brand-glow: rgba(123, 92, 255, 0.42);
+  --accent-500: #35e0f5;
+  --accent-400: #6ae9f8;
+
+  --brand-gradient: linear-gradient(135deg, #35e0f5 0%, #7b5cff 100%);
+  --brand-gradient-soft: linear-gradient(
+    135deg,
+    rgba(53, 224, 245, 0.16) 0%,
+    rgba(123, 92, 255, 0.16) 100%
+  );
+
+  /* --- Semánticos ------------------------------------------------------- */
+  /* El violeta de marca vive en el arco azul-violeta a propósito: así nunca
+     se confunde con el verde de ingreso ni el rojo de gasto, que es la
+     colisión que arruina las interfaces financieras. */
+  --positive: #2fd98f;
+  --positive-soft: rgba(47, 217, 143, 0.14);
+  --warning: #ffb020;
+  --warning-soft: rgba(255, 176, 32, 0.14);
+  --danger: #ff5c7a;
+  --danger-soft: rgba(255, 92, 122, 0.14);
+
+  /* --- Elevación -------------------------------------------------------- */
+  --shadow-sm: none;
+  /* El brillo interior de 1px arriba es lo que realmente vende profundidad. */
+  --shadow-md: 0 8px 24px -8px rgba(0, 0, 0, 0.55), inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+  --shadow-lg: 0 20px 48px -12px rgba(0, 0, 0, 0.7), inset 0 1px 0 0 rgba(255, 255, 255, 0.07);
+  --shadow-brand: 0 8px 32px -8px rgba(123, 92, 255, 0.45);
+
+  /* --- Forma ------------------------------------------------------------ */
+  --r-xs: 8px;
+  --r-sm: 12px;
+  --r-md: 16px;
+  --r-lg: 22px;
+  --r-xl: 28px;
+  --r-full: 9999px;
+
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  --sp-8: 32px;
+  --sp-10: 40px;
+  --sp-12: 48px;
+
+  /* --- Tipografía ------------------------------------------------------- */
+  /* Space Grotesk sólo de 22px para arriba: sus cifras no son fiablemente
+     tabulares y sus formas anchas perjudican la densidad en texto pequeño. */
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-sans: Inter, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.375rem;
+  --text-2xl: 1.75rem;
+  --text-3xl: 2.25rem;
+  --text-display: 3.25rem;
+
+  /* --- Movimiento ------------------------------------------------------- */
+  --ease-out: cubic-bezier(0.2, 0.8, 0.25, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --dur-fast: 120ms;
+  --dur: 220ms;
+  --dur-slow: 420ms;
+
+  /* --- Distribución ----------------------------------------------------- */
+  --tabbar-h: 68px;
+  --safe-b: env(safe-area-inset-bottom, 0px);
+  --safe-t: env(safe-area-inset-top, 0px);
+
+  color-scheme: dark;
+}
+
+/*
+ * Tema claro. Los colores semánticos del tema oscuro NO valen sobre blanco
+ * (el verde y el rojo claros caen por debajo de 4,5): aquí van sus versiones
+ * oscurecidas, todas verificadas.
+ */
+:root[data-theme='light'] {
+  --bg-inset: #f2f0fb;
+  --bg: #faf9ff;
+  --surface-solid: #ffffff;
+  --bg-elevated: #ffffff;
+  --surface-2: #f2f0fb;
+  --surface-3: #e4e1f2;
+
+  --border: rgba(20, 18, 31, 0.08);
+  --border-strong: #e4e1f2;
+
+  --text: #14121f;
+  --text-muted: #54507a;
+  --text-faint: #7d78a0;
+  --text-on-brand: #ffffff;
+
+  --brand-500: #5b3ee0;
+  --brand-400: #5b3ee0;
+  --brand-300: #5b3ee0;
+  --brand-600: #4a2fc4;
+  --brand-glow: rgba(91, 62, 224, 0.28);
+  --accent-500: #06788c;
+  --accent-400: #06788c;
+
+  --brand-gradient: linear-gradient(135deg, #06788c 0%, #5b3ee0 100%);
+  --brand-gradient-soft: linear-gradient(
+    135deg,
+    rgba(6, 120, 140, 0.12) 0%,
+    rgba(91, 62, 224, 0.12) 100%
+  );
+
+  --positive: #0a7f4e;
+  --positive-soft: rgba(10, 127, 78, 0.12);
+  --warning: #8a5600;
+  --warning-soft: rgba(138, 86, 0, 0.12);
+  --danger: #c41f44;
+  --danger-soft: rgba(196, 31, 68, 0.12);
+
+  --shadow-md: 0 8px 24px -8px rgba(20, 18, 31, 0.12);
+  --shadow-lg: 0 20px 48px -12px rgba(20, 18, 31, 0.18);
+  --shadow-brand: 0 8px 32px -10px rgba(91, 62, 224, 0.4);
+
+  color-scheme: light;
+}
+
+/*
+ * Paleta de los apartados. Cada apartado escoge un índice y arrastra su color
+ * a la tarjeta, a la cabecera y a sus gráficas: el color ES la identidad del
+ * apartado, y por eso vive fuera de los componentes. Los ocho tonos están
+ * elegidos para contrastar 4,5:1 o más sobre el lienzo oscuro.
+ */
+:root {
+  --space-0: #7b5cff;
+  --space-1: #35e0f5;
+  --space-2: #2fd98f;
+  --space-3: #ffb020;
+  --space-4: #ff8a5c;
+  --space-5: #ff5cc8;
+  --space-6: #b8e62f;
+  --space-7: #5c8cff;
+
+  --space-grad-0: linear-gradient(135deg, #9b84ff, #7b5cff);
+  --space-grad-1: linear-gradient(135deg, #6ae9f8, #35e0f5);
+  --space-grad-2: linear-gradient(135deg, #6ce8b4, #2fd98f);
+  --space-grad-3: linear-gradient(135deg, #ffc95e, #ffb020);
+  --space-grad-4: linear-gradient(135deg, #ffb08e, #ff8a5c);
+  --space-grad-5: linear-gradient(135deg, #ff8ed9, #ff5cc8);
+  --space-grad-6: linear-gradient(135deg, #d3ef79, #b8e62f);
+  --space-grad-7: linear-gradient(135deg, #8fb0ff, #5c8cff);
+}

@@ -1,0 +1,107 @@
+.sheet {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: auto;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-top: 1px solid var(--border-strong);
+  border-radius: var(--r-xl) var(--r-xl) 0 0;
+  background: var(--bg-elevated);
+  color: var(--text);
+  box-shadow: var(--shadow-lg);
+  max-height: 96dvh;
+  overflow: visible;
+
+  display: flex;
+  flex-direction: column;
+  padding-bottom: calc(var(--sp-2) + var(--safe-b));
+
+  /* allow-discrete + @starting-style: anima la entrada y la salida de un
+     elemento que pasa por display:none, sin JavaScript de por medio. */
+  translate: 0 100%;
+  transition: translate var(--dur) var(--ease-out), overlay var(--dur) allow-discrete,
+    display var(--dur) allow-discrete;
+}
+
+.sheet[open] {
+  translate: 0 0;
+}
+
+@starting-style {
+  .sheet[open] {
+    translate: 0 100%;
+  }
+}
+
+/* Mientras el dedo arrastra, la hoja sigue al dedo sin suavizado: cualquier
+   transición aquí se percibe como retardo. */
+.sheet--dragging {
+  transition: none;
+}
+
+.sheet--full {
+  height: 96dvh;
+}
+
+.sheet::backdrop {
+  background: rgba(4, 4, 10, 0.62);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  opacity: 0;
+  transition: opacity var(--dur) var(--ease-out), overlay var(--dur) allow-discrete,
+    display var(--dur) allow-discrete;
+}
+
+.sheet[open]::backdrop {
+  opacity: 1;
+}
+
+@starting-style {
+  .sheet[open]::backdrop {
+    opacity: 0;
+  }
+}
+
+.sheet-handle {
+  flex-shrink: 0;
+  padding-top: var(--sp-3);
+  /* El área de arrastre no debe hacer scroll ella misma. */
+  touch-action: none;
+  cursor: grab;
+}
+
+.sheet-grabber {
+  display: block;
+  width: 40px;
+  height: 4px;
+  border-radius: var(--r-full);
+  background: var(--border-strong);
+  margin: 0 auto;
+}
+
+.sheet-title {
+  font-size: var(--text-lg);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-align: center;
+  padding: var(--sp-3) var(--sp-5) var(--sp-1);
+}
+
+.sheet-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--sp-3) var(--sp-5) var(--sp-4);
+}
+
+/* Cualquier contenido en columna dentro de una hoja se encogería al superar
+   su alto; se declara aquí una vez en lugar de en cada formulario. */
+.sheet-body > * > * {
+  flex-shrink: 0;
+}

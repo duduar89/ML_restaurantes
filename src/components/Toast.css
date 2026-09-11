@@ -1,0 +1,41 @@
+.toast {
+  position: fixed;
+  left: var(--sp-4);
+  right: var(--sp-4);
+  /* Siempre por encima de la barra de pestañas, nunca tapada por ella. */
+  bottom: calc(var(--tabbar-h) + var(--safe-b) + var(--sp-3));
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  border-radius: var(--r-md);
+  background: var(--surface-3);
+  border: 1px solid var(--border-strong);
+  box-shadow: var(--shadow-md);
+  font-size: var(--text-sm);
+
+  translate: 0 calc(100% + var(--sp-6));
+  opacity: 0;
+  transition: translate var(--dur) var(--ease-spring), opacity var(--dur) var(--ease-out);
+}
+
+.toast--in {
+  translate: 0 0;
+  opacity: 1;
+}
+
+.toast-message {
+  flex: 1;
+  min-width: 0;
+}
+
+.toast-action {
+  flex-shrink: 0;
+  color: var(--brand-300);
+  font-weight: 700;
+  font-size: var(--text-sm);
+  /* Márgenes negativos: el área táctil crece a 44px sin agrandar la caja. */
+  padding: var(--sp-3);
+  margin: calc(var(--sp-3) * -1);
+}

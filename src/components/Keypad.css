@@ -1,0 +1,40 @@
+.keypad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--sp-2);
+  width: 100%;
+}
+
+.keypad-key {
+  /* 52 px sigue por encima del mínimo táctil cómodo de 44 y ahorra 24 px de
+     alto en toda la rejilla, que es lo que hace que quepan el teclado, los
+     campos y el botón de guardar sin scroll. */
+  height: 52px;
+  border-radius: var(--r-md);
+  background: var(--surface-2);
+  color: var(--text);
+  font-size: var(--text-xl);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform var(--dur-fast) var(--ease-out), background var(--dur-fast);
+  /* La respuesta al toque tiene que ser inmediata: el usuario teclea rápido. */
+  user-select: none;
+}
+
+.keypad-key:active {
+  transform: scale(0.94);
+  background: var(--surface-3);
+}
+
+.keypad-key--action {
+  background: transparent;
+  color: var(--text-muted);
+  font-size: var(--text-lg);
+}
+
+.keypad-key--action:active {
+  background: var(--surface-2);
+}

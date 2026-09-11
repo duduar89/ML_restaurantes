@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- viewport-fit=cover: sin él, env(safe-area-inset-*) devuelve 0 y la
+         barra inferior se mete bajo el indicador de inicio del iPhone. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <!-- El color del tema es el lienzo, no el violeta: una barra de estado
+         violeta pelearía con el fondo de la app. -->
+    <meta name="theme-color" content="#0a0912" />
+    <meta name="color-scheme" content="dark light" />
+
+    <title>Caudal · Gastos</title>
+    <meta
+      name="description"
+      content="Control de gastos personales. Apunta en segundos, separa por apartados y mira a dónde va tu dinero."
+    />
+
+    <!-- iOS: sigue sin haber beforeinstallprompt, y apple-touch-icon tiene que
+         ser un PNG opaco de 180x180 o iOS lo compone sobre negro. -->
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="favicon-64.png" sizes="64x64" type="image/png" />
+    <link rel="apple-touch-icon" href="apple-touch-icon-180.png" sizes="180x180" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Caudal" />
+    <meta name="mobile-web-app-capable" content="yes" />
+
+    <!-- Inter para el cuerpo y las cifras (trae `tnum` y cero barrado de
+         verdad); Space Grotesk sólo para la voz de display. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400..800&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Pinta el fondo antes de que arranque React: sin esto se ve un
+         destello blanco al abrir la app instalada. -->
+    <style>
+      html,
+      body {
+        background: #0a0912;
+      }
+    </style>
+    <script>
+      // El tema elegido se aplica ANTES del primer pintado. Hacerlo desde
+      // React dejaría ver un fogonazo del tema contrario en cada arranque.
+      try {
+        if (localStorage.getItem('caudal-theme') === 'light') {
+          document.documentElement.dataset.theme = 'light'
+          document.documentElement.style.background = '#faf9ff'
+          document.querySelector('meta[name="theme-color"]').content = '#faf9ff'
+        }
+      } catch (error) {
+        /* Modo privado: se queda con el tema oscuro por defecto. */
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

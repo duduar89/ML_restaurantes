@@ -22,14 +22,19 @@
   padding-bottom: calc(var(--sp-2) + var(--safe-b));
 
   /* allow-discrete + @starting-style: anima la entrada y la salida de un
-     elemento que pasa por display:none, sin JavaScript de por medio. */
+     elemento que pasa por display:none, sin JavaScript de por medio.
+     La curva es la de los paneles deslizantes de iOS: sale disparada y frena
+     largo, que es lo que hace que una hoja se sienta pesada de verdad. */
   translate: 0 100%;
-  transition: translate var(--dur) var(--ease-out), overlay var(--dur) allow-discrete,
-    display var(--dur) allow-discrete;
+  /* Cerrar es más rápido que abrir: al abrir acompañas, al cerrar te apartas. */
+  transition: translate var(--dur-exit) var(--ease-out),
+    overlay var(--dur-exit) allow-discrete, display var(--dur-exit) allow-discrete;
 }
 
 .sheet[open] {
   translate: 0 0;
+  transition: translate var(--dur-slow) var(--ease-drawer),
+    overlay var(--dur-slow) allow-discrete, display var(--dur-slow) allow-discrete;
 }
 
 @starting-style {
@@ -53,12 +58,14 @@
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   opacity: 0;
-  transition: opacity var(--dur) var(--ease-out), overlay var(--dur) allow-discrete,
-    display var(--dur) allow-discrete;
+  transition: opacity var(--dur-exit) var(--ease-out),
+    overlay var(--dur-exit) allow-discrete, display var(--dur-exit) allow-discrete;
 }
 
 .sheet[open]::backdrop {
   opacity: 1;
+  transition: opacity var(--dur) var(--ease-out), overlay var(--dur) allow-discrete,
+    display var(--dur) allow-discrete;
 }
 
 @starting-style {

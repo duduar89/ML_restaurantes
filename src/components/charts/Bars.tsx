@@ -39,7 +39,9 @@ export function Bars({
               {bucket.cents > 0 ? formatMoneyCompact(bucket.cents) : ''}
             </span>
             <span className="bars-track">
-              <span className="bars-fill" style={{ height: `${height}%` }} />
+              {/* El relleno ocupa todo y se baja lo que le falta para llegar a
+                  su valor: así la animación va por transformación, no por alto. */}
+              <span className="bars-fill" style={{ translate: `0 ${100 - height}%` }} />
             </span>
             <span className="bars-label">{bucket.label}</span>
           </button>

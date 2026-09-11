@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router'
 import { LogoMark } from '@/brand/Logo'
+import { ChevronLeft } from '@/components/Icons'
 import { ExpenseList } from '@/components/ExpenseList'
 import { ProgressBar } from '@/components/charts/ProgressBar'
 import { ChartFrame } from '@/components/charts/ChartFrame'
@@ -99,7 +100,8 @@ export function SpaceScreen({ onSelectExpense }: { onSelectExpense: (expense: Ex
       >
         <div className="spacehead-nav">
           <button type="button" className="spacehead-back" onClick={() => void navigate(-1)}>
-            ‹ Apartados
+            <ChevronLeft size={16} />
+            Apartados
           </button>
           <button type="button" className="spacehead-edit" onClick={() => setEditOpen(true)}>
             Editar

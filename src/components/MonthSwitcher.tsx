@@ -1,5 +1,6 @@
 import { addMonths, currentMonthKey, formatMonth, type MonthKey } from '@/lib/dates'
 import { haptic } from '@/hooks/useHaptics'
+import { ChevronLeft, ChevronRight } from './Icons'
 import './MonthSwitcher.css'
 
 /**
@@ -26,7 +27,7 @@ export function MonthSwitcher({
           onChange(addMonths(month, -1))
         }}
       >
-        ‹
+        <ChevronLeft size={18} />
       </button>
       <span className="monthsw-label">{formatMonth(month)}</span>
       <button
@@ -39,7 +40,7 @@ export function MonthSwitcher({
           onChange(addMonths(month, 1))
         }}
       >
-        ›
+        <ChevronRight size={18} />
       </button>
     </div>
   )

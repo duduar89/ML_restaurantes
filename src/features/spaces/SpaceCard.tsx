@@ -40,7 +40,7 @@ export function SpaceCard({
           <div className="spacecard-track">
             <span
               className={`spacecard-fill spacecard-fill--${status.state}`}
-              style={{ width: `${Math.min(100, status.ratio * 100)}%` }}
+              style={{ translate: `${Math.min(100, status.ratio * 100) - 100}% 0` }}
             />
           </div>
           <span className="spacecard-left num">

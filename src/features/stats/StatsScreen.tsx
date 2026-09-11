@@ -49,16 +49,16 @@ const MONTHS_IN_HISTORY = 6
 /**
  * Variación mes a mes en una columna estrecha.
  *
- * Partiendo de casi cero, el porcentaje se dispara y deja de informar: pasar
- * de 2 € a 40 € es un +1900 % que sólo dice que antes no había nada. En ese
- * caso se enseña "nuevo", y por encima de mil por ciento se corta para que la
- * columna no se descuadre.
+ * Un porcentaje sólo informa mientras el número es pequeño. Pasar de 60 € a
+ * 780 € es un +1200 %, una cifra que nadie procesa y que además desborda la
+ * columna; y si se recorta, dos categorías distintas acaban enseñando el mismo
+ * "+999 %" y parece un error. A partir de cierto salto se dice en veces, que
+ * es como se cuenta de viva voz: "se ha multiplicado por trece".
  */
-function formatDelta(percent: number | null, previousCents: number): string {
-  if (percent === null) return 'nuevo'
-  if (previousCents < 500) return 'nuevo'
-  if (percent > 999) return '+999%'
-  if (percent < -999) return '−999%'
+function formatDelta(percent: number | null, previousCents: number, currentCents: number): string {
+  // Partiendo de casi nada, cualquier variación es infinita y no dice nada.
+  if (percent === null || previousCents < 500) return 'nuevo'
+  if (percent > 150) return `×${Math.round(currentCents / previousCents)}`
   return `${percent > 0 ? '+' : ''}${percent.toFixed(0)}%`
 }
 
@@ -324,7 +324,11 @@ export function StatsScreen({ onSelectExpense }: { onSelectExpense: (expense: Ex
                               : 'trends-delta--down'
                         }`}
                       >
-                        {formatDelta(trend.delta, trend.series.at(-2)?.cents ?? 0)}
+                        {formatDelta(
+                          trend.delta,
+                          trend.series.at(-2)?.cents ?? 0,
+                          trend.series.at(-1)?.cents ?? 0
+                        )}
                       </span>
                     </li>
                   ))}

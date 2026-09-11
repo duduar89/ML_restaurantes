@@ -85,10 +85,10 @@
   --sp-12: 48px;
 
   /* --- Tipografía ------------------------------------------------------- */
-  /* Space Grotesk sólo de 22px para arriba: sus cifras no son fiablemente
-     tabulares y sus formas anchas perjudican la densidad en texto pequeño. */
-  --font-display: 'Space Grotesk', system-ui, sans-serif;
-  --font-sans: Inter, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  /* Bricolage sólo de 22px para arriba: tiene carácter, y el carácter estorba
+     en texto pequeño y denso. Plex se ocupa de todo lo demás. */
+  --font-display: 'Bricolage Grotesque', var(--font-sans);
+  --font-sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
 
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
@@ -99,12 +99,29 @@
   --text-3xl: 2.25rem;
   --text-display: 3.25rem;
 
-  /* --- Movimiento ------------------------------------------------------- */
-  --ease-out: cubic-bezier(0.2, 0.8, 0.25, 1);
-  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
-  --dur-fast: 120ms;
+  /* --- Movimiento -------------------------------------------------------
+   * Nada rebota. Una curva elástica (que se pasa del valor final y vuelve)
+   * envejece mal y, en una app que se abre veinte veces al día, cansa. Los
+   * objetos reales frenan, no rebotan: por eso todo sale de exponenciales.
+   *
+   * Y nunca ease-in en interfaz: arranca lento justo en el instante que el
+   * usuario está mirando, así que una animación con ease-in SE SIENTE más
+   * lenta que la misma duración con ease-out.
+   */
+  /* Entradas y salidas: arranca rápido, responde al instante. */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  /* Movimiento en pantalla (algo que se desplaza sin entrar ni salir). */
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  /* La curva de los paneles deslizantes de iOS. */
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+
+  /* Por debajo de 300 ms o la interfaz se siente pesada. La salida siempre es
+     más rápida que la entrada: al abrir se acompaña, al cerrar se aparta. */
+  --dur-press: 120ms;
+  --dur-fast: 140ms;
   --dur: 220ms;
-  --dur-slow: 420ms;
+  --dur-exit: 160ms;
+  --dur-slow: 380ms;
 
   /* --- Distribución ----------------------------------------------------- */
   --tabbar-h: 68px;

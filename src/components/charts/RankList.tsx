@@ -36,7 +36,10 @@ export function RankList({
               onClick={onSelect ? () => onSelect(bucket.key) : undefined}
               disabled={!onSelect}
             >
-              <span className="rank-fill" style={{ width: `${width}%`, background: color }} />
+              <span
+                className="rank-fill"
+                style={{ translate: `${width - 100}% 0`, background: color }}
+              />
               <span className="rank-name">
                 {emoji?.(bucket.key) && <span className="rank-emoji">{emoji(bucket.key)}</span>}
                 {bucket.label}

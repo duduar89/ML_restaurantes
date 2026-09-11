@@ -66,18 +66,24 @@
 .bars-track {
   flex: 1;
   width: 100%;
-  display: flex;
-  align-items: flex-end;
+  position: relative;
   border-radius: var(--r-sm);
   background: var(--surface-2);
   overflow: hidden;
 }
 
+/*
+ * El relleno mide siempre el alto completo y se desplaza hacia abajo hasta
+ * dejar a la vista sólo su parte. Animar `height` obligaría al navegador a
+ * rehacer layout y pintado en cada fotograma; `translate` lo resuelve el
+ * compositor y no toca el hilo principal.
+ */
 .bars-fill {
-  width: 100%;
+  position: absolute;
+  inset: 0;
   border-radius: var(--r-sm);
   background: linear-gradient(180deg, var(--brand-400), var(--brand-600));
-  transition: height var(--dur-slow) var(--ease-out);
+  transition: translate var(--dur-slow) var(--ease-out);
 }
 
 .bars-col--active .bars-fill {
@@ -124,9 +130,9 @@
 
 .rank-fill {
   position: absolute;
-  inset: 0 auto 0 0;
+  inset: 0;
   opacity: 0.22;
-  transition: width var(--dur-slow) var(--ease-out);
+  transition: translate var(--dur-slow) var(--ease-out);
 }
 
 .rank-name {
@@ -282,6 +288,13 @@
   color: var(--text-muted);
 }
 
+/* En modo compacto ya hay una cifra grande justo encima: esta línea es una
+   referencia, no un dato, y tiene que pesar como tal. */
+.progress--compact .progress-budget {
+  font-size: var(--text-xs);
+  color: var(--text-faint);
+}
+
 .progress-track {
   position: relative;
   height: 10px;
@@ -292,10 +305,10 @@
 
 .progress-fill {
   position: absolute;
-  inset: 0 auto 0 0;
+  inset: 0;
   border-radius: var(--r-full);
   background: var(--brand-gradient);
-  transition: width var(--dur-slow) var(--ease-out);
+  transition: translate var(--dur-slow) var(--ease-out);
 }
 
 .progress-track--warn .progress-fill {

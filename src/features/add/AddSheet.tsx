@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Sheet } from '@/components/Sheet'
 import { Keypad } from '@/components/Keypad'
 import { Chips } from '@/components/Chips'
+import { ChevronDown } from '@/components/Icons'
 import { useToast } from '@/components/Toast'
 import { useAppData } from '@/app/store'
 import { useRecentExpenses } from '@/hooks/useExpenses'
@@ -240,8 +241,8 @@ export function AddSheet({
               {selectedCategory?.emoji} {selectedCategory?.name} · {selectedSpace?.emoji}{' '}
               {selectedSpace?.name} · {dayLabel}
             </span>
-            <span className="add-details-caret" aria-hidden="true">
-              {detailsOpen ? '⌃' : '⌄'}
+            <span className={`add-details-caret ${detailsOpen ? 'is-open' : ''}`}>
+              <ChevronDown size={16} />
             </span>
           </button>
 

@@ -15,14 +15,17 @@
   box-shadow: var(--shadow-md);
   font-size: var(--text-sm);
 
+  /* Entra y sale por abajo, por el mismo sitio: la dirección es la que hace
+     que deslizarlo hacia abajo para descartarlo parezca lo natural. */
   translate: 0 calc(100% + var(--sp-6));
   opacity: 0;
-  transition: translate var(--dur) var(--ease-spring), opacity var(--dur) var(--ease-out);
+  transition: translate var(--dur-exit) var(--ease-out), opacity var(--dur-exit) var(--ease-out);
 }
 
 .toast--in {
   translate: 0 0;
   opacity: 1;
+  transition: translate var(--dur) var(--ease-out), opacity var(--dur) var(--ease-out);
 }
 
 .toast-message {

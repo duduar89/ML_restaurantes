@@ -1,5 +1,6 @@
 import { haptic } from '@/hooks/useHaptics'
 import { applyKey, KEYPAD_KEYS } from '@/lib/keypad'
+import { Backspace } from './Icons'
 import './Keypad.css'
 
 /**
@@ -29,7 +30,9 @@ export function Keypad({
         <button
           key={key}
           type="button"
-          className={`keypad-key ${key === '⌫' ? 'keypad-key--action' : ''}`}
+          className={`keypad-key ${key === '⌫' ? 'keypad-key--action' : ''} ${
+            key === ',' ? 'keypad-key--comma' : ''
+          }`}
           aria-label={key === '⌫' ? 'Borrar' : key === ',' ? 'Coma decimal' : key}
           /* onPointerDown y no onClick: la tecla responde en cuanto el dedo
              toca, sin esperar a que lo levante. */
@@ -38,7 +41,7 @@ export function Keypad({
             onChange(applyKey(value, key))
           }}
         >
-          {key}
+          {key === '⌫' ? <Backspace /> : key}
         </button>
       ))}
     </div>

@@ -40,7 +40,7 @@
   height: 32px;
   border-radius: var(--r-full);
   border: 2px solid transparent;
-  transition: transform var(--dur-fast) var(--ease-spring);
+  transition: transform var(--dur-fast) var(--ease-out);
 }
 
 .color-dot--active {

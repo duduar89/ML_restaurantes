@@ -27,7 +27,7 @@ export function ProgressBar({
   const overflow = status.ratio > 1
 
   return (
-    <div className="progress">
+    <div className={`progress ${compact ? 'progress--compact' : ''}`}>
       <div className="progress-head">
         {compact ? (
           <span className="progress-budget num">Presupuesto {formatMoney(status.budgetCents)}</span>
@@ -47,7 +47,7 @@ export function ProgressBar({
         aria-valuemax={100}
         aria-label="Presupuesto consumido"
       >
-        <span className="progress-fill" style={{ width: `${percent}%` }} />
+        <span className="progress-fill" style={{ translate: `${percent - 100}% 0` }} />
         {paceRatio !== null && paceRatio !== undefined && paceRatio > 0 && paceRatio < 1 && (
           <span
             className="progress-pace"

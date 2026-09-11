@@ -48,9 +48,9 @@
   box-shadow: var(--shadow-brand);
   /* Sobresale de la barra: lo hace inconfundible y acerca el objetivo al pulgar. */
   transform: translateY(-14px);
-  transition: transform var(--dur-fast) var(--ease-out);
+  transition: transform var(--dur-press) var(--ease-out);
 }
 
 .tabbar-fab:active {
-  transform: translateY(-14px) scale(0.92);
+  transform: translateY(-14px) scale(0.94);
 }

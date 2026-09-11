@@ -74,6 +74,8 @@ ol {
 .num {
   font-variant-numeric: tabular-nums slashed-zero;
   font-feature-settings: 'tnum' 1, 'zero' 1;
+  /* IBM Plex Sans ya trae las cifras monoespaciadas de fábrica, así que la
+     alineación se mantiene aunque `tnum` no llegue a aplicarse. */
   font-variant-ligatures: none;
   letter-spacing: -0.01em;
 }
@@ -112,13 +114,50 @@ ol {
   border-radius: var(--r-xs);
 }
 
+/*
+ * Movimiento reducido no significa "sin animación": significa sin
+ * DESPLAZAMIENTO. Matar todas las transiciones a 0,01 ms se lleva por delante
+ * la confirmación de que un botón respondió, el aviso que aparece o el cambio
+ * de estado de una barra, y deja la interfaz dando saltos secos.
+ *
+ * Aquí se conserva lo que explica (opacidad, color, fondo) y se elimina lo que
+ * marea (traslaciones, escalas, deslizamientos).
+ */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+    /* Sólo se anulan las propiedades de movimiento. */
+    transition-property: opacity, background-color, border-color, color, fill, stroke !important;
+    transition-duration: 160ms !important;
+  }
+
+  /* Las hojas siguen apareciendo y desapareciendo, pero sin deslizarse. */
+  .sheet,
+  .sheet[open],
+  .toast,
+  .toast--in {
+    translate: none !important;
+  }
+
+  .sheet,
+  .toast {
+    opacity: 0;
+  }
+
+  .sheet[open],
+  .toast--in {
+    opacity: 1;
+  }
+
+  /* Las barras de las gráficas saltan a su valor en vez de crecer. */
+  .bars-fill,
+  .rank-fill,
+  .progress-fill,
+  .spacecard-fill {
+    transition: none !important;
   }
 }
 

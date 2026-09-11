@@ -31,6 +31,12 @@
   margin-bottom: var(--sp-5);
 }
 
+.spacehead-back {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
 .spacehead-back,
 .spacehead-edit {
   font-size: var(--text-sm);

@@ -3,6 +3,7 @@ import { LogoLockup } from '@/brand/Logo'
 import { ExpenseList } from '@/components/ExpenseList'
 import { ProgressBar } from '@/components/charts/ProgressBar'
 import { MonthSwitcher } from '@/components/MonthSwitcher'
+import { Trend } from '@/components/Icons'
 import { useAppData } from '@/app/store'
 import { useExpenses } from '@/hooks/useExpenses'
 import { patchSettings } from '@/db/repo'
@@ -100,7 +101,7 @@ export function HomeScreen({
 
           {change !== null && (
             <p className={`hero-delta hero-delta--${stats.delta.direction}`}>
-              {stats.delta.direction === 'up' ? '▲' : stats.delta.direction === 'down' ? '▼' : '='}{' '}
+              <Trend direction={stats.delta.direction} />
               {Math.abs(change).toFixed(0)}% respecto al mes anterior
             </p>
           )}

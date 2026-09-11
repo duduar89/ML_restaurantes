@@ -43,21 +43,20 @@
   font-weight: 800;
   letter-spacing: -0.04em;
   line-height: 1;
-  /* El importe es lo único que importa en esta pantalla: se lleva el degradado. */
-  background: var(--brand-gradient);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  /* Sólido, no degradado. El importe es el número que el usuario está
+     comprobando: el énfasis se lo dan el tamaño y el peso, y un degradado
+     sobre texto sólo le quita legibilidad. */
+  color: var(--text);
 }
 
 .add-amount--empty {
-  background: none;
   color: var(--text-faint);
 }
 
 .add-currency {
   font-size: var(--text-2xl);
   font-weight: 700;
+  color: var(--text-muted);
 }
 
 /* --- Campos ------------------------------------------------------------- */
@@ -182,5 +181,11 @@
 
 .add-details-caret {
   flex-shrink: 0;
+  display: flex;
   color: var(--text-faint);
+  transition: rotate var(--dur-fast) var(--ease-out);
+}
+
+.add-details-caret.is-open {
+  rotate: 180deg;
 }

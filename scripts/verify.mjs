@@ -246,7 +246,7 @@ async function checkPackaging() {
     check('precachea la app entera', precache >= 10, `${precache} entradas`)
     check(
       'precachea también iconos y fuentes',
-      /icon-512\.png/.test(sw) && /apple-touch-icon/.test(sw)
+      /icon-512\.png/.test(sw) && /plex-sans-latin-400700\.woff2/.test(sw)
     )
   }
 

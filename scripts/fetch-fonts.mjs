@@ -25,11 +25,20 @@ const CSS_OUT = resolve(ROOT, 'src', 'styles', 'fonts.css')
 const UA =
   'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
 
+/*
+ * Ni Inter ni Space Grotesk, que son la pareja a la que converge casi toda
+ * interfaz generada hoy y ya no distinguen nada.
+ *
+ * IBM Plex Sans se diseñó para interfaces densas de datos y sus cifras ya son
+ * monoespaciadas por defecto —comprobado midiendo "111111" contra "000000"—,
+ * así que las columnas de importes alinean incluso si `tnum` no llegara a
+ * aplicarse. Bricolage Grotesque pone la voz de display: tiene carácter propio
+ * y, a diferencia de las serif que se probaron, mantiene las cifras tabulares,
+ * que es imprescindible porque el importe grande cambia con cada tecla.
+ */
 const FAMILIES = [
-  { name: 'Inter', query: 'Inter:wght@400..800', file: 'inter' },
-  // Rango variable (500..700) y no dos pesos sueltos: un solo archivo por
-  // subconjunto en lugar de dos, con el mismo resultado visual.
-  { name: 'Space Grotesk', query: 'Space+Grotesk:wght@500..700', file: 'space-grotesk' },
+  { name: 'IBM Plex Sans', query: 'IBM+Plex+Sans:wght@400..700', file: 'plex-sans' },
+  { name: 'Bricolage Grotesque', query: 'Bricolage+Grotesque:opsz,wght@12..96,500..800', file: 'bricolage' },
 ]
 
 const WANTED_SUBSETS = ['latin', 'latin-ext']
@@ -90,9 +99,9 @@ async function main() {
  * Fuentes alojadas en el propio proyecto. Generado por scripts/fetch-fonts.mjs
  * — no editar a mano; para actualizarlas, \`npm run fonts\`.
  *
- * Inter lleva las cifras tabulares y el cero barrado de verdad, que es lo que
- * mantiene alineadas las columnas de dinero. Space Grotesk es sólo la voz de
- * display, de 22 px para arriba.
+ * IBM Plex Sans lleva el cuerpo y, sobre todo, las cifras: sus números ya son
+ * monoespaciados de fábrica, así que las columnas de importes alinean siempre.
+ * Bricolage Grotesque es sólo la voz de display, de 22 px para arriba.
  */
 
 ${blocks.join('\n\n')}

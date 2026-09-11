@@ -40,8 +40,20 @@ function openGraph(): Plugin {
   }
 }
 
+/**
+ * Sello de la compilación, para que la app pueda decir en qué versión está.
+ *
+ * Sin esto, "no me funciona el botón de actualizar" no se puede diagnosticar
+ * ni desde el móvil ni desde fuera: no hay forma de saber si la que está
+ * corriendo es la nueva o la vieja.
+ */
+const BUILD_ID = new Date().toISOString().slice(0, 16).replace('T', ' ')
+
 export default defineConfig({
   base,
+  define: {
+    __BUILD_ID__: JSON.stringify(BUILD_ID),
+  },
   resolve: {
     alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
   },

@@ -12,6 +12,7 @@ import { buildBackup, backupToFile, deliverBackup, restoreBackup, toCsv } from '
 import { useInstall } from './useInstall'
 import { AutomationGuide } from './AutomationGuide'
 import { CaptureLogSection } from './CaptureLogSection'
+import { VersionSection } from './VersionSection'
 import { ImportSection } from './ImportSection'
 import './SettingsScreen.css'
 
@@ -280,6 +281,11 @@ export function SettingsScreen() {
               Claro
             </button>
           </div>
+        </section>
+
+        {/* --- Versión --- */}
+        <section className="settings-card">
+          <VersionSection />
         </section>
 
         <footer className="settings-foot">

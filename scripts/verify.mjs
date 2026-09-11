@@ -338,6 +338,29 @@ async function run(browser, base) {
     await context.close()
   }
 
+  /* --- 5. Versión y actualización ---------------------------------------- */
+  console.log('\nSaber en qué versión estás')
+  {
+    // "No me va el botón de actualizar" no se puede diagnosticar sin esto: el
+    // aviso de nueva versión es efímero y, si se descarta o la app se abre sin
+    // recargar, no queda nada en pantalla que diga en qué versión estás.
+    const { context, page, errors } = await newPage()
+    await page.goto(`${base}/ajustes`, { waitUntil: 'networkidle' })
+    await page.waitForTimeout(600)
+    await page.locator('.version').scrollIntoViewIfNeeded()
+
+    const sello = await page.locator('.version-id').innerText()
+    check('enseña la fecha de la versión', /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/.test(sello), sello)
+
+    await page.getByRole('button', { name: 'Buscar actualización' }).click()
+    await page.waitForTimeout(3000)
+    const texto = await page.locator('.version').innerText()
+    check('dice que ya estás al día cuando no hay nada nuevo', texto.includes('Ya tienes la última'))
+
+    check('sin errores en consola', errors.length === 0, errors[0])
+    await context.close()
+  }
+
   await checkPackaging()
 }
 

@@ -23,6 +23,9 @@ export function AutomationGuide() {
   }, [])
 
   const example = `${endpoint}?importe=12,50&concepto=Mercadona&auto=1`
+  // El de Android va con el aviso entero: el reconocimiento lo hace Caudal, así
+  // que la macro no tiene que extraer nada con expresiones regulares.
+  const androidExample = `${endpoint}?auto=1&texto={notification}`
 
   async function copy(text: string) {
     try {
@@ -99,18 +102,30 @@ export function AutomationGuide() {
             la app de tu banco.
           </li>
           <li>
-            Extrae el importe del texto del aviso con una expresión regular y guárdalo en una
-            variable.
+            Añade la acción <strong>Abrir sitio web</strong> —<em>no</em> «Petición HTTP»— y pega
+            la dirección de abajo, pero cambiando el final: borra lo que hay detrás de{' '}
+            <code>texto=</code> e inserta el texto mágico del{' '}
+            <strong>cuerpo de la notificación</strong> (<code>{'{notification}'}</code>). No hace
+            falta ninguna expresión regular: Caudal lee el aviso entero.
           </li>
           <li>
-            Añade la acción <strong>Abrir sitio web</strong> —<em>no</em> «Petición HTTP»— con
-            esta dirección, metiendo la variable en el importe:
+            <code>texto=</code> tiene que quedar <strong>al final</strong>. Un comercio con un{' '}
+            <code>&amp;</code> en el nombre partiría la dirección en dos, y Caudal lee ese
+            parámetro hasta el final de la línea justo para que eso no pase.
+          </li>
+          <li>
+            Si la acción ofrece una casilla de <strong>codificar los parámetros</strong>,
+            márcala: sin ella, una almohadilla en el nombre del comercio trunca la dirección.
           </li>
         </ol>
       )}
 
-      <button type="button" className="guide-code" onClick={() => void copy(example)}>
-        <code>{example}</code>
+      <button
+        type="button"
+        className="guide-code"
+        onClick={() => void copy(platform === 'android' ? androidExample : example)}
+      >
+        <code>{platform === 'android' ? androidExample : example}</code>
         <span className="guide-copy">Copiar</span>
       </button>
 

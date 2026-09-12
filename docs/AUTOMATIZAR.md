@@ -320,19 +320,92 @@ del hotel durante un viaje y las mande directas a ese apartado:
 https://caudal.brainstormersagency.es/add?auto=1&apartado=Japón&texto={notification}
 ```
 
+## Pasarle la macro a otra persona
+
+Se puede exportar la macro ya montada para que la otra persona no tenga que
+construirla: menú de la macro → **Exportar**, y le pasas el archivo `.macro`.
+También vale *compartir con dispositivo cercano*.
+
+**No uses el «enlace compartible».** Ese sube tu macro a los servidores de
+MacroDroid, y con ella el patrón con el que se leen los avisos de tu banco. El
+archivo va de un móvil a otro y no pasa por nadie.
+
+Y antes de exportar, **vacía las variables globales**: el archivo `.macro` se
+las lleva con sus valores dentro.
+
+Lo que no se puede transferir nunca es el **acceso a notificaciones** ni la
+exención de batería: son ajustes del sistema y hay que darlos a mano en cada
+móvil. Cuenta unos quince minutos con ella delante.
+
+### El precio de MacroDroid, que no es cero
+
+La versión gratuita de las versiones recientes ya no es «cinco macros y ya»:
+lleva un régimen de **días de uso** que, al agotarse, **desactiva la app
+entera**. Se prorroga viendo anuncios o activando la compartición de datos con
+*data partners*, que piden ubicación precisa y acceso al uso del dispositivo.
+
+Si el motivo para montar todo esto era que tus gastos no salgan de tu móvil,
+esa segunda opción lo tira por tierra. La licencia Pro son unos 4,59 € de pago
+único. Cuéntalos como parte del coste.
+
 ## Compartir un aviso a mano
 
-Sin macro ninguna: en cualquier aviso o mensaje, mantén pulsado el texto →
-**Compartir** → **Caudal**. Llega igual, con vista previa antes de guardar.
+**Esta es la vía que no exige instalar ni configurar nada**, y para la mayoría
+de la gente es la respuesta correcta.
+
+Si el aviso de tu banco llega por **SMS o por correo**, mantienes pulsado el
+texto → **Compartir** → **Caudal**, y se abre con el importe y el comercio ya
+leídos, esperando que confirmes. Tres toques, ningún permiso, ninguna app de
+más.
+
+El requisito es que Caudal esté instalada **desde Chrome con «Instalar
+aplicación»**, no con «añadir a pantalla de inicio». Con lo segundo Android
+crea un acceso directo que no aparece en el menú de compartir, y no da ningún
+error: simplemente Caudal no sale en la lista.
+
+**Si el aviso llega como notificación push de la app del banco, esto no vale:**
+una notificación no se puede compartir. Ahí sólo queda la macro.
+
+### Cómo saber cuál de los dos casos es el tuyo
+
+Págate algo de un euro y mira qué te llega. Sólo hay tres respuestas, y cada
+una cierra la decisión:
+
+| Lo que llega | Qué hacer |
+|---|---|
+| **Un SMS o un correo** con el importe dentro | Compartir. No hace falta nada más. |
+| **Una notificación de la app del banco** | Sólo la macro de MacroDroid. |
+| Un aviso de «tienes un movimiento, entra en la app» | No hay nada que leer. Extracto mensual. |
+
+Haz esta prueba **antes** de montar nada: quince minutos aquí te ahorran una
+tarde entera por el camino equivocado.
 
 ---
 
 ## En iPhone
 
-Es más limitado y conviene saberlo antes: **Atajos › Automatización** tiene un
-disparador de **Cartera**, pero sólo salta con los pagos de Apple Pay hechos en
-tienda. Los pagos con la tarjeta física y las compras por internet no lo
-disparan.
+**Atajos viene preinstalada**, así que en iPhone no hay que instalar nada de
+terceros: **Atajos › Automatización** tiene un disparador de **Cartera** que da
+importe, comercio y tarjeta, y desde iOS 17 puede ejecutarse sin pedir
+confirmación.
+
+Cubre los pagos con **Apple Pay**. Quedan fuera la tarjeta física, Bizum y los
+recibos. Si además cubre las compras por internet y dentro de apps, o sólo el
+pago sin contacto en tienda, es algo que no he conseguido confirmar: las
+fuentes se contradicen. Pruébalo con una compra online antes de darlo por
+hecho.
+
+Cuenta también con que dispara con operaciones **denegadas** y arrastra fallos
+de tiempo de espera documentados en el foro de desarrolladores de Apple. Nada
+de lo que llegue por aquí debería darse por bueno sin mirarlo.
+
+**Hay un problema serio de destino en iPhone.** La app de la pantalla de inicio
+guarda sus datos **aparte de Safari**, y «Abrir URL» abre Safari: el gasto
+acabaría en un Caudal distinto del que usas. Compruébalo en *Ajustes ›
+Versión*, que dice cuántos movimientos hay en el almacén que estás viendo: si
+abres la app instalada y el navegador y los números no coinciden, tienes dos
+copias. Mientras eso no esté resuelto, en iPhone es más fiable el extracto
+mensual.
 
 La acción tiene que ser **Abrir URL**, no «Obtener contenido de la URL». La
 segunda sale a internet a pedir la página y el resultado no llega nunca a la

@@ -287,6 +287,42 @@ async function run(browser, base) {
     await context.close()
   }
 
+  /* --- 2d. Compartir un SMS del banco a la app --------------------------- */
+  console.log('\nCompartir un aviso desde el menú de Android')
+  {
+    // Es la única vía de captura que no exige instalar ni configurar NADA:
+    // mantener pulsado el SMS del banco, Compartir, Caudal. Android entrega el
+    // texto a /compartir con los parámetros del manifiesto.
+    const { context, page, errors } = await newPage()
+    await page.goto(base, { waitUntil: 'networkidle' })
+
+    const texto = 'BBVA: Compra de 21,40 EUR en FARMACIA CENTRAL con tarjeta terminada en 1234'
+    await page.goto(`${base}/compartir?text=${encodeURIComponent(texto)}`, {
+      waitUntil: 'networkidle',
+    })
+    await page.waitForTimeout(800)
+
+    const pantalla = await page.locator('.capture').innerText()
+    check('enseña lo que ha entendido', /21,40/.test(pantalla), pantalla.split('\n')[1])
+    check('saca el comercio', /FARMACIA CENTRAL/i.test(pantalla), pantalla)
+    check(
+      'NO lo guarda sin preguntar',
+      (await readExpenses(page)).length === 0,
+      'compartir nunca debe guardar a ciegas'
+    )
+
+    // Dentro de .capture: la hoja de añadir también tiene un botón "Guardar"
+    // montado detrás, y sin acotar el localizador la pulsación es ambigua.
+    await page.locator('.capture').getByRole('button', { name: 'Guardar', exact: true }).click()
+    await page.waitForTimeout(700)
+    const guardado = (await readExpenses(page))[0]
+    check('al confirmar se guarda', guardado?.amountCents === 2140, `fue ${guardado?.amountCents}`)
+    check('queda marcado como compartido', guardado?.source === 'share', guardado?.source)
+
+    check('sin errores en consola', errors.length === 0, errors[0])
+    await context.close()
+  }
+
   /* --- 3. Apartado nuevo ------------------------------------------------- */
   console.log('\nCrear un apartado')
   {

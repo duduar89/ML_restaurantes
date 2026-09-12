@@ -87,6 +87,24 @@ eso no rompa nada, pero sólo puede hacerlo si es el último.
 
 Ponle *Apuntar gasto de tarjeta* y guarda.
 
+### Si el aviso llega cortado
+
+`{notification}` trae el texto **plegado**: el que se ve sin desplegar la
+notificación. Algunos bancos escriben avisos largos que ahí salen cortados con
+puntos suspensivos, y entonces se pierde el final —normalmente el nombre del
+comercio—.
+
+Si te pasa, cambia ese texto mágico por **`{not_text_big}`**, que es el texto
+desplegado y viene entero. La pega es que las apps que no usan aviso largo
+dejan `{not_text_big}` vacío, así que no lo pongas por defecto: sólo si ves que
+el tuyo llega cortado.
+
+Y si el importe está en el título en vez de en el cuerpo, puedes mandar los dos:
+
+```
+...?auto=1&texto={not_title} {notification}
+```
+
 ### Activa la codificación si la acción la ofrece
 
 En las opciones avanzadas de «Abrir sitio web» hay una casilla del tipo

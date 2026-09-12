@@ -421,6 +421,11 @@ async function run(browser, base) {
     const texto = await page.locator('.version').innerText()
     check('dice que ya estás al día cuando no hay nada nuevo', texto.includes('Ya tienes la última'))
 
+    const donde = await page.locator('.version-donde').innerText()
+    check('dice dónde está corriendo', /navegador|app instalada/.test(donde), donde)
+    check('dice en qué dirección', donde.includes('localhost'), donde)
+    check('cuenta los movimientos de ESTE almacén', /\d+ movimientos? guardados? aquí/.test(donde), donde)
+
     check('sin errores en consola', errors.length === 0, errors[0])
     await context.close()
   }

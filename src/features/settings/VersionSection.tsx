@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRegisterSW } from 'virtual:pwa-register/react'
 import { useToast } from '@/components/Toast'
+import { db } from '@/db/db'
 import './VersionSection.css'
 
 /**
@@ -17,6 +18,11 @@ type Estado = 'quieto' | 'buscando' | 'al-dia' | 'hay-nueva' | 'sin-red'
 export function VersionSection() {
   const toast = useToast()
   const [estado, setEstado] = useState<Estado>('quieto')
+  const [guardados, setGuardados] = useState<number | null>(null)
+
+  useEffect(() => {
+    void db.expenses.filter((row) => row.deletedAt === 0).count().then(setGuardados)
+  }, [])
   const {
     needRefresh: [needRefresh],
     updateServiceWorker,
@@ -95,6 +101,43 @@ export function VersionSection() {
           tocan.
         </p>
       )}
+
+      <Donde guardados={guardados} />
     </section>
+  )
+}
+
+/**
+ * Dónde está corriendo esto y cuántos gastos hay AQUÍ.
+ *
+ * Sirve para detectar el fallo más traicionero de una app instalable: acabar
+ * con dos copias y dos bases de datos sin enterarse. Pasa por cosas
+ * invisibles —entrar con «www.» delante, abrirla en otro navegador, o en
+ * iPhone porque la app de la pantalla de inicio guarda aparte de Safari— y
+ * nada lo avisa: las dos copias funcionan, sólo que cada una con sus datos.
+ *
+ * Con esto se descubre en dos toques: se abre de las dos maneras y se compara.
+ * Si el número de movimientos no coincide, son dos almacenes distintos.
+ */
+function Donde({ guardados }: { guardados: number | null }) {
+  const instalada =
+    window.matchMedia('(display-mode: standalone)').matches ||
+    // Safari en iOS no implementa display-mode y usa su propia bandera.
+    (navigator as Navigator & { standalone?: boolean }).standalone === true
+
+  return (
+    <div className="version-donde">
+      <p className="version-hint">
+        Estás en <strong>{instalada ? 'la app instalada' : 'el navegador'}</strong>, en{' '}
+        <strong>{window.location.host}</strong>, con{' '}
+        <strong>{guardados === null ? '…' : guardados}</strong>{' '}
+        {guardados === 1 ? 'movimiento guardado' : 'movimientos guardados'} aquí.
+      </p>
+      <p className="version-hint">
+        Si abres Caudal de otra manera y ese número no coincide, tienes dos copias con datos
+        distintos. Quédate con una: la dirección tiene que ser siempre la misma, sin «www.» si no
+        lo pusiste al instalar.
+      </p>
+    </div>
   )
 }

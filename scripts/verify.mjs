@@ -338,6 +338,70 @@ async function run(browser, base) {
     await context.close()
   }
 
+  /* --- 4b. Importar un extracto en CSV ----------------------------------- */
+  console.log('\nImportar el extracto del banco en CSV')
+  {
+    const { context, page, errors } = await newPage()
+    await page.goto(`${base}/ajustes`, { waitUntil: 'networkidle' })
+    await page.waitForTimeout(600)
+
+    const CSV = [
+      'Extracto de cuenta',
+      'Titular: PRUEBA',
+      '',
+      'Fecha;Fecha valor;Concepto;Importe;Saldo',
+      '03/09/2026;03/09/2026;COMPRA EN MERCADONA;-47,85;1.234,10',
+      '05/09/2026;05/09/2026;NOMINA SEPTIEMBRE;1.850,00;3.084,10',
+      '15/09/2026;15/09/2026;RECIBO LUZ;-62,40;3.021,70',
+    ].join('\n')
+
+    await page.locator('.importsec input[type=file]').setInputFiles({
+      name: 'extracto.csv',
+      mimeType: 'text/csv',
+      buffer: Buffer.from(CSV, 'utf8'),
+    })
+    await page.waitForTimeout(900)
+
+    const vista = await page.locator('.importsec-preview').innerText()
+    check('sale la vista previa', /vista previa/i.test(vista))
+    check('cuenta los cargos bien', /2 · 110,25/.test(vista.replace(/\u00a0/g, ' ')), vista.split('\n').find((l) => /Cargos/.test(l)))
+    check('cuenta los abonos bien', /1 · 1\.850,00/.test(vista.replace(/\u00a0/g, ' ')))
+    check('dice de qué columna ha sacado el importe', vista.includes('«Importe»'))
+    check('NO ha cogido el saldo', !vista.includes('1.234,10') && !vista.includes('3.021,70'))
+
+    await page.getByRole('button', { name: /^Importar/ }).click()
+    await page.waitForTimeout(900)
+    const rows = await readExpenses(page)
+    check('los movimientos llegan a la base', rows.filter((r) => r.source === 'import').length === 3)
+    check(
+      'el gasto guarda los céntimos completos',
+      rows.some((r) => r.amountCents === 4785 && r.kind === 'expense')
+    )
+    check(
+      'la nómina entra como ingreso',
+      rows.some((r) => r.amountCents === 185000 && r.kind === 'income')
+    )
+
+    // Reimportar el mismo fichero no puede duplicar nada.
+    await page.locator('.importsec input[type=file]').setInputFiles({
+      name: 'extracto.csv',
+      mimeType: 'text/csv',
+      buffer: Buffer.from(CSV, 'utf8'),
+    })
+    await page.waitForTimeout(900)
+    await page.getByRole('button', { name: /^Importar/ }).click()
+    await page.waitForTimeout(900)
+    const despues = await readExpenses(page)
+    check(
+      'reimportar el mismo extracto no duplica',
+      despues.filter((r) => r.source === 'import').length === 3,
+      `${despues.filter((r) => r.source === 'import').length} movimientos`
+    )
+
+    check('sin errores en consola', errors.length === 0, errors[0])
+    await context.close()
+  }
+
   /* --- 5. Versión y actualización ---------------------------------------- */
   console.log('\nSaber en qué versión estás')
   {

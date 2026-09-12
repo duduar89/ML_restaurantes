@@ -100,3 +100,22 @@
   color: var(--text-faint);
   justify-content: center;
 }
+
+/* Lo que la app ha deducido del CSV, para que se pueda desmentir antes de
+   importar. Un extracto mal leído no da error: da unos totales creíbles. */
+.importsec-columns {
+  margin: 0;
+  color: var(--text-faint);
+  font-size: var(--text-xs);
+  line-height: 1.5;
+}
+
+.importsec-warning {
+  margin: 0;
+  padding: var(--sp-3);
+  border-radius: var(--r-sm);
+  background: var(--surface-2);
+  color: var(--warning);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+}
